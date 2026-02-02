@@ -1,0 +1,91 @@
+:root {
+    --color-bg: #E1FAF9;
+    --color-accent1: #78FFD6;
+    --color-accent2: #0AD3FF;
+    --color-dark: #023C40;
+    --success: #28a745;
+}
+
+body {
+    background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-accent1) 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+}
+
+.card-final {
+    background: white;
+    padding: 50px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 90%;
+}
+
+.check-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+h1 { color: var(--color-dark); margin-bottom: 10px; }
+
+.resaltado {
+    color: var(--color-accent2);
+    font-weight: bold;
+}
+
+.info-envio {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 15px;
+}
+
+.btn-email {
+    display: inline-block;
+    background: var(--color-accent2);
+    color: white;
+    padding: 15px 25px;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.btn-email:hover {
+    background: var(--color-dark);
+    transform: scale(1.05);
+}
+
+.mensaje-exito {
+    margin-top: 20px;
+    color: var(--success);
+    font-weight: bold;
+    background: #e8f5e9;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.acciones-finales {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-secundario {
+    color: var(--color-dark);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-salir {
+    color: #cc0000;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styleFinal.css">
+    <title>TriPing | ¡Todo listo!</title>
+</head>
+<body>
+    <div class="card-final">
+        <div class="check-icon">✨</div>
+        
+        <header>
+            <h1>¡Itinerario Completado!</h1>
+            <p>Todo está listo para tu aventura en <span class="resaltado" th:text="${session.ciudad}">la ciudad</span>.</p>
+        </header>
+
+        <section class="info-envio">
+            <p>¿Quieres llevar tu plan contigo?</p>
+            
+            <a th:href="@{/enviar-itinerario}" class="btn-email">
+                <span>📧 Enviar itinerario a mi Email (PDF)</span>
+            </a>
+
+            <div th:if="${param.enviado}" class="mensaje-exito">
+                <p>✅ ¡Correo enviado con éxito! Revisa tu bandeja de entrada.</p>
+            </div>
+            
+            <div th:if="${param.error}" class="mensaje-error">
+                <p>❌ Hubo un problema al enviar el correo. Inténtalo de nuevo.</p>
+            </div>
+        </section>
+
+        <div class="acciones-finales">
+            <a th:href="@{/inicio}" class="btn-secundario">Volver a actividades</a>
+            <a th:href="@{/logout}" class="btn-salir">Cerrar sesión de forma segura</a>
+        </div>
+    </div>
+</body>
+</html>

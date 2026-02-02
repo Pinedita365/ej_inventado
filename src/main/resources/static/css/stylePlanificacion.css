@@ -1,0 +1,239 @@
+/* Paleta de TriPing */
+:root {
+    --color-bg: #E1FAF9;
+    --color-accent1: #78FFD6;
+    --color-accent2: #0AD3FF;
+    --color-accent3: #C3979F;
+    --color-dark: #023C40;
+}
+
+/* RESET BÁSICO */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-dark);
+    min-height: 100vh;
+}
+
+/* HEADER */
+header.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-accent1);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.header-left button {
+    background-color: var(--color-accent2);
+    color: var(--color-dark);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+.header-left button:hover {
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+}
+
+.header-center h1 {
+    color: var(--color-dark);
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.header-right .usuario {
+    color: var(--color-dark);
+    font-weight: 600;
+}
+
+/* BARRA DE INFORMACIÓN DEL VIAJE */
+.barra-viaje {
+    margin-top: 90px; /* espacio por header fijo */
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+    padding: 1rem 2rem;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* MAIN PLANIFICACION */
+.planificacion-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* TABLA DE DÍAS */
+.dias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.dias-container .card-actividad {
+    width: 120px;
+    min-height: 80px;
+    background-color: var(--color-accent3);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.dias-container .card-actividad:hover {
+    transform: translateY(-5px);
+}
+
+/* Días libres */
+.dias-container .card-actividad .btn-detalles {
+    background-color: #b7f1c1; /* verde claro */
+    color: var(--color-dark);
+    border: none;
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.dias-container .card-actividad .btn-detalles:hover {
+    background-color: #91e49f;
+}
+
+/* CARDS DEL CARRITO */
+.carrito-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.carrito-container .card-actividad {
+    width: 250px;
+    background-color: var(--color-accent1);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.carrito-container .card-actividad:hover {
+    transform: translateY(-5px);
+}
+
+.carrito-container .card-actividad img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.carrito-container .card-actividad button {
+    background-color: var(--color-accent2);
+    color: var(--color-dark);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.carrito-container .card-actividad button:hover {
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+}
+
+.carrito-container .card-actividad select {
+    margin-left: 5px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1px solid var(--color-dark);
+}
+/* CONTENEDOR DEL BOTÓN FINALIZAR */
+.finalizar-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* HR acotado */
+.finalizar-container hr {
+    width: 60%; /* ajusta al 60% del contenedor */
+    margin: 30px auto; /* centrado horizontal */
+    border: 1px solid var(--color-accent3);
+}
+
+/* BOTÓN FINALIZAR PLANIFICACIÓN */
+.btn-boton {
+    display: inline-block;
+    background-color: var(--color-accent2);
+    color: var(--color-dark);
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-boton:hover {
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+    transform: translateY(-3px);
+}
+
+
+
+/* Footer normal */
+footer.footer {
+    text-align: center;
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    margin-top: auto; /* mantiene el footer abajo */
+    z-index: 2;
+}
+.btn-logout {
+    background-color: transparent;
+    border: 1px solid #d9534f;
+    color: #d9534f;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #d9534f;
+    color: white;
+}

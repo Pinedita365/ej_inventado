@@ -1,0 +1,192 @@
+/* 🎨 Paleta TriPing */
+:root {
+    --color-bg: #E1FAF9;
+    --color-accent1: #78FFD6;
+    --color-accent2: #0AD3FF;
+    --color-accent3: #C3979F;
+    --color-dark: #023C40;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Estructura general */
+body {
+    background-color: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* HEADER */
+header.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;   
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-accent1);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.header-left button {
+    background-color: var(--color-accent2);
+    color: var(--color-dark);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+.header-left button:hover {
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+}
+
+.header-center h1 {
+    color: var(--color-dark);
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.header-right .usuario {
+    color: var(--color-dark);
+    font-weight: 600;
+}
+
+/* 🎨 IMAGEN DECORATIVA */
+.imagen-entrada {
+    width: 100%;
+    height: 500px;
+    background: url('/img/inicio.jpg') no-repeat center center/cover;
+    background-attachment: fixed;
+}
+
+/* INFORMACIÓN DEL VIAJE (solo localidad + fechas) */
+.info-viaje {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: rgba(120, 255, 214, 0.85);
+    position: relative;
+    z-index: 1;
+}
+
+.datos-viaje {
+    color: var(--color-dark);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* TITULO SOBRE LAS CARDS */
+.titulo-actividades {
+    text-align: center;
+    color: var(--color-dark);
+    margin-top: 2rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+/* CONTENEDOR DE CARDS */
+.contenedor-actividades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* CARD DE ACTIVIDAD */
+.card-actividad {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 320px;
+    flex-direction: column;
+}
+
+.card-actividad:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+}
+
+.card-actividad img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-actividad h3 {
+    color: var(--color-dark);
+    margin: 1rem 0 0.5rem 0;
+}
+
+.card-actividad p {
+    padding: 0 1rem 1rem;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+/* BOTÓN FINAL */
+.btn-continuar {
+    display: block;
+    margin: 2rem auto 3rem;
+    background-color: var(--color-accent2);
+    color: var(--color-dark);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    width: 280px;
+    text-align: center;
+}
+
+.btn-continuar:hover {
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+}
+
+/* FOOTER */
+/* Footer normal */
+footer.footer {
+    text-align: center;
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    margin-top: auto; /* mantiene el footer abajo */
+    z-index: 2;
+}
+.btn-logout {
+    background-color: transparent;
+    border: 1px solid #d9534f;
+    color: #d9534f;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #d9534f;
+    color: white;
+}

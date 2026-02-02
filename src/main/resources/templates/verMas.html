@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TriPing | Detalle Actividad</title>
+    <link rel="stylesheet" href="css/styleDetalleActividad.css">
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <button onclick="window.location.href='inicio'">← Volver al inicio</button>
+        </div>
+        <div class="header-center">
+            <h1>TriPing</h1>
+        </div>
+        <div class="header-right">
+            <span class="usuario" th:text="${session.nombre}">Usuario</span>
+        </div>
+    </header>
+
+    <!-- BARRA DE INFORMACIÓN DEL VIAJE -->
+    <div class="barra-viaje"><p> 
+        <strong th:text="${session.ciudad}"></strong> — 
+        <span th:text="'Del ' + ${session.fEntrada} + ' al ' + ${session.fSalida}"></span> </p>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="detalle-container">
+        <div class="detalle-card">
+            <img th:src="${session.act.img}" alt="Imagen de la actividad" class="detalle-img">
+            <div class="detalle-info">
+                <h2 th:text="${session.act.nombre}" class="detalle-nombre"></h2>
+                <h4 th:text="${session.act.tipo}" class="detalle-tipo"></h4>
+                <p th:text="${session.act.descripcion}" class="detalle-descripcion"></p>
+                <p><strong>Duración:</strong> <span th:text="${session.act.duracion} + ' horas'"></span></p>
+                <p><strong>Precio:</strong> <span th:text="${session.act.precio} + ' €'"></span></p>
+                <p><strong>Ciudad:</strong> <span th:text="${session.act.ciudad}"></span></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>
+            &copy; 2026 <span th:text="#{app.name}">TriPing</span> — <span th:text="#{index.eslogan}">Tu planificador de
+                viajes</span>
+        </p>
+        <div class="language-picker">
+            <a href="?lang=es">ES 🇪🇸</a> |
+            <a href="?lang=en">EN 🇬🇧</a>
+        </div>
+    </footer>
+</body>
+
+</html>

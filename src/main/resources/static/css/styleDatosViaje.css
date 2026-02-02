@@ -1,0 +1,137 @@
+/* 🎨 Paleta TriPing */
+:root {
+    --color-bg: #E1FAF9;
+    --color-accent1: #78FFD6;
+    --color-accent2: #0AD3FF;
+    --color-accent3: #C3979F;
+    --color-dark: #023C40;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-accent1) 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.card-configuracion {
+    background-color: var(--white);
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(2, 60, 64, 0.15);
+    text-align: center;
+}
+
+.card-header h2 {
+    color: var(--color-dark);
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.card-header p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+.resaltado-nombre {
+    color: var(--color-accent2);
+    font-weight: bold;
+}
+
+.emoji-viaje {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.form-viaje {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-weight: 600;
+    color: var(--color-dark);
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    padding: 12px 15px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: var(--color-accent2);
+}
+
+.fechas-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.btn-comenzar {
+    background: var(--color-dark);
+    color: var(--white);
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s, background 0.3s;
+    margin-top: 10px;
+}
+
+.btn-comenzar:hover {
+    background: #035a60;
+    transform: translateY(-2px);
+}
+
+.btn-volver {
+    display: inline-block;
+    margin-top: 25px;
+    color: #999;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s;
+}
+
+.btn-volver:hover {
+    color: var(--color-accent3);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .fechas-container {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/styleIndex.css}">
+    <title th:text="#{app.name} + ' | ' + #{index.login}"></title>
+</head>
+<body>
+
+    <div class="overlay">
+        <header>
+            <h1>🌍 <span class="logo" th:text="#{app.name}">TriPing</span></h1>
+            <p th:text="#{index.eslogan}">Tu aventura comienza aquí.</p>
+        </header>
+
+        <main class="contenedor-acceso">
+            <section class="seccion-auth">
+                <div class="tabs">
+                    <button class="tab-btn active" id="btn-login" onclick="toggleAuth('login')" th:text="#{index.login}">Login</button>
+                    <button class="tab-btn" id="btn-registro" onclick="toggleAuth('registro')" th:text="#{index.registro}">Registro</button>
+                </div>
+
+                <div id="login-form">
+                    <form th:action="@{/login}" method="post">
+                        <input type="email" name="username" th:placeholder="#{index.email}" required>
+                        <input type="password" name="password" th:placeholder="#{index.pass}" required>
+                        <button type="submit" class="btn-entrar" th:text="#{index.entrar}">Entrar</button>
+                    </form>
+                    <div class="divisor" th:text="#{index.social}">O accede con</div>
+                    <div class="social-login">
+                        <a th:href="@{/oauth2/authorization/google}" class="btn-google">Google</a>
+                        <a th:href="@{/oauth2/authorization/github}" class="btn-github">GitHub</a>
+                    </div>
+                </div>
+
+                <div id="registro-form" style="display: none;">
+                    <form th:action="@{/registrar}" method="post">
+                        <input type="text" name="nombre" th:placeholder="#{viaje.nombre}" required>
+                        <input type="email" name="email" th:placeholder="#{index.email}" required>
+                        <input type="password" name="password" th:placeholder="#{index.pass}" required>
+                        <button type="submit" class="btn-registro" th:text="#{index.registro}">Registrarse</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="seccion-invitado">
+                <h3 th:text="#{index.no_registro}">¿No quieres registrarte?</h3>
+                <p th:text="#{index.no_registro_desc}">Puedes planificar tu viaje ahora mismo.</p>
+                <a th:href="@{/configurar-viaje}" class="btn-invitado" th:text="#{index.btn_invitado}">Entrar como Invitado</a>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="language-picker">
+                <a href="?lang=es">ES 🇪🇸</a>
+                <span>|</span>
+                <a href="?lang=en">EN 🇬🇧</a>
+            </div>
+        </footer>
+
+        <div th:if="${param.error}" class="mensaje-error" th:text="#{index.error}"></div>
+    </div>
+
+    <script>
+        function toggleAuth(type) {
+            const loginForm = document.getElementById('login-form');
+            const registroForm = document.getElementById('registro-form');
+            const btnLogin = document.getElementById('btn-login');
+            const btnRegistro = document.getElementById('btn-registro');
+
+            if (type === 'login') {
+                loginForm.style.display = 'block';
+                registroForm.style.display = 'none';
+                btnLogin.classList.add('active');
+                btnRegistro.classList.remove('active');
+            } else {
+                loginForm.style.display = 'none';
+                registroForm.style.display = 'block';
+                btnLogin.classList.remove('active');
+                btnRegistro.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styleDatosViaje.css">
+    <title>TriPing | Configura tu viaje</title>
+</head>
+
+<body>
+    <div class="video-background">
+    </div>
+
+    <div class="card-configuracion">
+        <header class="card-header">
+            <span class="emoji-viaje">✈️</span>
+            <h2 th:text="#{viaje.prepara}">Prepara tu aventura</h2>
+            <p>
+                <span th:text="#{viaje.hola(${session.nombre != null ? session.nombre : #messages.msg('generico.invitado')})}"></span>
+            </p>
+        </header>
+
+        <form th:action="@{/comprobar}" method="get" class="form-viaje">
+            <div class="input-group">
+                <label for="ciudad" th:text="#{viaje.pregunta_ciudad}">📍 ¿A dónde quieres ir?</label>
+                <input type="text" id="ciudad" name="ciudad" th:placeholder="#{viaje.placeholder_ciudad}" required>
+            </div>
+
+            <div class="fechas-container">
+                <div class="input-group">
+                    <label for="fEntrada" th:text="#{viaje.fecha_inicio}">📅 Fecha de inicio</label>
+                    <input type="date" id="fEntrada" name="fEntrada" required>
+                </div>
+                <div class="input-group">
+                    <label for="fSalida" th:text="#{viaje.fecha_fin}">📅 Fecha de fin</label>
+                    <input type="date" id="fSalida" name="fSalida" required>
+                </div>
+            </div>
+
+            <input type="hidden" name="nombre" th:value="${session.nombre != null ? session.nombre : 'Invitado'}">
+
+            <button type="submit" class="btn-comenzar" th:text="#{viaje.btn}">
+                <span>Explorar Actividades</span>
+                <i class="icon-arrow">→</i>
+            </button>
+        </form>
+
+        <div class="card-footer">
+            <a href="/" class="btn-volver">← Cambiar usuario</a>
+        </div>
+    </div>
+</body>
+
+</html>

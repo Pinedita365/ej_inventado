@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7f6;
+    padding: 20px;
+}
+
+.admin-container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.admin-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Ajuste para que la descripción ocupe las dos columnas */
+.admin-form textarea, .full-width {
+    grid-column: span 2;
+    padding: 10px;
+}
+
+input, select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ESTILO PARA LAS SECCIONES DINÁMICAS (Nuevo) */
+.campo-especifico {
+    grid-column: span 2; /* Ocupa todo el ancho */
+    background-color: #e6f2f3; /* Un verde muy clarito para resaltar */
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #023C40;
+    display: none; /* Se controla por JS */
+}
+
+.campo-especifico label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #023C40;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: #023C40;
+    color: white;
+}
+
+.btn-save {
+    background: #023C40;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    grid-column: span 2;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.btn-save:hover {
+    background: #035a60;
+}
+
+.btn-delete {
+    color: #d9534f;
+    text-decoration: none;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+}/* Botón Volver para el panel de Admin */
+.btn-volver {
+    text-decoration: none;
+    color: var(--color-dark);
+    background-color: var(--color-accent1);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-volver:hover {
+    background-color: var(--color-accent2);
+    transform: translateX(-5px); /* Pequeño efecto de movimiento hacia atrás */
+    filter: brightness(1.05);
+}

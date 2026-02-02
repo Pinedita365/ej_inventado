@@ -1,0 +1,161 @@
+/* 🎨 Paleta TriPing */
+:root {
+    --color-bg: #E1FAF9;
+    --color-accent1: #78FFD6;
+    --color-accent2: #0AD3FF;
+    --color-accent3: #C3979F;
+    --color-dark: #023C40;
+}
+
+/* GENERAL */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-dark);
+    padding-top: 80px; /* espacio para header fijo */
+}
+
+/* HEADER */
+header.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;   
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-accent1);
+    padding: 0rem 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.header-left button {
+    background-color: var(--color-accent2);
+    color: var(--color-dark);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+.header-left button:hover {
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+}
+
+.header-center h1 {
+    color: var(--color-dark);
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+.header-right .usuario {
+    color: var(--color-dark);
+    font-weight: 600;
+    padding-right:30px;
+}
+
+/* BARRA DE VIAJE */
+.barra-viaje {
+    background-color: var(--color-dark);
+    color: var(--color-accent1);
+    text-align: center;
+    padding: 0.8rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* CONTENEDOR DETALLE */
+.detalle-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.detalle-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.detalle-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.detalle-info {
+    padding: 20px;
+}
+
+.detalle-nombre {
+    color: var(--color-dark);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.detalle-tipo {
+    color: var(--color-accent3);
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.detalle-descripcion {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+/* FOOTER */
+/* Footer normal */
+footer.footer {
+    text-align: center;
+    background-color: var(--color-dark);
+    color: var(--color-bg);
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    margin-top: auto; /* mantiene el footer abajo */
+    z-index: 2;
+}
+.btn-logout {
+    background-color: transparent;
+    border: 1px solid #d9534f;
+    color: #d9534f;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .header-center h1 {
+        font-size: 1.4rem;
+    }
+
+    .header-left button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .detalle-card {
+        max-width: 90%;
+    }
+}

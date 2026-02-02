@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TriPing | Planificación del viaje</title>
+    <link rel="stylesheet" href="css/stylePlanificacion.css">
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <button onclick="window.location.href='confirmarCarrito'">← Volver al inicio</button>
+        </div>
+        <div class="header-center">
+            <h1>TriPing</h1>
+        </div>
+        <div class="header-right">
+            <span class="usuario" th:text="${session.nombre}">Usuario</span>
+        </div>
+    </header>
+
+    <!-- BARRA DE INFORMACIÓN DEL VIAJE -->
+    <div class="barra-viaje">
+        <p>
+            <strong th:text="${session.ciudad}"></strong> —
+            <span th:text="'Del ' + ${session.fEntrada} + ' al ' + ${session.fSalida}"></span>
+        </p>
+    </div>
+
+    <main class="planificacion-container">
+        <h2>Planificación del viaje</h2>
+
+        <div class="dias-container">
+            <div th:each="act, i : ${session.plan}" class="card-actividad">
+                <div th:text=" 'Dia '+${i.index+1}"></div>
+                <div th:if="${act != null}" th:text="${act.nombre}"></div>
+                <div th:if="${act == null}">
+                    <form action="">
+                        <input type="hidden" name="posSel" th:value="${i.index}" />
+                        <button type="submit" class="btn-detalles">Libre</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <p style="text-align: center;width: 100%;color: var(--color-accent3);font-style: italic;">Puede realizar una actividad en varios días</p>
+        <br>
+        <hr style="margin: 30px 0; border: 1px solid var(--color-accent3);">
+
+        <!-- CARDS DEL CARRITO -->
+        <h3>Actividades en tu carrito</h3>
+        <div class="carrito-container">
+            <div th:each="act, i : ${session.carrito}" class="card-actividad">
+                <img th:src="${act.img}" alt="Imagen de la actividad">
+                <h3 th:text="${act.nombre}"></h3>
+                <p th:text="${act.getBreveDesc()}"></p>
+                <p><strong>Ciudad:</strong> <span th:text="${act.ciudad}"></span></p>
+
+                <div class="botones-card">
+                    <form action="">
+                        <input type="hidden" name="actSel" th:value="${i.index}" />
+                        <button type="submit" class="btn-detalles">Seleccionar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="finalizar-container">
+        <hr>
+        <form action="final">
+            <input class="btn-boton" type="submit" value="Finalizar planificación">
+        </form>
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>
+            &copy; 2026 <span th:text="#{app.name}">TriPing</span> — <span th:text="#{index.eslogan}">Tu planificador de
+                viajes</span>
+        </p>
+        <div class="language-picker">
+            <a href="?lang=es">ES 🇪🇸</a> |
+            <a href="?lang=en">EN 🇬🇧</a>
+        </div>
+    </footer>
+</body>
+
+</html>

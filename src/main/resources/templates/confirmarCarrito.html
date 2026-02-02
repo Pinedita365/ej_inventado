@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/styleConfirmarCarrito.css">
+    <title>TriPing | Actividades elegidas</title>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <button onclick="window.location.href='inicio'">← Volver al inicio</button>
+        </div>
+        <div class="header-center">
+            <h1>TriPing</h1>
+        </div>
+        <div class="header-right">
+            <span class="usuario" th:text="${session.nombre}">Usuario</span>
+        </div>
+    </header>
+
+    <!-- IMAGEN DE ENTRADA -->
+    <section class="imagen-entrada"></section>
+
+    <!-- INFORMACIÓN DEL VIAJE -->
+    <section class="info-viaje">
+        <div class="datos-viaje">
+            <span th:text="'Destino: ' + ${session.ciudad}"></span> — 
+            <span th:text="'Del ' + ${session.fEntrada} + ' al ' + ${session.fSalida}"></span>
+        </div>
+    </section>
+
+    <!-- TÍTULO -->
+    <div class="titulo-actividades">Estas son las actividades elegidas</div>
+
+    <!-- CARDS -->
+    <section class="contenedor-actividades">
+        <div th:each="act : ${session.carrito}" class="card-actividad">
+            <img th:src="${act.img}" alt="Imagen actividad">
+            <h3 th:text="${act.nombre}"></h3>
+            <p th:text="${act.descripcion}"></p>
+        </div>
+    </section>
+
+    <!-- BOTÓN CONTINUAR -->
+    <form action="planificar">
+        <input class="btn-continuar" type="submit" value="Continuar a planificar el viaje">
+    </form>
+        
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>
+            &copy; 2026 <span th:text="#{app.name}">TriPing</span> — <span th:text="#{index.eslogan}">Tu planificador de
+                viajes</span>
+        </p>
+        <div class="language-picker">
+            <a href="?lang=es">ES 🇪🇸</a> |
+            <a href="?lang=en">EN 🇬🇧</a>
+        </div>
+    </footer>
+</body>
+</html>

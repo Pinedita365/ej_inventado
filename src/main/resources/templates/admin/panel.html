@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Administrador</title>
+    <link rel="stylesheet" th:href="@{/css/styleAdmin.css}">
+</head>
+
+<body>
+    <div class="admin-container">
+        <div class="header-acciones"
+            style="width: 100%; display: flex; justify-content: flex-start; margin-bottom: 20px;">
+            <a th:href="@{/inicio}" class="btn-volver">
+                 <span th:text="#{nav.volver}">Volver al inicio</span>
+            </a>
+        </div>
+        <h1 th:text="#{admin.panel_titulo}"></h1>
+        <div class="admin-card">
+            <h2 th:text="#{admin.nueva}">Añadir Nueva Actividad</h2>
+            <h4>Todos los valores obligatorios <span style="color: red;">*</span></h4>
+
+            <form th:action="@{/admin/guardar}" method="post" enctype="multipart/form-data" class="admin-form">
+                
+                <input type="text" name="nombre" th:placeholder="#{admin.nombre_placeholder}" required>
+
+                <input type="text" name="ciudad" th:placeholder="#{admin.ciudad}" required>
+
+                <input type="number" name="precio" th:placeholder="#{admin.precio_placeholder}" min=5 max=500 step=1 required>
+
+                <input type="number" name="duracion" placeholder="Duración (minutos) *" min=15 max=480 required>
+
+                <textarea name="descripcion" th:placeholder="#{admin.desc_placeholder}" required></textarea>
+
+                <div class="form-group" style="grid-column: span 1;">
+                    <label style="font-size: 12px; color: #666;" th:text="#{admin.img_label}"></label>
+                    <input type="file" name="imagen" accept="image/*" required>
+                </div>
+
+                <div class="form-group" style="grid-column: span 1;">
+                    <label style="font-size: 12px; color: #666;" th:text="#{admin.tipo_label}"></label>
+                    <select name="tipo" id="tipoActividad" onchange="mostrarCampos()" required>
+                        <option value="">-- Selecciona un tipo --</option>
+                        <option value="DEPORTIVA">Deportiva</option>
+                        <option value="GASTRONOMICA">Gastronómica</option>
+                        <option value="TURISTICA">Turística</option>
+                    </select>
+                </div>
+
+                <div id="seccionDeportiva" class="campo-especifico">
+                    <label>Nivel de dificultad:</label>
+                    <select name="nivel" style="width: 100%;">
+                        <option value="Bajo">Bajo</option>
+                        <option value="Medio">Medio</option>
+                        <option value="Alto">Alto</option>
+                    </select>
+                </div>
+
+                <div id="seccionGastronomica" class="campo-especifico">
+                    <label>Tipo de vestimenta:</label>
+                    <input type="text" name="vestimenta" placeholder="Ej: Formal, Informal..." style="width: 95%;">
+                </div>
+
+                <div id="seccionTuristica" class="campo-especifico">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" name="vehiculo" value="true" style="width: auto;"> ¿Requiere vehículo
+                        propio?
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-save">Guardar Actividad</button>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <h2>Listado de Actividades Actuales</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th th:text="#{admin.img_label}"></th>
+                        <th th:text="#{admin.nombre_placeholder}"></th>
+                        <th th:text="#{admin.ciudad}"></th>
+                        <th th:text="#{admin.tipo_label}"></th>
+                        <th th:text="#{admin.precio_placeholder}"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="act : ${actividades}">
+                        <td>
+                            <img th:src="${act.img}" alt="Actividad"
+                                style="width: 80px; height: 50px; object-fit: cover; border-radius: 5px;">
+                        </td>
+                        <td th:text="${act.nombre}"></td>
+                        <td th:text="${act.ciudad}"></td>
+                        <td th:text="${act.tipo}"></td>
+                        <td th:text="${act.precio} + '€'"></td>
+                        <td>
+                            <form th:action="@{/admin/eliminar}" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${act.id}">
+                                <button type="submit" class="btn-delete"
+                                    onclick="return confirm('¿Estás seguro de que quieres borrar esta actividad?')"
+                                    th:text="#{admin.btn_eliminar}">
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function mostrarCampos() {
+            document.getElementById('seccionDeportiva').style.display = 'none';
+            document.getElementById('seccionGastronomica').style.display = 'none';
+            document.getElementById('seccionTuristica').style.display = 'none';
+
+            var tipo = document.getElementById('tipoActividad').value;
+
+            if (tipo === 'DEPORTIVA') {
+                document.getElementById('seccionDeportiva').style.display = 'block';
+            } else if (tipo === 'GASTRONOMICA') {
+                document.getElementById('seccionGastronomica').style.display = 'block';
+            } else if (tipo === 'TURISTICA') {
+                document.getElementById('seccionTuristica').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>
