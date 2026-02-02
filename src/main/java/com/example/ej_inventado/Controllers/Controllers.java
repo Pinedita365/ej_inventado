@@ -297,31 +297,42 @@ public class Controllers {
     }
 
     @GetMapping("/enviar-itinerario")
-    public String enviarFinal(HttpSession session, Authentication auth) {
-        try {
-            Actividad[] plan = (Actividad[]) session.getAttribute("plan");
-            String nombre = (String) session.getAttribute("nombre");
-            String emailDestino = "";
+public String enviarFinal(HttpSession session, Authentication auth) {
+    try {
+        Actividad[] plan = (Actividad[]) session.getAttribute("plan");
+        String nombre = (String) session.getAttribute("nombre");
+        String emailDestino = "";
 
-            if (auth instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
-                Map<String, Object> attributes = token.getPrincipal().getAttributes();
-                emailDestino = (String) attributes.get("email");
-            } else {
-                emailDestino = auth.getName();
+        // --- INICIO DEL CAMBIO ---
+        if (auth instanceof OAuth2AuthenticationToken token) {
+            Map<String, Object> attributes = token.getPrincipal().getAttributes();
+            
+            // Verificamos si existe el atributo "email" (Google siempre lo da, GitHub no siempre)
+            if (attributes.get("email") != null) {
+                emailDestino = attributes.get("email").toString();
+            } 
+            // Si el email es nulo (caso común en GitHub), usamos el login como fallback
+            else if (attributes.get("login") != null) {
+                emailDestino = attributes.get("login").toString() + "@github.com";
+                System.out.println("DEBUG: Email no encontrado en GitHub, usando fallback: " + emailDestino);
             }
-            System.out.println("DEBUG: Enviando itinerario a: " + emailDestino);
-
-            if (emailDestino == null || !emailDestino.contains("@")) {
-                throw new Exception("Dirección de correo no válida: " + emailDestino);
-            }
-
-            byte[] pdfContent = PdfGenerator.generarItinerarioPdf(plan, nombre);
-            emailService.enviarItinerarioConPdf(emailDestino, nombre, pdfContent);
-
-            return "redirect:/final?enviado=true";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/final?error=true";
+        } else {
+            // Login manual (email es el username)
+            emailDestino = auth.getName();
         }
+        // --- FIN DEL CAMBIO ---
+
+        if (emailDestino == null || emailDestino.isEmpty()) {
+            throw new Exception("No se pudo determinar el email de destino.");
+        }
+
+        byte[] pdfContent = PdfGenerator.generarItinerarioPdf(plan, nombre);
+        emailService.enviarItinerarioConPdf(emailDestino, nombre, pdfContent);
+
+        return "redirect:/final?enviado=true";
+    } catch (Exception e) {
+        e.printStackTrace();
+        return "redirect:/final?error=true";
     }
+}
 }
