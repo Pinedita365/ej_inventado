@@ -1,3 +1,5 @@
+package com.example.ej_inventado.config;
+
 import java.util.Locale;
 
 import org.springframework.context.annotation.Bean;
