@@ -36,7 +36,7 @@
                 <h2 th:text="${session.act.nombre}" class="detalle-nombre"></h2>
                 <h4 th:text="${session.act.tipo}" class="detalle-tipo"></h4>
                 <p th:text="${session.act.descripcion}" class="detalle-descripcion"></p>
-                <p><strong>Duración:</strong> <span th:text="${session.act.duracion} + ' horas'"></span></p>
+                <p><strong>Duración:</strong> <span th:text="${session.act.getTiempo()} + ' horas'"></span></p>
                 <p><strong>Precio:</strong> <span th:text="${session.act.precio} + ' €'"></span></p>
                 <p><strong>Ciudad:</strong> <span th:text="${session.act.ciudad}"></span></p>
             </div>

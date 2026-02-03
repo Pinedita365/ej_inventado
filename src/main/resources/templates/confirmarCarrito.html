@@ -7,7 +7,6 @@
 </head>
 
 <body>
-    <!-- HEADER -->
     <header class="header">
         <div class="header-left">
             <button onclick="window.location.href='inicio'">← Volver al inicio</button>
@@ -20,10 +19,8 @@
         </div>
     </header>
 
-    <!-- IMAGEN DE ENTRADA -->
     <section class="imagen-entrada"></section>
 
-    <!-- INFORMACIÓN DEL VIAJE -->
     <section class="info-viaje">
         <div class="datos-viaje">
             <span th:text="'Destino: ' + ${session.ciudad}"></span> — 
@@ -31,10 +28,8 @@
         </div>
     </section>
 
-    <!-- TÍTULO -->
     <div class="titulo-actividades">Estas son las actividades elegidas</div>
 
-    <!-- CARDS -->
     <section class="contenedor-actividades">
         <div th:each="act : ${session.carrito}" class="card-actividad">
             <img th:src="${act.img}" alt="Imagen actividad">
@@ -43,13 +38,10 @@
         </div>
     </section>
 
-    <!-- BOTÓN CONTINUAR -->
     <form action="planificar">
         <input class="btn-continuar" type="submit" value="Continuar a planificar el viaje">
     </form>
         
-
-    <!-- FOOTER -->
     <footer class="footer">
         <p>
             &copy; 2026 <span th:text="#{app.name}">TriPing</span> — <span th:text="#{index.eslogan}">Tu planificador de

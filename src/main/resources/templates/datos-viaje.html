@@ -17,23 +17,25 @@
             <span class="emoji-viaje">✈️</span>
             <h2 th:text="#{viaje.prepara}">Prepara tu aventura</h2>
             <p>
-                <span th:text="#{viaje.hola(${session.nombre != null ? session.nombre : #messages.msg('generico.invitado')})}"></span>
+                <span
+                    th:text="#{viaje.hola(${session.nombre != null ? session.nombre : #messages.msg('generico.invitado')})}"></span>
             </p>
         </header>
 
         <form th:action="@{/comprobar}" method="get" class="form-viaje">
             <div class="input-group">
-                <label for="ciudad" th:text="#{viaje.pregunta_ciudad}">📍 ¿A dónde quieres ir?</label>
+                <label for="ciudad" th:text="#{viaje.pregunta_ciudad}" class="ast">📍 ¿A dónde quieres ir? <span
+                        style="color: red;">*</span></label>
                 <input type="text" id="ciudad" name="ciudad" th:placeholder="#{viaje.placeholder_ciudad}" required>
             </div>
 
             <div class="fechas-container">
                 <div class="input-group">
-                    <label for="fEntrada" th:text="#{viaje.fecha_inicio}">📅 Fecha de inicio</label>
+                    <label for="fEntrada" th:text="#{viaje.fecha_inicio}" class="ast">📅 Fecha de inicio</label>
                     <input type="date" id="fEntrada" name="fEntrada" required>
                 </div>
                 <div class="input-group">
-                    <label for="fSalida" th:text="#{viaje.fecha_fin}">📅 Fecha de fin</label>
+                    <label for="fSalida" th:text="#{viaje.fecha_fin}" class="ast">📅 Fecha de fin</label>
                     <input type="date" id="fSalida" name="fSalida" required>
                 </div>
             </div>
