@@ -267,6 +267,11 @@ public String valida(
     public String confirmarCarrito() {
         return "confirmarCarrito";
     }
+    @GetMapping("/invitado")
+    public String paginaInvitado(Model model) {
+        model.addAttribute("listaAct", actividadRepository.findAll());
+        return "invitado";
+    }
 
     @GetMapping("/planificar")
     public String planificar(
