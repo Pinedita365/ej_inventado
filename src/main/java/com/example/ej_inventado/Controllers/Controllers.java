@@ -79,43 +79,58 @@ public class Controllers {
     }
 
     @GetMapping("/comprobar")
-    public String valida(
-            @RequestParam(name = "nombre") String nombre,
-            @RequestParam(name = "ciudad") String ciudad,
-            @RequestParam(name = "fEntrada") String fEntradaStr,
-            @RequestParam(name = "fSalida") String fSalidaStr,
-            HttpSession session, HttpServletResponse response) {
+public String valida(
+        @RequestParam(name = "nombre") String nombre,
+        @RequestParam(name = "ciudad") String ciudad,
+        @RequestParam(name = "fEntrada") String fEntradaStr,
+        @RequestParam(name = "fSalida") String fSalidaStr,
+        HttpSession session, HttpServletResponse response) {
 
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate fEntrada = LocalDate.parse(fEntradaStr, formatter);
-            LocalDate fSalida = LocalDate.parse(fSalidaStr, formatter);
+    try {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fEntrada = LocalDate.parse(fEntradaStr, formatter);
+        LocalDate fSalida = LocalDate.parse(fSalidaStr, formatter);
+        LocalDate hoy = LocalDate.now();
 
-            if (fSalida.isBefore(fEntrada)) {
-                session.setAttribute("errorMensaje", "La fecha de salida no puede ser anterior.");
-                return "redirect:/configurar-viaje";
-            }
-            long diasViaje = java.time.temporal.ChronoUnit.DAYS.between(fEntrada, fSalida) + 1;
-            if (diasViaje > 30) {
-                session.setAttribute("errorMensaje", "El viaje no puede superar los 30 días.");
-                return "redirect:/configurar-viaje";
-            }
-
-            session.setAttribute("nombre", nombre);
-            session.setAttribute("ciudad", ciudad);
-            session.setAttribute("fEntrada", fEntradaStr);
-            session.setAttribute("fSalida", fSalidaStr);
-            session.setAttribute("diasViaje", diasViaje);
-            session.setAttribute("cont", 0);
-            session.setAttribute("precioCarro", 0);
-            session.setAttribute("carrito", new ArrayList<Actividad>());
-
-            return "redirect:/inicio";
-        } catch (Exception e) {
-            session.setAttribute("errorMensaje", "Datos inválidos.");
+        if (fEntrada.isBefore(hoy)) {
+            session.setAttribute("errorMensaje", "La fecha de inicio no puede ser anterior a hoy.");
             return "redirect:/configurar-viaje";
         }
+
+        if (fSalida.isBefore(fEntrada)) {
+            session.setAttribute("errorMensaje", "La fecha de salida no puede ser anterior.");
+            return "redirect:/configurar-viaje";
+        }
+
+        long diasViaje = java.time.temporal.ChronoUnit.DAYS.between(fEntrada, fSalida) + 1;
+        if (diasViaje > 30) {
+            session.setAttribute("errorMensaje", "El viaje no puede superar los 30 días.");
+            return "redirect:/configurar-viaje";
+        }
+
+        String ciudadLimpia = ciudad.trim();
+        List<Actividad> actividadesEnCiudad = actividadRepository.findByCiudad(ciudadLimpia);
+
+        if (actividadesEnCiudad == null || actividadesEnCiudad.isEmpty()) {
+            session.setAttribute("errorMensaje", "Lo sentimos, no tenemos actividades disponibles en " + ciudadLimpia);
+            return "redirect:/configurar-viaje";
+        }
+        session.setAttribute("nombre", nombre);
+        session.setAttribute("ciudad", ciudadLimpia);
+        session.setAttribute("fEntrada", fEntradaStr);
+        session.setAttribute("fSalida", fSalidaStr);
+        session.setAttribute("diasViaje", diasViaje);
+        session.setAttribute("cont", 0);
+        session.setAttribute("precioCarro", 0);
+        session.setAttribute("carrito", new ArrayList<Actividad>());
+
+        return "redirect:/inicio";
+
+    } catch (Exception e) {
+        session.setAttribute("errorMensaje", "Datos inválidos o formato de fecha incorrecto.");
+        return "redirect:/configurar-viaje";
     }
+}
 
     @GetMapping("/inicio")
     public String inicio(
@@ -127,21 +142,18 @@ public class Controllers {
             String nombreReal = "Invitado";
             String emailActual = "";
 
-            // Extraer Email y Nombre según el tipo de login
             if (auth instanceof OAuth2AuthenticationToken) {
                 OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) auth;
                 Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
 
                 emailActual = (String) attributes.get("email");
 
-                // Lógica de nombre para Google (name) o GitHub (login)
                 if (attributes.get("name") != null) {
                     nombreReal = attributes.get("name").toString();
                 } else if (attributes.get("login") != null) {
                     nombreReal = attributes.get("login").toString();
                 }
             } else {
-                // Login manual, el name de auth es el email
                 emailActual = auth.getName();
                 Optional<Usuario> optUser = usuarioRepository.findByEmail(emailActual);
                 if (optUser.isPresent()) {
@@ -152,7 +164,7 @@ public class Controllers {
             }
             if (idAñadir != null) {
                 List<Actividad> carrito = (List<Actividad>) session.getAttribute("carrito");
-                Long diasViaje = (Long) session.getAttribute("diasViaje"); // Límite de días
+                Long diasViaje = (Long) session.getAttribute("diasViaje"); 
 
                 if (carrito == null) {
                     carrito = new ArrayList<Actividad>();
@@ -174,7 +186,6 @@ public class Controllers {
                 }
                 session.setAttribute("carrito", carrito);
             }
-            // BUSCAR ROL EN BD Y GUARDAR EN SESIÓN
             Optional<Usuario> optUsuarioRol = usuarioRepository.findByEmail(emailActual);
             if (optUsuarioRol.isPresent()) {
                 Usuario u = optUsuarioRol.get();
@@ -187,11 +198,9 @@ public class Controllers {
             System.out.println(">>> ROL EN BD: " + session.getAttribute("rolUsuario"));
         }
 
-        // Obtener actividades de la ciudad
         String ciudad = (String) session.getAttribute("ciudad");
         List<Actividad> listaAct = actividadRepository.findByCiudad(ciudad);
 
-        // Lógica de Carrito
         if (idAñadir != null) {
             List<Actividad> carrito = (List<Actividad>) session.getAttribute("carrito");
             if (carrito == null) {

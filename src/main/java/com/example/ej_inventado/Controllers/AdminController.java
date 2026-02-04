@@ -20,8 +20,6 @@ import com.example.ej_inventado.clases.Turistica;
 import com.example.ej_inventado.repositories.ActividadRepository;
 import com.example.ej_inventado.services.CloudinaryService;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -84,5 +82,10 @@ public class AdminController {
 
         actividadRepository.save(nueva);
         return "redirect:/inicio";
+    }
+    @PostMapping("/eliminar")
+    public String eliminarActividad(@RequestParam("id") Long id) {
+        actividadRepository.deleteById(id);
+        return "redirect:/admin/panel?deleted=true";
     }
 }
