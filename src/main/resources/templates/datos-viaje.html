@@ -32,11 +32,13 @@
             <div class="fechas-container">
                 <div class="input-group">
                     <label for="fEntrada" th:text="#{viaje.fecha_inicio}" class="ast">📅 Fecha de inicio</label>
-                    <input type="date" id="fEntrada" name="fEntrada" required>
+                    <input th:if="${session.fEntrada!=null}" type="date" id="fEntrada" name="fEntrada" th:value="${session.fEntrada}" required>
+                    <input th:if="${session.ciudad==null}" type="date" id="fEntrada" name="fEntrada" required>
                 </div>
                 <div class="input-group">
                     <label for="fSalida" th:text="#{viaje.fecha_fin}" class="ast">📅 Fecha de fin</label>
-                    <input type="date" id="fSalida" name="fSalida" required>
+                    <input th:if="${session.fSalida!=null}" type="date" id="fSalida" name="fSalida" th:value="${session.fSalida}" required>
+                    <input th:if="${session.fSalida==null}" type="date" id="fSalida" name="fSalida" required>
                 </div>
             </div>
 

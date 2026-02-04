@@ -36,22 +36,22 @@
                     th:text="#{generico.desde} + ' ' + ${session.fEntrada} + ' ' + #{generico.al} + ' ' + ${session.fSalida}"></span>
             </div>
             <div class="localidad">
-                <span th:text="#{generico.ciudad} + ': ' + ${session.ciudad}">Madrid</span>
+                <span th:text="#{generico.ciudad} + ': ' + ${session.ciudad}"></span>
             </div>
         </div>
 
         <div class="controles">
             <form action="" method="get">
-                <label for="ordenar">Ordenar por:</label>
+                <label for="ordenar" th:text="#{Ordenar.txt}"></label>
                 <select id="ordenar" name="orden">
                     <option value="defecto" th:selected="${session.orden == 'defecto'}">Por defecto</option>
                     <option value="precio" th:selected="${session.orden == 'precio'}">Precio</option>
                 </select>
-                <input type="submit" value="Ordenar">
+                <input type="submit" th:value="#{Ordenar.btn}">
             </form>
 
             <div class="contador">
-                Actividades añadidas: <span th:text="${session.cont}">0</span>
+                <span th:text="#{Act.ana}"></span> <span th:text="${session.cont}">0</span>
             </div>
         </div>
     </section>
@@ -77,7 +77,12 @@
             </form>
         </div>
     </section>
-
+    <div th:if="${mensajeVacio}" class="alert-warning" style="text-align: center; padding: 20px;">
+        <p th:text="${mensajeVacio}"></p>
+        <form th:action="@{/configurar-viaje}">
+            <input type="submit" th:value="#{Nohay}" class="btn-detalles">
+        </form>
+    </div>
     <div class="contenedor-principal">
 
         <section class="contenedor-actividades">

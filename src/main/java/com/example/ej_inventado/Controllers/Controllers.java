@@ -79,58 +79,54 @@ public class Controllers {
     }
 
     @GetMapping("/comprobar")
-public String valida(
-        @RequestParam(name = "nombre") String nombre,
-        @RequestParam(name = "ciudad") String ciudad,
-        @RequestParam(name = "fEntrada") String fEntradaStr,
-        @RequestParam(name = "fSalida") String fSalidaStr,
-        HttpSession session, HttpServletResponse response) {
+    public String valida(
+            @RequestParam(name = "nombre") String nombre,
+            @RequestParam(name = "ciudad") String ciudad,
+            @RequestParam(name = "fEntrada") String fEntradaStr,
+            @RequestParam(name = "fSalida") String fSalidaStr,
+            HttpSession session, HttpServletResponse response) {
 
-    try {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate fEntrada = LocalDate.parse(fEntradaStr, formatter);
-        LocalDate fSalida = LocalDate.parse(fSalidaStr, formatter);
-        LocalDate hoy = LocalDate.now();
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate fEntrada = LocalDate.parse(fEntradaStr, formatter);
+            LocalDate fSalida = LocalDate.parse(fSalidaStr, formatter);
+            LocalDate hoy = LocalDate.now();
 
-        if (fEntrada.isBefore(hoy)) {
-            session.setAttribute("errorMensaje", "La fecha de inicio no puede ser anterior a hoy.");
+            if (fEntrada.isBefore(hoy)) {
+                session.setAttribute("errorMensaje", "La fecha de inicio no puede ser anterior a hoy.");
+                return "redirect:/configurar-viaje";
+            }
+
+            if (fSalida.isBefore(fEntrada)) {
+                session.setAttribute("errorMensaje", "La fecha de salida no puede ser anterior.");
+                return "redirect:/configurar-viaje";
+            }
+
+            long diasViaje = java.time.temporal.ChronoUnit.DAYS.between(fEntrada, fSalida) + 1;
+            if (diasViaje > 30) {
+                session.setAttribute("errorMensaje", "El viaje no puede superar los 30 días.");
+                return "redirect:/configurar-viaje";
+            }
+
+            String ciudadLimpia = ciudad.trim();
+            List<Actividad> actividadesEnCiudad = actividadRepository.findByCiudad(ciudadLimpia);
+
+            session.setAttribute("nombre", nombre);
+            session.setAttribute("ciudad", ciudadLimpia);
+            session.setAttribute("fEntrada", fEntradaStr);
+            session.setAttribute("fSalida", fSalidaStr);
+            session.setAttribute("diasViaje", diasViaje);
+            session.setAttribute("cont", 0);
+            session.setAttribute("precioCarro", 0);
+            session.setAttribute("carrito", new ArrayList<Actividad>());
+
+            return "redirect:/inicio";
+
+        } catch (Exception e) {
+            session.setAttribute("errorMensaje", "Datos inválidos o formato de fecha incorrecto.");
             return "redirect:/configurar-viaje";
         }
-
-        if (fSalida.isBefore(fEntrada)) {
-            session.setAttribute("errorMensaje", "La fecha de salida no puede ser anterior.");
-            return "redirect:/configurar-viaje";
-        }
-
-        long diasViaje = java.time.temporal.ChronoUnit.DAYS.between(fEntrada, fSalida) + 1;
-        if (diasViaje > 30) {
-            session.setAttribute("errorMensaje", "El viaje no puede superar los 30 días.");
-            return "redirect:/configurar-viaje";
-        }
-
-        String ciudadLimpia = ciudad.trim();
-        List<Actividad> actividadesEnCiudad = actividadRepository.findByCiudad(ciudadLimpia);
-
-        if (actividadesEnCiudad == null || actividadesEnCiudad.isEmpty()) {
-            session.setAttribute("errorMensaje", "Lo sentimos, no tenemos actividades disponibles en " + ciudadLimpia);
-            return "redirect:/configurar-viaje";
-        }
-        session.setAttribute("nombre", nombre);
-        session.setAttribute("ciudad", ciudadLimpia);
-        session.setAttribute("fEntrada", fEntradaStr);
-        session.setAttribute("fSalida", fSalidaStr);
-        session.setAttribute("diasViaje", diasViaje);
-        session.setAttribute("cont", 0);
-        session.setAttribute("precioCarro", 0);
-        session.setAttribute("carrito", new ArrayList<Actividad>());
-
-        return "redirect:/inicio";
-
-    } catch (Exception e) {
-        session.setAttribute("errorMensaje", "Datos inválidos o formato de fecha incorrecto.");
-        return "redirect:/configurar-viaje";
     }
-}
 
     @GetMapping("/inicio")
     public String inicio(
@@ -164,7 +160,7 @@ public String valida(
             }
             if (idAñadir != null) {
                 List<Actividad> carrito = (List<Actividad>) session.getAttribute("carrito");
-                Long diasViaje = (Long) session.getAttribute("diasViaje"); 
+                Long diasViaje = (Long) session.getAttribute("diasViaje");
 
                 if (carrito == null) {
                     carrito = new ArrayList<Actividad>();
@@ -199,7 +195,10 @@ public String valida(
         }
 
         String ciudad = (String) session.getAttribute("ciudad");
-        List<Actividad> listaAct = actividadRepository.findByCiudad(ciudad);
+        List<Actividad> listaAct = actividadRepository.findByCiudad(ciudad.trim());
+        if (listaAct == null || listaAct.isEmpty()) {
+            model.addAttribute("mensajeVacio", "No hay actividades disponibles para " + ciudad);
+        }
 
         if (idAñadir != null) {
             List<Actividad> carrito = (List<Actividad>) session.getAttribute("carrito");
@@ -267,6 +266,7 @@ public String valida(
     public String confirmarCarrito() {
         return "confirmarCarrito";
     }
+
     @GetMapping("/invitado")
     public String paginaInvitado(Model model) {
         model.addAttribute("listaAct", actividadRepository.findAll());
@@ -311,42 +311,43 @@ public String valida(
     }
 
     @GetMapping("/enviar-itinerario")
-public String enviarFinal(HttpSession session, Authentication auth) {
-    try {
-        Actividad[] plan = (Actividad[]) session.getAttribute("plan");
-        String nombre = (String) session.getAttribute("nombre");
-        String emailDestino = "";
+    public String enviarFinal(HttpSession session, Authentication auth) {
+        try {
+            Actividad[] plan = (Actividad[]) session.getAttribute("plan");
+            String nombre = (String) session.getAttribute("nombre");
+            String emailDestino = "";
 
-        // --- INICIO DEL CAMBIO ---
-        if (auth instanceof OAuth2AuthenticationToken token) {
-            Map<String, Object> attributes = token.getPrincipal().getAttributes();
-            
-            // Verificamos si existe el atributo "email" (Google siempre lo da, GitHub no siempre)
-            if (attributes.get("email") != null) {
-                emailDestino = attributes.get("email").toString();
-            } 
-            // Si el email es nulo (caso común en GitHub), usamos el login como fallback
-            else if (attributes.get("login") != null) {
-                emailDestino = attributes.get("login").toString() + "@github.com";
-                System.out.println("DEBUG: Email no encontrado en GitHub, usando fallback: " + emailDestino);
+            // --- INICIO DEL CAMBIO ---
+            if (auth instanceof OAuth2AuthenticationToken token) {
+                Map<String, Object> attributes = token.getPrincipal().getAttributes();
+
+                // Verificamos si existe el atributo "email" (Google siempre lo da, GitHub no
+                // siempre)
+                if (attributes.get("email") != null) {
+                    emailDestino = attributes.get("email").toString();
+                }
+                // Si el email es nulo (caso común en GitHub), usamos el login como fallback
+                else if (attributes.get("login") != null) {
+                    emailDestino = attributes.get("login").toString() + "@github.com";
+                    System.out.println("DEBUG: Email no encontrado en GitHub, usando fallback: " + emailDestino);
+                }
+            } else {
+                // Login manual (email es el username)
+                emailDestino = auth.getName();
             }
-        } else {
-            // Login manual (email es el username)
-            emailDestino = auth.getName();
+            // --- FIN DEL CAMBIO ---
+
+            if (emailDestino == null || emailDestino.isEmpty()) {
+                throw new Exception("No se pudo determinar el email de destino.");
+            }
+
+            byte[] pdfContent = PdfGenerator.generarItinerarioPdf(plan, nombre);
+            emailService.enviarItinerarioConPdf(emailDestino, nombre, pdfContent);
+
+            return "redirect:/final?enviado=true";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/final?error=true";
         }
-        // --- FIN DEL CAMBIO ---
-
-        if (emailDestino == null || emailDestino.isEmpty()) {
-            throw new Exception("No se pudo determinar el email de destino.");
-        }
-
-        byte[] pdfContent = PdfGenerator.generarItinerarioPdf(plan, nombre);
-        emailService.enviarItinerarioConPdf(emailDestino, nombre, pdfContent);
-
-        return "redirect:/final?enviado=true";
-    } catch (Exception e) {
-        e.printStackTrace();
-        return "redirect:/final?error=true";
     }
-}
 }
