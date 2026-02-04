@@ -28,7 +28,7 @@ public class SecurityConfig {
                                                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
-                                .formLogin(form -> form
+                                .formLogin(form -> form         
                                                 .loginPage("/")
                                                 .loginProcessingUrl("/login")
                                                 .defaultSuccessUrl("/configurar-viaje", true)
