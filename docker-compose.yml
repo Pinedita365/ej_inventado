@@ -1,0 +1,36 @@
+services:
+
+  triping_db:
+    image: mysql:8.0
+    container_name: triping_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: triping_db
+    volumes:
+      - triping_data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  triping_app:
+    build: .
+    container_name: triping_app
+    depends_on:
+      triping_db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:8080"
+    env_file:
+      - .env
+    environment:
+      # Sobrescribe DB_URL para usar el hostname interno de Docker
+      DB_URL: jdbc:mysql://triping_db:3306/triping_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    restart: unless-stopped
+
+volumes:
+  triping_data:
+    name: triping_data

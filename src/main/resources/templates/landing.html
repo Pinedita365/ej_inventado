@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TriPing — Descubre y planifica actividades únicas en cualquier ciudad de España.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleLanding.css}">
+    <title>TriPing — Tu planificador de actividades</title>
+</head>
+<body class="landing-body">
+
+<!-- ══ NAVBAR PÚBLICO ══════════════════════════════════════════════════ -->
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero__bg" aria-hidden="true">
+        <div class="hero__blob hero__blob--1"></div>
+        <div class="hero__blob hero__blob--2"></div>
+        <div class="hero__blob hero__blob--3"></div>
+    </div>
+    <div class="hero__content">
+        <span class="hero__tag">✨ Más de 100 actividades disponibles</span>
+        <h1 class="hero__title">
+            Descubre qué hacer<br>
+            <span class="hero__title-accent">en cualquier ciudad</span>
+        </h1>
+        <p class="hero__subtitle">
+            Busca actividades deportivas, turísticas y gastronómicas, planifica tu itinerario día a día
+            y recibe tu plan en PDF. Todo en un solo lugar.
+        </p>
+        <div class="hero__actions">
+            <a th:href="@{/login}" class="btn btn-accent btn-lg">Empezar gratis →</a>
+            <a th:href="@{/invitado}" class="btn btn-outline hero__btn-outline">Ver actividades</a>
+        </div>
+        <div class="hero__stats">
+            <div class="hero__stat"><strong>100+</strong><span>Actividades</span></div>
+            <div class="hero__stat-sep">·</div>
+            <div class="hero__stat"><strong>15+</strong><span>Ciudades</span></div>
+            <div class="hero__stat-sep">·</div>
+            <div class="hero__stat"><strong>3</strong><span>Categorías</span></div>
+            <div class="hero__stat-sep">·</div>
+            <div class="hero__stat"><strong>Gratis</strong><span>Para usuarios</span></div>
+        </div>
+    </div>
+    <div class="hero__img-wrap" aria-hidden="true">
+        <div class="hero__img-card hero__img-card--1">
+            <span>🏄 Snórquel en Cabo de Gata</span>
+            <small>Almería · 25 €</small>
+        </div>
+        <div class="hero__img-card hero__img-card--2">
+            <span>🏛️ Visita guiada Sevilla</span>
+            <small>Sevilla · 50 €</small>
+        </div>
+        <div class="hero__img-card hero__img-card--3">
+            <span>🍽️ Ruta Cruzcampo</span>
+            <small>Sevilla · 40 €</small>
+        </div>
+        <div class="hero__img-card hero__img-card--4">
+            <span>🏕️ Descenso del Sella</span>
+            <small>Cantabria · 35 €</small>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     CÓMO FUNCIONA
+════════════════════════════════════════════════════════════════════════ -->
+<section class="section como-funciona">
+    <div class="section__inner">
+        <div class="section__header">
+            <span class="section__tag">Simple y rápido</span>
+            <h2>¿Cómo funciona TriPing?</h2>
+            <p>En tres pasos tienes tu itinerario listo.</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step__num">1</div>
+                <div class="step__icon">🔍</div>
+                <h3>Busca tu ciudad</h3>
+                <p>Escribe el nombre de cualquier ciudad y descubre todas las actividades disponibles en ella.</p>
+            </div>
+            <div class="step__connector" aria-hidden="true">→</div>
+            <div class="step">
+                <div class="step__num">2</div>
+                <div class="step__icon">🛒</div>
+                <h3>Elige actividades</h3>
+                <p>Añade al carrito las actividades que más te gusten. Filtra por tipo y precio.</p>
+            </div>
+            <div class="step__connector" aria-hidden="true">→</div>
+            <div class="step">
+                <div class="step__num">3</div>
+                <div class="step__icon">📄</div>
+                <h3>Recibe tu plan</h3>
+                <p>Organiza las actividades día a día y recibe tu itinerario completo por email en PDF.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     CATEGORÍAS
+════════════════════════════════════════════════════════════════════════ -->
+<section class="section categorias">
+    <div class="section__inner">
+        <div class="section__header">
+            <span class="section__tag">Para todos los gustos</span>
+            <h2>Tres tipos de actividades</h2>
+        </div>
+        <div class="cat-grid">
+            <div class="cat-card cat-card--dep">
+                <div class="cat-card__icon">🏃</div>
+                <h3>Deportivas</h3>
+                <p>Kayak, senderismo, snórquel, descensos de ríos y mucho más. Elige tu nivel de dificultad.</p>
+                <a th:href="@{/login}" class="btn btn-sm">Explorar →</a>
+            </div>
+            <div class="cat-card cat-card--tur">
+                <div class="cat-card__icon">🏛️</div>
+                <h3>Turísticas</h3>
+                <p>Visitas guiadas, monumentos, reservas naturales y experiencias culturales únicas.</p>
+                <a th:href="@{/login}" class="btn btn-sm">Explorar →</a>
+            </div>
+            <div class="cat-card cat-card--gas">
+                <div class="cat-card__icon">🍽️</div>
+                <h3>Gastronómicas</h3>
+                <p>Rutas de tapas, cenas exclusivas, maridajes de vino y la mejor gastronomía local.</p>
+                <a th:href="@{/login}" class="btn btn-sm">Explorar →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     RESEÑAS
+════════════════════════════════════════════════════════════════════════ -->
+<section class="section resenas" id="resenas">
+    <div class="section__inner">
+        <div class="section__header">
+            <span class="section__tag">Lo que dicen nuestros usuarios</span>
+            <h2>Reseñas reales</h2>
+            <p th:if="${totalResenas != null and totalResenas > 0}"
+               th:text="${totalResenas} + ' reseñas de usuarios reales'">0 reseñas</p>
+        </div>
+
+        <!-- Grid de reseñas desde BD -->
+        <div class="resenas-grid" th:if="${resenas != null and !resenas.isEmpty()}">
+            <div class="resena-card" th:each="r : ${resenas}">
+                <div class="resena-card__stars" th:text="${r.starsHtml}">★★★★★</div>
+                <p th:text="${'«' + r.texto + '»'}">Texto</p>
+                <div class="resena-card__autor">
+                    <div class="resena-avatar" th:text="${r.iniciales}">XX</div>
+                    <div>
+                        <strong th:text="${r.nombreAutor}">Nombre</strong>
+                        <small th:if="${r.ciudad != null and !#strings.isEmpty(r.ciudad)}"
+                               th:text="'Viaje a ' + ${r.ciudad}">Ciudad</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado vacío (sin reseñas aún) -->
+        <div th:if="${resenas == null or resenas.isEmpty()}" style="text-align:center;padding:40px 0;color:rgba(255,255,255,.5)">
+            <div style="font-size:2.5rem;margin-bottom:12px">💬</div>
+            <p>Sé el primero en dejar una reseña.</p>
+        </div>
+
+        <!-- Botón crear reseña (solo usuarios autenticados) -->
+        <div class="resenas-cta" sec:authorize="isAuthenticated()">
+            <button type="button" class="btn btn-resena" onclick="abrirModalResena()">
+                ✍️ Escribir una reseña
+            </button>
+        </div>
+        <div class="resenas-cta" sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}" class="btn btn-resena">
+                🔑 Inicia sesión para escribir una reseña
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     LOGIN INLINE
+════════════════════════════════════════════════════════════════════════ -->
+<section class="section login-inline" id="acceder">
+    <div class="section__inner">
+        <div class="login-inline__grid">
+
+            <!-- Formulario de acceso -->
+            <div class="login-inline__card">
+                <div class="login-inline__header">
+                    <span class="section__tag">Ya soy usuario</span>
+                    <h2>Iniciar sesión</h2>
+                    <p>Accede a tu cuenta y retoma tu planificación.</p>
+                </div>
+
+                <!-- Alertas -->
+                <div th:if="${param.error}"   class="alert alert-error">⚠️ Credenciales incorrectas.</div>
+                <div th:if="${param.logout}"  class="alert alert-info">👋 Sesión cerrada correctamente.</div>
+
+                <form th:action="@{/login}" method="post" novalidate>
+                    <div class="field">
+                        <label for="li-email">Correo electrónico</label>
+                        <input id="li-email" type="email" name="username" required
+                               autocomplete="email" placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="field">
+                        <label for="li-pwd">Contraseña</label>
+                        <input id="li-pwd" type="password" name="password" required
+                               autocomplete="current-password" placeholder="Tu contraseña">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Entrar →</button>
+                </form>
+
+                <div class="login-inline__divider"><span>o accede con</span></div>
+
+                <div class="login-inline__social">
+                    <a th:href="@{/oauth2/authorization/google}" class="btn-oauth btn-oauth--google">
+                        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                            <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                        </svg>
+                        Continuar con Google
+                    </a>
+                    <a th:href="@{/oauth2/authorization/github}" class="btn-oauth btn-oauth--github">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                        Continuar con GitHub
+                    </a>
+                </div>
+
+                <p class="login-inline__footer-note">
+                    ¿Necesitas acceso de empresa?
+                    <a th:href="@{/sobre-nosotros}">Contáctanos</a>
+                </p>
+            </div>
+
+            <!-- CTA de registro -->
+            <div class="login-inline__register">
+                <div class="login-inline__register-inner">
+                    <span class="login-inline__new-badge">Nuevo en TriPing</span>
+                    <h2>¿Aún no tienes cuenta?</h2>
+                    <p>Regístrate gratis en menos de un minuto y empieza a planificar tu próxima aventura.</p>
+                    <ul class="login-inline__perks">
+                        <li>✅ Acceso a más de 100 actividades</li>
+                        <li>✅ Planificador de itinerarios día a día</li>
+                        <li>✅ Recibe tu plan en PDF por email</li>
+                        <li>✅ 100% gratis para usuarios</li>
+                    </ul>
+                    <a th:href="@{/login}" class="btn btn-accent btn-lg">Crear cuenta gratis →</a>
+                    <small>Sin tarjeta de crédito. Sin compromisos.</small>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     PARA EMPRESAS
+════════════════════════════════════════════════════════════════════════ -->
+<section class="section empresas-cta">
+    <div class="section__inner">
+        <div class="empresas-cta__grid">
+            <div class="empresas-cta__text">
+                <span class="section__tag">Para negocios</span>
+                <h2>¿Tienes una empresa de actividades?</h2>
+                <p>Únete a TriPing y llega a miles de viajeros que buscan experiencias como la tuya. Gestiona tus actividades, sube fotos y establece tus propios precios.</p>
+                <ul class="empresas-cta__list">
+                    <li>✅ Panel de gestión propio</li>
+                    <li>✅ Sube y edita actividades fácilmente</li>
+                    <li>✅ Visibilidad ante miles de usuarios</li>
+                    <li>✅ Soporte prioritario</li>
+                </ul>
+                <a th:href="@{/sobre-nosotros}" class="btn btn-primary">Saber más →</a>
+            </div>
+            <div class="empresas-cta__visual" aria-hidden="true">
+                <div class="empresas-cta__card">
+                    <div class="ec-card__header">Panel de empresa</div>
+                    <div class="ec-card__row"><span>🏄 Snórquel VIP</span><span class="ec-badge ec-badge--activo">Activo</span></div>
+                    <div class="ec-card__row"><span>🚣 Kayak tour</span><span class="ec-badge ec-badge--activo">Activo</span></div>
+                    <div class="ec-card__row"><span>🍷 Cata de vinos</span><span class="ec-badge ec-badge--nuevo">Nuevo</span></div>
+                    <div class="ec-card__btn">+ Añadir actividad</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     CTA FINAL
+════════════════════════════════════════════════════════════════════════ -->
+<section class="section cta-final">
+    <div class="cta-final__inner">
+        <h2>¿Listo para tu próxima aventura?</h2>
+        <p>Regístrate gratis y empieza a descubrir actividades increíbles.</p>
+        <div class="cta-final__actions">
+            <a th:href="@{/login}" class="btn btn-accent btn-lg">Crear cuenta gratis →</a>
+            <a th:href="@{/invitado}" class="btn btn-ghost btn-lg">Explorar sin registro</a>
+        </div>
+    </div>
+</section>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<!-- ══ MODAL CREAR RESEÑA ══════════════════════════════════════════════ -->
+<div id="modal-resena" class="modal-resena-overlay" style="display:none" onclick="cerrarModalResena(event)">
+    <div class="modal-resena-box">
+        <div class="modal-resena-header">
+            <h3>✍️ Escribir una reseña</h3>
+            <button type="button" class="modal-resena-close" onclick="cerrarModalResena()">✕</button>
+        </div>
+
+        <form th:action="@{/resenas/crear}" method="post" class="modal-resena-form">
+
+            <!-- Valoración con estrellas -->
+            <div class="resena-stars-input">
+                <label>Valoración *</label>
+                <div class="stars-selector" id="stars-selector">
+                    <input type="radio" name="estrellas" id="s5" value="5" required>
+                    <label for="s5" title="5 estrellas">★</label>
+                    <input type="radio" name="estrellas" id="s4" value="4">
+                    <label for="s4" title="4 estrellas">★</label>
+                    <input type="radio" name="estrellas" id="s3" value="3">
+                    <label for="s3" title="3 estrellas">★</label>
+                    <input type="radio" name="estrellas" id="s2" value="2">
+                    <label for="s2" title="2 estrellas">★</label>
+                    <input type="radio" name="estrellas" id="s1" value="1">
+                    <label for="s1" title="1 estrella">★</label>
+                </div>
+                <span class="stars-label" id="stars-label">Sin valorar</span>
+            </div>
+
+            <!-- Texto -->
+            <div class="field">
+                <label for="resena-texto">Tu reseña *</label>
+                <textarea id="resena-texto" name="texto" required rows="4"
+                          maxlength="600"
+                          placeholder="Cuéntanos tu experiencia con TriPing..."></textarea>
+                <small style="color:var(--c-muted);font-size:.75rem" id="char-count">0 / 600</small>
+            </div>
+
+            <!-- Ciudad (opcional) -->
+            <div class="field">
+                <label for="resena-ciudad">Ciudad del viaje <span style="color:var(--c-muted);font-weight:400">(opcional)</span></label>
+                <input id="resena-ciudad" type="text" name="ciudad" maxlength="80"
+                       placeholder="Ej: Sevilla, Cantabria...">
+            </div>
+
+            <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+                <button type="button" class="btn btn-outline" onclick="cerrarModalResena()">Cancelar</button>
+                <button type="submit" class="btn btn-accent btn-lg">Publicar reseña →</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function abrirModalResena() {
+    document.getElementById('modal-resena').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+function cerrarModalResena(e) {
+    if (!e || e.target === document.getElementById('modal-resena')) {
+        document.getElementById('modal-resena').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') cerrarModalResena();
+});
+
+// Contador de caracteres
+document.getElementById('resena-texto')?.addEventListener('input', function() {
+    document.getElementById('char-count').textContent = this.value.length + ' / 600';
+});
+
+// Labels de estrellas
+const starsLabels = { 1:'Muy mala', 2:'Mala', 3:'Regular', 4:'Buena', 5:'¡Excelente!' };
+document.querySelectorAll('.stars-selector input').forEach(radio => {
+    radio.addEventListener('change', () => {
+        const lbl = document.getElementById('stars-label');
+        if (lbl) lbl.textContent = starsLabels[radio.value] || '';
+    });
+});
+</script>
+
+</body>
+</html>

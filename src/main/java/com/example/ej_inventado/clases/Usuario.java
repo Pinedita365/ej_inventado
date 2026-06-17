@@ -23,6 +23,7 @@ public class Usuario {
     private String password;
     private String rol;
     private String proveedor;
+    private String fotoPerfil;
 
     public Usuario() {}
 
@@ -76,6 +77,14 @@ public class Usuario {
 
     public void setProveedor(String proveedor) {
         this.proveedor = proveedor;
+    }
+
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
     }
 
 }

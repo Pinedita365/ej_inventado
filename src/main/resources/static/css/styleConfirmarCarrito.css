@@ -1,192 +1,96 @@
-/* 🎨 Paleta TriPing */
-:root {
-    --color-bg: #E1FAF9;
-    --color-accent1: #78FFD6;
-    --color-accent2: #0AD3FF;
-    --color-accent3: #C3979F;
-    --color-dark: #023C40;
+/* =====================================================================
+   TriPing — Confirmar carrito
+   ===================================================================== */
+.cc-body { min-height: 100vh; display: flex; flex-direction: column; background: var(--c-bg); }
+
+/* ── Barra de progreso ────────────────────────────────────────────── */
+.cc-progress {
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    padding: 10px 24px;
+}
+.cc-progress__inner {
+    max-width: 900px; margin: 0 auto;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.cc-step {
+    font-size: 0.8rem; font-weight: 600;
+    color: var(--c-muted); padding: 4px 12px;
+    border-radius: 99px; border: 1.5px solid var(--c-border);
+}
+.cc-step--active {
+    background: var(--c-dark); color: var(--c-mint); border-color: var(--c-dark);
+}
+.cc-step--done  { background: var(--c-light); color: var(--c-dark); }
+.cc-step__arrow { color: var(--c-muted); font-size: 0.9rem; }
+
+/* ── Main ─────────────────────────────────────────────────────────── */
+.cc-main { flex: 1; max-width: 1000px; margin: 0 auto; padding: 32px 24px 120px; width: 100%; }
+
+/* ── Cabecera del viaje ───────────────────────────────────────────── */
+.cc-trip-header { margin-bottom: 28px; }
+.cc-trip-info h1 { font-size: 1.6rem; font-weight: 800; color: var(--c-dark); margin-bottom: 6px; }
+.cc-trip-info p  { font-size: 0.875rem; color: var(--c-muted); }
+
+/* ── Grid ─────────────────────────────────────────────────────────── */
+.cc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
 }
 
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-
-/* Estructura general */
-body {
-    background-color: var(--color-bg);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-/* HEADER */
-header.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;   
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--color-accent1);
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-}
-
-.header-left button {
-    background-color: var(--color-accent2);
-    color: var(--color-dark);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: 0.3s ease;
-}
-
-.header-left button:hover {
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-}
-
-.header-center h1 {
-    color: var(--color-dark);
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-}
-
-.header-right .usuario {
-    color: var(--color-dark);
-    font-weight: 600;
-}
-
-/* 🎨 IMAGEN DECORATIVA */
-.imagen-entrada {
-    width: 100%;
-    height: 500px;
-    background: url('/img/inicio.jpg') no-repeat center center/cover;
-    background-attachment: fixed;
-}
-
-/* INFORMACIÓN DEL VIAJE (solo localidad + fechas) */
-.info-viaje {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: rgba(120, 255, 214, 0.85);
-    position: relative;
-    z-index: 1;
-}
-
-.datos-viaje {
-    color: var(--color-dark);
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-/* TITULO SOBRE LAS CARDS */
-.titulo-actividades {
-    text-align: center;
-    color: var(--color-dark);
-    margin-top: 2rem;
-    font-size: 1.6rem;
-    font-weight: 600;
-}
-
-/* CONTENEDOR DE CARDS */
-.contenedor-actividades {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: center;
-    padding: 2rem;
-}
-
-/* CARD DE ACTIVIDAD */
-.card-actividad {
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* ── Card de actividad ────────────────────────────────────────────── */
+.cc-card {
+    background: var(--c-surface);
+    border-radius: var(--rad-l);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--c-border);
     overflow: hidden;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 320px;
-    flex-direction: column;
+    display: flex; flex-direction: column;
+    animation: fadeUp .35s ease both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+.cc-card__img { position: relative; height: 180px; overflow: hidden; }
+.cc-card__img img { width: 100%; height: 100%; object-fit: cover; }
+.cc-card__badge {
+    position: absolute; top: 10px; left: 10px;
+    padding: 3px 9px; border-radius: 99px;
+    font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .3px;
+    backdrop-filter: blur(6px);
 }
 
-.card-actividad:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+.cc-card__body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.cc-card__body h3 { font-size: 0.95rem; font-weight: 700; color: var(--c-dark); }
+.cc-card__desc { font-size: 0.82rem; color: var(--c-muted); line-height: 1.55; flex: 1; }
+.cc-card__meta {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    font-size: 0.78rem; color: var(--c-muted); font-weight: 500;
+    padding-top: 8px; border-top: 1px solid var(--c-border);
 }
+.cc-card__price { font-weight: 700; color: var(--c-dark); margin-left: auto; }
 
-.card-actividad img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
+/* ── Barra inferior fija ──────────────────────────────────────────── */
+.cc-footer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--c-surface);
+    border-top: 1px solid var(--c-border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+    z-index: 50;
 }
+.cc-footer-bar__total { display: flex; flex-direction: column; }
+.cc-footer-bar__label { font-size: 0.75rem; color: var(--c-muted); font-weight: 600; }
+.cc-footer-bar__amount{ font-size: 1.5rem; font-weight: 800; color: var(--c-dark); }
+.cc-footer-bar__actions { display: flex; gap: 10px; align-items: center; }
 
-.card-actividad h3 {
-    color: var(--color-dark);
-    margin: 1rem 0 0.5rem 0;
-}
-
-.card-actividad p {
-    padding: 0 1rem 1rem;
-    color: #333;
-    font-size: 0.95rem;
-}
-
-/* BOTÓN FINAL */
-.btn-continuar {
-    display: block;
-    margin: 2rem auto 3rem;
-    background-color: var(--color-accent2);
-    color: var(--color-dark);
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s ease;
-    width: 280px;
-    text-align: center;
-}
-
-.btn-continuar:hover {
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-}
-
-/* FOOTER */
-/* Footer normal */
-footer.footer {
-    text-align: center;
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-    padding: 1rem 0;
-    font-size: 0.9rem;
-    margin-top: auto; /* mantiene el footer abajo */
-    z-index: 2;
-}
-.btn-logout {
-    background-color: transparent;
-    border: 1px solid #d9534f;
-    color: #d9534f;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-    transition: all 0.3s ease;
-}
-
-.btn-logout:hover {
-    background-color: #d9534f;
-    color: white;
+@media (max-width: 600px) {
+    .cc-main { padding: 20px 16px 110px; }
+    .cc-footer-bar { flex-direction: column; text-align: center; }
+    .cc-footer-bar__actions { width: 100%; flex-direction: column; }
+    .cc-footer-bar__actions .btn { width: 100%; }
 }

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleIndex.css}">
+    <title>TriPing | Acceder</title>
+</head>
+<body>
+<div class="overlay">
+
+    <header class="site-header">
+        <div class="logo-wrap">
+            <a th:href="@{/}" style="text-decoration:none;display:flex;align-items:center;gap:10px">
+                <span aria-hidden="true">🌍</span>
+                <h1 class="logo-text">TriPing</h1>
+            </a>
+        </div>
+        <p class="tagline">Tu aventura comienza aquí.</p>
+    </header>
+
+    <main class="main-grid" role="main">
+
+        <!-- ── Bloque Auth ── -->
+        <section class="card card-auth" aria-label="Acceso a la cuenta">
+
+            <!-- Alertas -->
+            <div th:if="${param.error}" class="alert alert-error" role="alert">
+                <span aria-hidden="true">⚠️</span>
+                <span th:text="#{index.error}">Credenciales incorrectas.</span>
+            </div>
+            <div th:if="${param.success}" class="alert alert-success" role="alert">
+                <span aria-hidden="true">✅</span>
+                <span th:text="#{index.exito_registro}">¡Cuenta creada! Ya puedes iniciar sesión.</span>
+            </div>
+            <div th:if="${param.logout}" class="alert alert-info" role="alert">
+                <span aria-hidden="true">👋</span>
+                <span th:text="#{index.logout_success}">Sesión cerrada.</span>
+            </div>
+            <div th:if="${param.reset}" class="alert alert-success" role="alert">
+                <span aria-hidden="true">🔒</span>
+                Contraseña restablecida correctamente. Ya puedes iniciar sesión.
+            </div>
+
+            <!-- Pestañas -->
+            <div class="tabs" role="tablist">
+                <button id="btn-login" class="tab-btn active" role="tab"
+                        aria-selected="true" aria-controls="panel-login"
+                        onclick="switchTab('login')">Iniciar sesión</button>
+                <button id="btn-registro" class="tab-btn" role="tab"
+                        aria-selected="false" aria-controls="panel-registro"
+                        onclick="switchTab('registro')">Registrarse</button>
+            </div>
+
+            <!-- Panel Login -->
+            <div id="panel-login" role="tabpanel" aria-labelledby="btn-login">
+                <form th:action="@{/login}" method="post" novalidate>
+                    <div class="field">
+                        <label for="username">Correo electrónico</label>
+                        <input id="username" type="email" name="username"
+                               autocomplete="email" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="field">
+                        <label for="pwd-login">Contraseña</label>
+                        <div class="input-row">
+                            <input id="pwd-login" type="password" name="password"
+                                   autocomplete="current-password" required placeholder="Tu contraseña">
+                            <button type="button" class="eye-btn" onclick="togglePwd('pwd-login',this)" aria-label="Mostrar/ocultar">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+                </form>
+                <div style="text-align:right;margin-top:8px">
+                    <a th:href="@{/recuperar-password}" style="font-size:.82rem;color:var(--c-muted);text-decoration:underline;text-underline-offset:3px">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
+                <div class="divider"><span>O accede con</span></div>
+                <div class="social-btns">
+                    <a th:href="@{/oauth2/authorization/google}" class="btn btn-google" aria-label="Google">
+                        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                            <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                        </svg>
+                        Google
+                    </a>
+                    <a th:href="@{/oauth2/authorization/github}" class="btn btn-github" aria-label="GitHub">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel Registro -->
+            <div id="panel-registro" role="tabpanel" aria-labelledby="btn-registro" hidden>
+                <div th:if="${param.regError}" class="alert alert-error" role="alert">
+                    <span aria-hidden="true">⚠️</span>
+                    <div th:switch="${param.regError[0]}">
+                        <span th:case="'email_en_uso'"        th:text="#{index.err_email_en_uso}"></span>
+                        <span th:case="'password_debil'"      th:text="#{index.err_password_debil}"></span>
+                        <span th:case="'password_no_coincide'" th:text="#{index.err_password_no_coincide}"></span>
+                        <span th:case="*"                     th:text="#{index.err_servidor}"></span>
+                    </div>
+                </div>
+                <form th:action="@{/registrar}" method="post" novalidate>
+                    <div class="field">
+                        <label for="reg-nombre">Nombre completo</label>
+                        <input id="reg-nombre" type="text" name="nombre" autocomplete="name" required maxlength="100" placeholder="Tu nombre">
+                    </div>
+                    <div class="field">
+                        <label for="reg-email">Correo electrónico</label>
+                        <input id="reg-email" type="email" name="email" autocomplete="email" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="field">
+                        <label for="reg-pwd">Contraseña</label>
+                        <div class="input-row">
+                            <input id="reg-pwd" type="password" name="password" autocomplete="new-password"
+                                   required minlength="8" placeholder="Mínimo 8 caracteres"
+                                   oninput="evalStrength(this.value)">
+                            <button type="button" class="eye-btn" onclick="togglePwd('reg-pwd',this)" aria-label="Mostrar/ocultar">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        <div class="strength-wrap">
+                            <div class="strength-bar"><div id="strength-fill" class="strength-fill"></div></div>
+                            <span id="strength-lbl" class="strength-lbl"></span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="reg-cpwd">Confirmar contraseña</label>
+                        <div class="input-row">
+                            <input id="reg-cpwd" type="password" name="confirmPassword" autocomplete="new-password"
+                                   required placeholder="Repite la contraseña" oninput="evalMatch()">
+                            <button type="button" class="eye-btn" onclick="togglePwd('reg-cpwd',this)" aria-label="Mostrar/ocultar">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        <span id="match-lbl" class="match-lbl" aria-live="polite"></span>
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-full" onclick="return clientValidate()">Crear cuenta</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ── Bloque Invitado ── -->
+        <section class="card card-guest" aria-label="Acceso sin cuenta">
+            <span class="guest-icon" aria-hidden="true">🗺️</span>
+            <h2>¿No quieres registrarte?</h2>
+            <p>Puedes explorar actividades sin crear una cuenta.</p>
+            <ul class="feature-list">
+                <li>✓ Explora actividades por ciudad</li>
+                <li>✓ Filtra por categoría</li>
+                <li>✓ Consulta todos los detalles</li>
+            </ul>
+            <a th:href="@{/invitado}" class="btn btn-guest mt-auto">Explorar sin registrarme</a>
+        </section>
+    </main>
+
+    <footer class="site-footer" style="margin-top:24px">
+        <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
+            <a th:href="@{/}" style="color:var(--c-mint);font-weight:600">← Volver al inicio</a>
+            <span>&copy; 2026 <strong>TriPing</strong></span>
+            <nav class="lang-picker">
+                <a href="?lang=es">ES 🇪🇸</a><span>|</span><a href="?lang=en">EN 🇬🇧</a>
+            </nav>
+        </div>
+    </footer>
+</div>
+
+<script>
+function switchTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('panel-login').hidden    = !isLogin;
+    document.getElementById('panel-registro').hidden =  isLogin;
+    document.getElementById('btn-login').classList.toggle('active',    isLogin);
+    document.getElementById('btn-registro').classList.toggle('active', !isLogin);
+    document.getElementById('btn-login').setAttribute('aria-selected',    String(isLogin));
+    document.getElementById('btn-registro').setAttribute('aria-selected', String(!isLogin));
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const p = new URLSearchParams(location.search);
+    switchTab(p.has('regError') || p.get('tab') === 'registro' ? 'registro' : 'login');
+});
+function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    btn.classList.toggle('active', inp.type === 'text');
+}
+const STRENGTH = [
+    {lbl:'Muy débil', cls:'w-20 s-danger'}, {lbl:'Débil', cls:'w-40 s-warning'},
+    {lbl:'Aceptable', cls:'w-60 s-info'},   {lbl:'Fuerte', cls:'w-80 s-success'},
+    {lbl:'¡Excelente!', cls:'w-100 s-success'},
+];
+function evalStrength(v) {
+    let s = 0;
+    if (v.length >= 8) s++; if (/[a-z]/.test(v)) s++; if (/[A-Z]/.test(v)) s++;
+    if (/[0-9]/.test(v)) s++; if (/[^a-zA-Z0-9]/.test(v)) s++;
+    const idx = v.length === 0 ? -1 : Math.min(s - 1, 4);
+    const fill = document.getElementById('strength-fill');
+    const lbl  = document.getElementById('strength-lbl');
+    fill.className = 'strength-fill ' + (idx >= 0 ? STRENGTH[idx].cls : '');
+    lbl.textContent = idx >= 0 ? STRENGTH[idx].lbl : '';
+}
+function evalMatch() {
+    const pw = document.getElementById('reg-pwd').value;
+    const cpw = document.getElementById('reg-cpwd').value;
+    const lbl = document.getElementById('match-lbl');
+    if (!cpw) { lbl.textContent = ''; return; }
+    const ok = pw === cpw;
+    lbl.textContent = ok ? '✓ Coinciden' : '✗ No coinciden';
+    lbl.className = 'match-lbl ' + (ok ? 's-success' : 's-danger');
+}
+function clientValidate() {
+    const pw = document.getElementById('reg-pwd').value;
+    const cpw = document.getElementById('reg-cpwd').value;
+    if (pw.length < 8) { alert('Mínimo 8 caracteres.'); return false; }
+    if (pw !== cpw) { alert('Las contraseñas no coinciden.'); return false; }
+    return true;
+}
+</script>
+</body>
+</html>

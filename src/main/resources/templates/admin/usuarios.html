@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleAdmin.css}">
+    <title>TriPing Admin | Usuarios</title>
+</head>
+<body class="admin-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="admin-layout">
+
+    <!-- ── Sidebar ─────────────────────────────────────────────────── -->
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar__brand">
+            <span class="admin-sidebar__icon">⚙️</span>
+            <div>
+                <strong>Administración</strong>
+                <small>Panel de control</small>
+            </div>
+        </div>
+        <nav class="admin-sidebar__nav">
+            <a th:href="@{/admin/usuarios}"    class="admin-nav-link admin-nav-link--active">👥 Usuarios</a>
+            <a th:href="@{/admin/empresas}"    class="admin-nav-link">🏢 Empresas</a>
+            <a th:href="@{/admin/actividades}" class="admin-nav-link">🎯 Actividades</a>
+            <a th:href="@{/}"              class="admin-nav-link" style="margin-top:4px;border-top:1px solid var(--c-border);padding-top:10px">🏠 Volver al hub</a>
+        </nav>
+        <div class="admin-sidebar__stats">
+            <div class="admin-stat-row"><span>Usuarios</span><strong th:text="${totalUsuarios}">0</strong></div>
+            <div class="admin-stat-row"><span>Empresas</span><strong th:text="${totalEmpresas}">0</strong></div>
+            <div class="admin-stat-row"><span>Actividades</span><strong th:text="${totalActividades}">0</strong></div>
+        </div>
+    </aside>
+
+    <!-- ── Contenido ───────────────────────────────────────────────── -->
+    <main class="admin-content">
+
+        <div class="admin-page-header">
+            <div>
+                <h1>👥 Gestión de usuarios</h1>
+                <p>Busca, filtra, cambia roles y elimina usuarios de la plataforma.</p>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div th:if="${param.deleted   != null}" class="alert alert-info">🗑️ Usuario eliminado.</div>
+        <div th:if="${param.rolChanged != null}" class="alert alert-success">✅ Rol actualizado.</div>
+
+        <!-- Filtros -->
+        <div class="admin-card">
+            <div class="admin-card__body">
+                <form th:action="@{/admin/usuarios}" method="get">
+                    <div class="admin-filters">
+                        <div class="admin-search-wrap">
+                            <span class="admin-search-icon">🔍</span>
+                            <input type="text" name="q" th:value="${q}" placeholder="Buscar por nombre o email...">
+                        </div>
+                        <div class="admin-rol-btns">
+                            <button type="submit" name="rolFiltro" value="TODOS"
+                                    th:class="${rolFiltro == 'TODOS'} ? 'admin-rol-btn active' : 'admin-rol-btn'">Todos</button>
+                            <button type="submit" name="rolFiltro" value="ROLE_USER"
+                                    th:class="${rolFiltro == 'ROLE_USER'} ? 'admin-rol-btn active' : 'admin-rol-btn'">Usuarios</button>
+                            <button type="submit" name="rolFiltro" value="ROLE_EMPRESA"
+                                    th:class="${rolFiltro == 'ROLE_EMPRESA'} ? 'admin-rol-btn active' : 'admin-rol-btn'">Empresas</button>
+                            <button type="submit" name="rolFiltro" value="ROLE_ADMIN"
+                                    th:class="${rolFiltro == 'ROLE_ADMIN'} ? 'admin-rol-btn active' : 'admin-rol-btn'">Admins</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="admin-card">
+            <div class="admin-card__header">
+                <h2>Listado de usuarios</h2>
+                <span style="font-size:.82rem;color:var(--c-muted)" th:text="${#lists.size(usuarios)} + ' resultados'"></span>
+            </div>
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Proveedor</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u : ${usuarios}" th:class="${u.rol == 'ROLE_ADMIN'} ? 'row-admin' : ''">
+                            <td th:text="${u.id}">1</td>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:8px">
+                                    <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--c-dark);display:flex;align-items:center;justify-content:center">
+                                        <img th:if="${u.fotoPerfil != null and !#strings.isEmpty(u.fotoPerfil)}"
+                                             th:src="${u.fotoPerfil}" alt="foto"
+                                             style="width:100%;height:100%;object-fit:cover">
+                                        <span th:unless="${u.fotoPerfil != null and !#strings.isEmpty(u.fotoPerfil)}"
+                                              th:text="${#strings.substring(u.nombre,0,1).toUpperCase()}"
+                                              style="color:var(--c-mint);font-size:.8rem;font-weight:700">U</span>
+                                    </div>
+                                    <span th:text="${u.nombre}">Nombre</span>
+                                </div>
+                            </td>
+                            <td><small th:text="${u.email}">email</small></td>
+                            <td>
+                                <span class="admin-badge"
+                                      th:classappend="${u.proveedor == 'GOOGLE'} ? ' badge-google' :
+                                                     (${u.proveedor == 'GITHUB'} ? ' badge-github' : ' badge-local')"
+                                      th:text="${u.proveedor != null ? u.proveedor : 'LOCAL'}"></span>
+                            </td>
+                            <td>
+                                <span class="admin-rol-badge"
+                                      th:classappend="${u.rol == 'ROLE_ADMIN'} ? ' rol-admin' :
+                                                     (${u.rol == 'ROLE_EMPRESA'} ? ' rol-empresa' : ' rol-user')"
+                                      th:text="${u.rol == 'ROLE_ADMIN'} ? 'Admin' :
+                                               (${u.rol == 'ROLE_EMPRESA'} ? 'Empresa' : 'Usuario')"></span>
+                            </td>
+                            <td class="admin-table__actions">
+                                <form th:action="@{/admin/usuarios/cambiar-rol}" method="post" style="display:inline">
+                                    <input type="hidden" name="id" th:value="${u.id}">
+                                    <select name="nuevoRol" class="admin-rol-select" onchange="this.form.submit()">
+                                        <option value="" disabled selected>Rol...</option>
+                                        <option value="ROLE_USER"    th:selected="${u.rol == 'ROLE_USER'}">Usuario</option>
+                                        <option value="ROLE_EMPRESA" th:selected="${u.rol == 'ROLE_EMPRESA'}">Empresa</option>
+                                        <option value="ROLE_ADMIN"   th:selected="${u.rol == 'ROLE_ADMIN'}">Admin</option>
+                                    </select>
+                                </form>
+                                <form th:action="@{/admin/usuarios/eliminar}" method="post" style="display:inline">
+                                    <input type="hidden" name="id" th:value="${u.id}">
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            th:disabled="${u.rol == 'ROLE_ADMIN'}"
+                                            onclick="return confirm('¿Eliminar este usuario?')">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(usuarios)}">
+                            <td colspan="6" style="text-align:center;color:var(--c-muted);padding:40px">
+                                No se encontraron usuarios con los filtros actuales.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

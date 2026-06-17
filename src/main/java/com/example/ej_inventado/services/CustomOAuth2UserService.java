@@ -1,7 +1,6 @@
 package com.example.ej_inventado.services;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // 1. Cargamos el usuario básico de Google/GitHub
         OAuth2User oAuth2User = super.loadUser(userRequest);
         
         String proveedor = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
@@ -35,7 +33,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             email = oAuth2User.getAttribute("login") + "@github.com";
         }
 
-        // 2. Buscamos en nuestra base de datos
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         Usuario usuarioReal;
 
@@ -53,15 +50,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             usuarioReal = usuarioOpt.get();
         }
 
-        // 3. ¡ESTA ES LA PARTE CLAVE! 
         // Creamos la autoridad basada en el rol de nuestra base de datos
         SimpleGrantedAuthority autoridad = new SimpleGrantedAuthority(usuarioReal.getRol());
 
-        // 4. Devolvemos un nuevo usuario que SI TIENE el rol de la base de datos
         return new DefaultOAuth2User(
                 Collections.singleton(autoridad), 
                 oAuth2User.getAttributes(), 
-                "email" // O la clave que use tu proveedor como ID (habitualmente email)
+                "email"
         );
     }
 }

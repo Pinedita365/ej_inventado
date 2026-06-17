@@ -1,85 +1,282 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TriPing - Descubre y planifica actividades en tu ciudad destino">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styleIndex.css}">
-    <title th:text="#{app.name} + ' | ' + #{index.login}"></title>
+    <title th:text="#{app.name} + ' | ' + #{index.login}">TriPing | Login</title>
 </head>
 <body>
+<div class="overlay">
 
-    <div class="overlay">
-        <header>
-            <h1>🌍 <span class="logo" th:text="#{app.name}">TriPing</span></h1>
-            <p th:text="#{index.eslogan}">Tu aventura comienza aquí.</p>
-        </header>
+    <!-- ===== CABECERA ===== -->
+    <header class="site-header">
+        <div class="logo-wrap">
+            <span aria-hidden="true">🌍</span>
+            <h1 class="logo-text" th:text="#{app.name}">TriPing</h1>
+        </div>
+        <p class="tagline" th:text="#{index.eslogan}">Tu aventura comienza aquí.</p>
+    </header>
 
-        <main class="contenedor-acceso">
-            <section class="seccion-auth">
-                <div class="tabs">
-                    <button class="tab-btn active" id="btn-login" onclick="toggleAuth('login')" th:text="#{index.login}">Login</button>
-                    <button class="tab-btn" id="btn-registro" onclick="toggleAuth('registro')" th:text="#{index.registro}">Registro</button>
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
+    <main class="main-grid" role="main">
+
+        <!-- ── Bloque Auth (Login / Registro) ── -->
+        <section class="card card-auth" aria-label="Acceso a la cuenta">
+
+            <!-- Alertas globales (login, logout, éxito de registro) -->
+            <div th:if="${param.error}" class="alert alert-error" role="alert" aria-live="polite">
+                <span aria-hidden="true">⚠️</span>
+                <span th:text="#{index.error}">Credenciales incorrectas.</span>
+            </div>
+            <div th:if="${param.success}" class="alert alert-success" role="alert" aria-live="polite">
+                <span aria-hidden="true">✅</span>
+                <span th:text="#{index.exito_registro}">¡Cuenta creada! Ya puedes iniciar sesión.</span>
+            </div>
+            <div th:if="${param.logout}" class="alert alert-info" role="alert" aria-live="polite">
+                <span aria-hidden="true">👋</span>
+                <span th:text="#{index.logout_success}">Sesión cerrada correctamente.</span>
+            </div>
+
+            <!-- Pestañas -->
+            <div class="tabs" role="tablist">
+                <button id="btn-login" class="tab-btn active"
+                        role="tab" aria-selected="true" aria-controls="panel-login"
+                        onclick="switchTab('login')" th:text="#{index.login}">
+                    Iniciar sesión
+                </button>
+                <button id="btn-registro" class="tab-btn"
+                        role="tab" aria-selected="false" aria-controls="panel-registro"
+                        onclick="switchTab('registro')" th:text="#{index.registro}">
+                    Registrarse
+                </button>
+            </div>
+
+            <!-- ── Panel Login ── -->
+            <div id="panel-login" role="tabpanel" aria-labelledby="btn-login">
+                <form th:action="@{/login}" method="post" novalidate>
+                    <div class="field">
+                        <label for="username" th:text="#{index.email}">Correo electrónico</label>
+                        <input id="username" type="email" name="username"
+                               autocomplete="email" required
+                               placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="field">
+                        <label for="pwd-login" th:text="#{index.pass}">Contraseña</label>
+                        <div class="input-row">
+                            <input id="pwd-login" type="password" name="password"
+                                   autocomplete="current-password" required
+                                   placeholder="Tu contraseña">
+                            <button type="button" class="eye-btn"
+                                    onclick="togglePwd('pwd-login', this)"
+                                    aria-label="Mostrar u ocultar contraseña">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" th:text="#{index.entrar}">Entrar</button>
+                </form>
+
+                <div class="divider" aria-hidden="true"><span th:text="#{index.social}">O accede con</span></div>
+
+                <div class="social-btns">
+                    <a th:href="@{/oauth2/authorization/google}" class="btn btn-google"
+                       aria-label="Iniciar sesión con Google">
+                        <!-- Google icon -->
+                        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                            <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                        </svg>
+                        Google
+                    </a>
+                    <a th:href="@{/oauth2/authorization/github}" class="btn btn-github"
+                       aria-label="Iniciar sesión con GitHub">
+                        <!-- GitHub icon -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
                 </div>
+            </div>
 
-                <div id="login-form">
-                    <form th:action="@{/login}" method="post">
-                        <input type="email" name="username" th:placeholder="#{index.email}" required>
-                        <input type="password" name="password" th:placeholder="#{index.pass}" required>
-                        <button type="submit" class="btn-entrar" th:text="#{index.entrar}">Entrar</button>
-                    </form>
-                    <div class="divisor" th:text="#{index.social}">O accede con</div>
-                    <div class="social-login">
-                        <a th:href="@{/oauth2/authorization/google}" class="btn-google">Google</a>
-                        <a th:href="@{/oauth2/authorization/github}" class="btn-github">GitHub</a>
+            <!-- ── Panel Registro ── -->
+            <div id="panel-registro" role="tabpanel" aria-labelledby="btn-registro" hidden>
+
+                <!-- Errores de registro (por parámetro URL) -->
+                <div th:if="${param.regError}" class="alert alert-error" role="alert" aria-live="polite">
+                    <span aria-hidden="true">⚠️</span>
+                    <div th:switch="${param.regError[0]}">
+                        <span th:case="'email_en_uso'"     th:text="#{index.err_email_en_uso}">Email ya en uso.</span>
+                        <span th:case="'password_debil'"   th:text="#{index.err_password_debil}">Contraseña débil.</span>
+                        <span th:case="'password_no_coincide'" th:text="#{index.err_password_no_coincide}">Las contraseñas no coinciden.</span>
+                        <span th:case="*"                  th:text="#{index.err_servidor}">Error. Inténtalo de nuevo.</span>
                     </div>
                 </div>
 
-                <div id="registro-form" style="display: none;">
-                    <form th:action="@{/registrar}" method="post">
-                        <input type="text" name="nombre" th:placeholder="#{viaje.nombre}" required>
-                        <input type="email" name="email" th:placeholder="#{index.email}" required>
-                        <input type="password" name="password" th:placeholder="#{index.pass}" required>
-                        <button type="submit" class="btn-registro" th:text="#{index.registro}">Registrarse</button>
-                    </form>
-                </div>
-            </section>
-
-            <section class="seccion-invitado">
-                <h3 th:text="#{index.no_registro}">¿No quieres registrarte?</h3>
-                <p th:text="#{index.no_registro_desc}">Puedes planificar tu viaje ahora mismo.</p>
-                <a th:href="@{/invitado}" class="btn-invitado" th:text="#{index.btn_invitado}">Entrar como Invitado</a>
-            </section>
-        </main>
-
-        <footer class="footer">
-            <div class="language-picker">
-                <a href="?lang=es">ES 🇪🇸</a>
-                <span>|</span>
-                <a href="?lang=en">EN 🇬🇧</a>
+                <form th:action="@{/registrar}" method="post" novalidate id="form-registro">
+                    <div class="field">
+                        <label for="reg-nombre" th:text="#{index.nombre_label}">Nombre completo</label>
+                        <input id="reg-nombre" type="text" name="nombre"
+                               autocomplete="name" required maxlength="100"
+                               placeholder="Tu nombre">
+                    </div>
+                    <div class="field">
+                        <label for="reg-email" th:text="#{index.email}">Correo electrónico</label>
+                        <input id="reg-email" type="email" name="email"
+                               autocomplete="email" required
+                               placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="field">
+                        <label for="reg-pwd" th:text="#{index.pass}">Contraseña</label>
+                        <div class="input-row">
+                            <input id="reg-pwd" type="password" name="password"
+                                   autocomplete="new-password" required minlength="8"
+                                   placeholder="Mínimo 8 caracteres"
+                                   oninput="evalStrength(this.value)">
+                            <button type="button" class="eye-btn"
+                                    onclick="togglePwd('reg-pwd', this)"
+                                    aria-label="Mostrar u ocultar contraseña">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        <div class="strength-wrap" aria-live="polite">
+                            <div class="strength-bar"><div id="strength-fill" class="strength-fill"></div></div>
+                            <span id="strength-lbl" class="strength-lbl"></span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="reg-cpwd" th:text="#{index.confirmar_pass}">Confirmar contraseña</label>
+                        <div class="input-row">
+                            <input id="reg-cpwd" type="password" name="confirmPassword"
+                                   autocomplete="new-password" required
+                                   placeholder="Repite la contraseña"
+                                   oninput="evalMatch()">
+                            <button type="button" class="eye-btn"
+                                    onclick="togglePwd('reg-cpwd', this)"
+                                    aria-label="Mostrar u ocultar contraseña">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        <span id="match-lbl" class="match-lbl" aria-live="polite"></span>
+                    </div>
+                    <button type="submit" class="btn btn-secondary"
+                            onclick="return clientValidate()" th:text="#{index.registro}">
+                        Crear cuenta
+                    </button>
+                </form>
             </div>
-        </footer>
+        </section>
 
-        <div th:if="${param.error}" class="mensaje-error" th:text="#{index.error}"></div>
-    </div>
+        <!-- ── Bloque Invitado ── -->
+        <section class="card card-guest" aria-label="Acceso como invitado">
+            <span class="guest-icon" aria-hidden="true">🗺️</span>
+            <h2 th:text="#{index.no_registro}">¿No quieres registrarte?</h2>
+            <p th:text="#{index.no_registro_desc}">Puedes explorar actividades sin crear una cuenta.</p>
+            <ul class="feature-list" aria-label="Qué puedes hacer">
+                <li>✓ Explora actividades por ciudad</li>
+                <li>✓ Filtra por categoría</li>
+                <li>✓ Consulta detalles de cada actividad</li>
+            </ul>
+            <a th:href="@{/invitado}" class="btn btn-guest" th:text="#{index.btn_invitado}">
+                Explorar sin registrarme
+            </a>
+        </section>
+    </main>
 
-    <script>
-        function toggleAuth(type) {
-            const loginForm = document.getElementById('login-form');
-            const registroForm = document.getElementById('registro-form');
-            const btnLogin = document.getElementById('btn-login');
-            const btnRegistro = document.getElementById('btn-registro');
+    <!-- ===== PIE DE PÁGINA ===== -->
+    <footer class="site-footer" role="contentinfo">
+        <nav class="lang-picker" aria-label="Idioma">
+            <a href="?lang=es" hreflang="es">ES 🇪🇸</a>
+            <span aria-hidden="true">|</span>
+            <a href="?lang=en" hreflang="en">EN 🇬🇧</a>
+        </nav>
+    </footer>
 
-            if (type === 'login') {
-                loginForm.style.display = 'block';
-                registroForm.style.display = 'none';
-                btnLogin.classList.add('active');
-                btnRegistro.classList.remove('active');
-            } else {
-                loginForm.style.display = 'none';
-                registroForm.style.display = 'block';
-                btnLogin.classList.remove('active');
-                btnRegistro.classList.add('active');
-            }
-        }
-    </script>
+</div><!-- /overlay -->
+
+<script>
+/* ─── Gestión de pestañas ─────────────────────────────── */
+function switchTab(tab) {
+    const isLogin = (tab === 'login');
+    document.getElementById('panel-login').hidden    =  !isLogin;
+    document.getElementById('panel-registro').hidden =   isLogin;
+    document.getElementById('btn-login').classList.toggle('active',    isLogin);
+    document.getElementById('btn-registro').classList.toggle('active', !isLogin);
+    document.getElementById('btn-login').setAttribute('aria-selected',    isLogin);
+    document.getElementById('btn-registro').setAttribute('aria-selected', !isLogin);
+}
+
+/* Detectar la pestaña correcta según la URL al cargar */
+document.addEventListener('DOMContentLoaded', function () {
+    const p = new URLSearchParams(location.search);
+    switchTab(p.has('regError') || p.get('tab') === 'registro' ? 'registro' : 'login');
+});
+
+/* ─── Mostrar / ocultar contraseña ───────────────────── */
+function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    const isHidden = inp.type === 'password';
+    inp.type = isHidden ? 'text' : 'password';
+    btn.setAttribute('aria-label', isHidden ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    btn.classList.toggle('active', isHidden);
+}
+
+/* ─── Indicador de fortaleza ─────────────────────────── */
+const STRENGTH = [
+    { lbl: 'Muy débil',   cls: 'w-20  s-danger'  },
+    { lbl: 'Débil',       cls: 'w-40  s-warning'  },
+    { lbl: 'Aceptable',   cls: 'w-60  s-info'     },
+    { lbl: 'Fuerte',      cls: 'w-80  s-success'  },
+    { lbl: '¡Excelente!', cls: 'w-100 s-success'  },
+];
+
+function evalStrength(v) {
+    let score = 0;
+    if (v.length >= 8)               score++;
+    if (/[a-z]/.test(v))            score++;
+    if (/[A-Z]/.test(v))            score++;
+    if (/[0-9]/.test(v))            score++;
+    if (/[^a-zA-Z0-9]/.test(v))    score++;
+    const idx  = v.length === 0 ? -1 : Math.min(score - 1, 4);
+    const fill = document.getElementById('strength-fill');
+    const lbl  = document.getElementById('strength-lbl');
+    fill.className = 'strength-fill ' + (idx >= 0 ? STRENGTH[idx].cls : '');
+    lbl.textContent = idx >= 0 ? STRENGTH[idx].lbl : '';
+    evalMatch(); // re-evaluar coincidencia si cambia la principal
+}
+
+/* ─── Coincidencia de contraseñas ────────────────────── */
+function evalMatch() {
+    const pw  = document.getElementById('reg-pwd').value;
+    const cpw = document.getElementById('reg-cpwd').value;
+    const lbl = document.getElementById('match-lbl');
+    if (!cpw) { lbl.textContent = ''; lbl.className = 'match-lbl'; return; }
+    const ok = pw === cpw;
+    lbl.textContent = ok ? '✓ Las contraseñas coinciden' : '✗ No coinciden';
+    lbl.className   = 'match-lbl ' + (ok ? 's-success' : 's-danger');
+}
+
+/* ─── Validación cliente antes de enviar ─────────────── */
+function clientValidate() {
+    const pw  = document.getElementById('reg-pwd').value;
+    const cpw = document.getElementById('reg-cpwd').value;
+    if (pw.length < 8) {
+        alert('La contraseña debe tener al menos 8 caracteres.');
+        return false;
+    }
+    if (pw !== cpw) {
+        alert('Las contraseñas no coinciden.');
+        return false;
+    }
+    return true;
+}
+</script>
 </body>
 </html>

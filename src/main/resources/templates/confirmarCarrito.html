@@ -1,56 +1,91 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/styleConfirmarCarrito.css">
-    <title>TriPing | Actividades elegidas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleConfirmarCarrito.css}">
+    <title>TriPing | Confirmar selección</title>
 </head>
+<body class="cc-body">
 
-<body>
-    <header class="header">
-        <div class="header-left">
-            <button onclick="window.location.href='inicio'">← Volver al inicio</button>
-        </div>
-        <div class="header-center">
-            <h1>TriPing</h1>
-        </div>
-        <div class="header-right">
-            <span class="usuario" th:text="${session.nombre}">Usuario</span>
-        </div>
-    </header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
-    <section class="imagen-entrada"></section>
+<!-- ══ PROGRESO ════════════════════════════════════════════════════════ -->
+<div class="cc-progress">
+    <div class="cc-progress__inner">
+        <div class="cc-step cc-step--done">1 · Elegir actividades</div>
+        <div class="cc-step__arrow">→</div>
+        <div class="cc-step cc-step--active">2 · Confirmar</div>
+        <div class="cc-step__arrow">→</div>
+        <div class="cc-step">3 · Planificar días</div>
+        <div class="cc-step__arrow">→</div>
+        <div class="cc-step">4 · Itinerario</div>
+    </div>
+</div>
 
-    <section class="info-viaje">
-        <div class="datos-viaje">
-            <span th:text="'Destino: ' + ${session.ciudad}"></span> — 
-            <span th:text="'Del ' + ${session.fEntrada} + ' al ' + ${session.fSalida}"></span>
+<!-- ══ CONTENIDO ═══════════════════════════════════════════════════════ -->
+<main class="cc-main">
+
+    <!-- Cabecera del viaje -->
+    <div class="cc-trip-header">
+        <div class="cc-trip-info">
+            <h1>Tu selección para <strong th:text="${session.ciudad}">la ciudad</strong></h1>
+            <p>
+                📅 Del <span th:text="${session.fEntrada}"></span> al <span th:text="${session.fSalida}"></span>
+                · <strong th:text="${session.diasViaje} + ' días'"></strong>
+                · <strong th:text="${session.cont} + ' actividades'"></strong>
+                · <strong th:text="${session.precioCarro} + ' €'"></strong> total
+            </p>
         </div>
-    </section>
+    </div>
 
-    <div class="titulo-actividades">Estas son las actividades elegidas</div>
+    <!-- Grid de actividades del carrito -->
+    <div class="cc-grid">
+        <article th:each="act : ${session.carrito}" class="cc-card">
+            <div class="cc-card__img">
+                <img th:src="@{${act.img}}" th:alt="${act.nombre}">
+                <span class="cc-card__badge"
+                      th:classappend="${act.tipo.name() == 'DEPORTIVA'} ? ' badge-deportiva' :
+                                     (${act.tipo.name() == 'TURISTICA'} ? ' badge-turistica' : ' badge-gastronomica')"
+                      th:text="${act.tipo.name() == 'DEPORTIVA'} ? '🏃 Deportiva' :
+                               (${act.tipo.name() == 'TURISTICA'} ? '🏛️ Turística' : '🍽️ Gastronómica')">
+                </span>
+            </div>
+            <div class="cc-card__body">
+                <h3 th:text="${act.nombre}">Nombre</h3>
+                <p class="cc-card__desc" th:text="${act.descripcion}">Descripción</p>
+                <div class="cc-card__meta">
+                    <span>📍 <span th:text="${act.ciudad}"></span></span>
+                    <span>⏱️ <span th:text="${act.duracion}"></span> min</span>
+                    <span class="cc-card__price"
+                          th:text="${act.precio > 0} ? ${act.precio} + ' €' : 'Gratis'">0€</span>
+                </div>
+            </div>
+        </article>
+    </div>
 
-    <section class="contenedor-actividades">
-        <div th:each="act : ${session.carrito}" class="card-actividad">
-            <img th:src="${act.img}" alt="Imagen actividad">
-            <h3 th:text="${act.nombre}"></h3>
-            <p th:text="${act.descripcion}"></p>
+    <!-- Resumen y CTA -->
+    <div class="cc-footer-bar">
+        <div class="cc-footer-bar__total">
+            <span class="cc-footer-bar__label">Total estimado</span>
+            <span class="cc-footer-bar__amount" th:text="${session.precioCarro} + ' €'">0 €</span>
         </div>
-    </section>
-
-    <form action="planificar">
-        <input class="btn-continuar" type="submit" value="Continuar a planificar el viaje">
-    </form>
-        
-    <footer class="footer">
-        <p>
-            &copy; 2026 <span th:text="#{app.name}">TriPing</span> — <span th:text="#{index.eslogan}">Tu planificador de
-                viajes</span>
-        </p>
-        <div class="language-picker">
-            <a href="?lang=es">ES 🇪🇸</a> |
-            <a href="?lang=en">EN 🇬🇧</a>
+        <div class="cc-footer-bar__actions">
+            <a th:href="@{/inicio}" class="btn btn-outline">← Cambiar selección</a>
+            <form action="planificar" method="get" style="display:inline">
+                <button type="submit" class="btn btn-accent btn-lg">
+                    Planificar por días →
+                </button>
+            </form>
         </div>
-    </footer>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
 </html>

@@ -34,9 +34,13 @@ public abstract class Actividad implements Descripciones, Comparable<Actividad> 
 
     private String img;
 
-    // Constructor vacío OBLIGATORIO para JPA
-    public Actividad() {
-    }
+    private Double latitud;
+    private Double longitud;
+
+    /** Email de la empresa propietaria; null = actividad oficial/admin */
+    private String creadorEmail;
+
+    public Actividad() {}
 
     public Actividad(Tipo tipo, int duracion, int precio, String ciudad,
             String nombre, String descripcion, String img) {
@@ -49,95 +53,54 @@ public abstract class Actividad implements Descripciones, Comparable<Actividad> 
         this.img = img;
     }
 
-    // getters y setters
-    public Long getId() {
-        return id;
-    }
+    // ── Getters ──────────────────────────────────────────
+    public Long getId()          { return id; }
+    public Tipo getTipo()        { return tipo; }
+    public int getDuracion()     { return duracion; }
+    public int getPrecio()       { return precio; }
+    public String getCiudad()    { return ciudad; }
+    public String getNombre()    { return nombre; }
+    public String getDescripcion(){ return descripcion; }
+    public String getImg()       { return img; }
+    public Double getLatitud()   { return latitud; }
+    public Double getLongitud()  { return longitud; }
 
-    public Tipo getTipo() {
-        return tipo;
-    }
+    // ── Setters ──────────────────────────────────────────
+    public void setDuracion(int duracion)        { this.duracion = duracion; }
+    public void setPrecio(int precio)            { this.precio = precio; }
+    public void setCiudad(String ciudad)         { this.ciudad = ciudad; }
+    public void setNombre(String nombre)         { this.nombre = nombre; }
+    public void setDescripcion(String desc)      { this.descripcion = desc; }
+    public void setImg(String img)               { this.img = img; }
+    public void setLatitud(Double latitud)         { this.latitud = latitud; }
+    public void setLongitud(Double longitud)       { this.longitud = longitud; }
+    public String getCreadorEmail()               { return creadorEmail; }
+    public void setCreadorEmail(String email)     { this.creadorEmail = email; }
 
-    public int getDuracion() {
-        return duracion;
-    }
-
-    public int getPrecio() {
-        return precio;
-    }
-
-    public String getCiudad() {
-        return ciudad;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setDuracion(int duracion) {
-        this.duracion = duracion;
-    }
-
-    public void setPrecio(int precio) {
-        this.precio = precio;
-    }
-
-    public void setCiudad(String ciudad) {
-        this.ciudad = ciudad;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    // Ordenar por precio (desc)
+    // ── Ordenar por precio (desc) ─────────────────────────
     @Override
-    public int compareTo(Actividad o) {
-        return o.precio - this.precio;
-    }
+    public int compareTo(Actividad o) { return o.precio - this.precio; }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof Actividad))
-            return false;
-        Actividad that = (Actividad) o;
-        return id != null && id.equals(that.id);
+        if (this == o) return true;
+        if (!(o instanceof Actividad)) return false;
+        return id != null && id.equals(((Actividad) o).id);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 
-    @Override
+    @Override @Transient
+    public int getTiempo() { return duracion / 60; }
+
     @Transient
-    public int getTiempo() {
-        return duracion / 60;
-    }
+    public String getInfoExtra() { return ""; }
 
-    @Override
-    @Transient
+    @Override @Transient
     public String getBreveDesc() {
-        return descripcion.length() > 50
-                ? descripcion.substring(0, 50) + "..."
+        return descripcion != null && descripcion.length() > 80
+                ? descripcion.substring(0, 80) + "..."
                 : descripcion;
     }
 }

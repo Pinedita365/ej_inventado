@@ -1,40 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styleFinal.css">
-    <title>TriPing | ¡Todo listo!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFinal.css}">
+    <title>TriPing | ¡Itinerario completado!</title>
 </head>
-<body>
-    <div class="card-final">
-        <div class="check-icon">✨</div>
-        
-        <header>
-            <h1>¡Itinerario Completado!</h1>
-            <p>Todo está listo para tu aventura en <span class="resaltado" th:text="${session.ciudad}">la ciudad</span>.</p>
-        </header>
+<body class="final-body">
 
-        <section class="info-envio">
-            <p>¿Quieres llevar tu plan contigo?</p>
-            
-            <a th:href="@{/enviar-itinerario}" class="btn-email">
-                <span>📧 Enviar itinerario a mi Email (PDF)</span>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- Confetti (CSS puro) -->
+<div class="confetti-wrap" aria-hidden="true">
+    <div th:each="i : ${#numbers.sequence(1, 24)}" class="confetti-piece"></div>
+</div>
+
+<!-- ══ CONTENIDO CENTRAL ══════════════════════════════════════════════ -->
+<main class="final-main">
+    <div class="final-card">
+
+        <!-- Icono de éxito -->
+        <div class="final-card__icon">🎉</div>
+
+        <!-- Título -->
+        <h1 class="final-card__title">¡Itinerario completado!</h1>
+        <p class="final-card__subtitle">
+            Tu aventura en <strong th:text="${session.ciudad}">la ciudad</strong> está lista.
+            <br>
+            <span th:text="${session.diasViaje} + ' días llenos de experiencias te esperan.'"></span>
+        </p>
+
+        <!-- Paso 4 completado -->
+        <div class="final-progress">
+            <div class="cc-step cc-step--done">1 · Actividades</div>
+            <div class="cc-step__arrow">→</div>
+            <div class="cc-step cc-step--done">2 · Confirmar</div>
+            <div class="cc-step__arrow">→</div>
+            <div class="cc-step cc-step--done">3 · Planificar</div>
+            <div class="cc-step__arrow">→</div>
+            <div class="cc-step cc-step--active">4 · ¡Listo!</div>
+        </div>
+
+        <!-- Sección email -->
+        <div class="final-email-section">
+            <p class="final-email-section__label">¿Quieres llevar tu itinerario contigo?</p>
+            <a th:href="@{/enviar-itinerario}" class="btn btn-primary btn-lg final-email-btn">
+                📧 Enviar PDF a mi email
             </a>
 
-            <div th:if="${param.enviado}" class="mensaje-exito">
-                <p>✅ ¡Correo enviado con éxito! Revisa tu bandeja de entrada.</p>
+            <div th:if="${param.enviado}" class="alert alert-success" style="margin-top:16px">
+                ✅ ¡Correo enviado! Revisa tu bandeja de entrada.
             </div>
-            
-            <div th:if="${param.error}" class="mensaje-error">
-                <p>❌ Hubo un problema al enviar el correo. Inténtalo de nuevo.</p>
+            <div th:if="${param.error}" class="alert alert-error" style="margin-top:16px">
+                ❌ Error al enviar. Inténtalo de nuevo.
             </div>
-        </section>
+        </div>
 
-        <div class="acciones-finales">
-            <a th:href="@{/inicio}" class="btn-secundario">Volver a actividades</a>
-            <a th:href="@{/logout}" class="btn-salir">Cerrar sesión de forma segura</a>
+        <!-- Acciones -->
+        <div class="final-actions">
+            <a th:href="@{/inicio}" class="btn btn-outline">← Ver actividades</a>
+            <a th:href="@{/}" class="btn btn-outline">🏠 Inicio</a>
+            <form th:action="@{/logout}" method="post" style="display:inline">
+                <button type="submit" class="btn btn-danger">Cerrar sesión</button>
+            </form>
         </div>
     </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
 </body>
 </html>

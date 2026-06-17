@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleEmpresa.css}">
+    <title>TriPing | Nueva actividad</title>
+</head>
+<body class="empresa-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="empresa-layout">
+
+    <!-- ── Sidebar ─────────────────────────────────────────────────── -->
+    <aside class="empresa-sidebar">
+        <div class="empresa-sidebar__brand">
+            <div class="empresa-sidebar__avatar"
+                 th:text="${#strings.substring(session.nombre != null ? session.nombre : 'E', 0, 2).toUpperCase()}">EM</div>
+            <div>
+                <strong th:text="${session.nombre}">Empresa</strong>
+            </div>
+        </div>
+        <nav class="empresa-sidebar__nav">
+            <a th:href="@{/empresa/actividades}" class="empresa-nav-link">📋 Mis actividades</a>
+            <a th:href="@{/empresa/nueva}"       class="empresa-nav-link empresa-nav-link--active">➕ Nueva actividad</a>
+            <a th:href="@{/}"                 class="empresa-nav-link">🏠 Hub</a>
+            <a th:href="@{/explorar}"            class="empresa-nav-link">🔍 Explorar</a>
+        </nav>
+    </aside>
+
+    <!-- ── Contenido ───────────────────────────────────────────────── -->
+    <main class="empresa-main">
+
+        <div th:if="${param.success}" class="alert alert-success">✅ Actividad publicada correctamente.</div>
+
+        <section class="empresa-section">
+            <div class="empresa-section__header">
+                <h2>➕ Nueva actividad</h2>
+            </div>
+            <div class="empresa-form-card">
+                <form th:action="@{/empresa/guardar}" method="post" enctype="multipart/form-data" class="empresa-form">
+
+                    <div class="empresa-form__row">
+                        <div class="field">
+                            <label>Nombre de la actividad *</label>
+                            <input type="text" name="nombre" required maxlength="120" placeholder="Ej: Kayak por el Guadalquivir">
+                        </div>
+                        <div class="field">
+                            <label>Ciudad *</label>
+                            <input type="text" name="ciudad" required placeholder="Ej: Sevilla">
+                        </div>
+                    </div>
+
+                    <div class="empresa-form__row empresa-form__row--3">
+                        <div class="field">
+                            <label>Precio (€) *</label>
+                            <input type="number" name="precio" required min="0" max="1000" step="1" placeholder="Ej: 35">
+                        </div>
+                        <div class="field">
+                            <label>Duración (minutos) *</label>
+                            <input type="number" name="duracion" required min="15" max="1440" placeholder="Ej: 180">
+                        </div>
+                        <div class="field">
+                            <label>Tipo *</label>
+                            <select name="tipo" id="empTipo" onchange="mostrarCampos()" required>
+                                <option value="">-- Tipo --</option>
+                                <option value="DEPORTIVA">Deportiva</option>
+                                <option value="GASTRONOMICA">Gastronómica</option>
+                                <option value="TURISTICA">Turística</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Descripción *</label>
+                        <textarea name="descripcion" required rows="4" placeholder="Describe la actividad..."></textarea>
+                    </div>
+
+                    <div class="empresa-form__row">
+                        <div class="field">
+                            <label>Imagen de portada *</label>
+                            <input type="file" name="imagen" accept="image/*" required>
+                        </div>
+                        <div class="field">
+                            <label>Latitud (opcional)</label>
+                            <input type="number" name="latitud" step="0.0001" placeholder="Ej: 37.3886">
+                        </div>
+                        <div class="field">
+                            <label>Longitud (opcional)</label>
+                            <input type="number" name="longitud" step="0.0001" placeholder="Ej: -5.9823">
+                        </div>
+                    </div>
+
+                    <div id="campoDeportiva" class="empresa-tipo-campo">
+                        <div class="field"><label>Nivel de dificultad</label>
+                            <select name="nivelStr"><option value="Bajo">Bajo</option><option value="Medio">Medio</option><option value="Alto">Alto</option></select>
+                        </div>
+                    </div>
+                    <div id="campoGastronomica" class="empresa-tipo-campo" style="display:none">
+                        <div class="field"><label>Código de vestimenta</label>
+                            <input type="text" name="vestimenta" placeholder="Ej: Formal, Casual...">
+                        </div>
+                    </div>
+                    <div id="campoTuristica" class="empresa-tipo-campo" style="display:none">
+                        <div class="field"><label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+                            <input type="checkbox" name="vehiculo" value="true" style="width:auto"> ¿Requiere vehículo propio?
+                        </label></div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;justify-content:flex-end">
+                        <a th:href="@{/empresa/actividades}" class="btn btn-outline">Cancelar</a>
+                        <button type="submit" class="btn btn-accent btn-lg">Publicar actividad →</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+function mostrarCampos() {
+    ['campoDeportiva','campoGastronomica','campoTuristica'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+    });
+    const t = document.getElementById('empTipo').value;
+    if (t === 'DEPORTIVA')    document.getElementById('campoDeportiva').style.display    = 'block';
+    if (t === 'GASTRONOMICA') document.getElementById('campoGastronomica').style.display = 'block';
+    if (t === 'TURISTICA')    document.getElementById('campoTuristica').style.display    = 'block';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleAdmin.css}">
+    <title>TriPing Admin | Empresas</title>
+</head>
+<body class="admin-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="admin-layout">
+
+    <!-- ── Sidebar ─────────────────────────────────────────────────── -->
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar__brand">
+            <span class="admin-sidebar__icon">⚙️</span>
+            <div>
+                <strong>Administración</strong>
+                <small>Panel de control</small>
+            </div>
+        </div>
+        <nav class="admin-sidebar__nav">
+            <a th:href="@{/admin/usuarios}"    class="admin-nav-link">👥 Usuarios</a>
+            <a th:href="@{/admin/empresas}"    class="admin-nav-link admin-nav-link--active">🏢 Empresas</a>
+            <a th:href="@{/admin/actividades}" class="admin-nav-link">🎯 Actividades</a>
+            <a th:href="@{/}" class="admin-nav-link" style="margin-top:4px;border-top:1px solid var(--c-border);padding-top:10px">🏠 Volver al hub</a>
+        </nav>
+        <div class="admin-sidebar__stats">
+            <div class="admin-stat-row"><span>Usuarios</span><strong th:text="${totalUsuarios}">0</strong></div>
+            <div class="admin-stat-row"><span>Empresas</span><strong th:text="${totalEmpresas}">0</strong></div>
+            <div class="admin-stat-row"><span>Actividades</span><strong th:text="${totalActividades}">0</strong></div>
+        </div>
+    </aside>
+
+    <!-- ── Contenido ───────────────────────────────────────────────── -->
+    <main class="admin-content">
+
+        <div class="admin-page-header">
+            <div>
+                <h1>🏢 Gestión de empresas</h1>
+                <p>Crea cuentas de empresa y gestiona las existentes.</p>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div th:if="${param.createdEmpresa != null}" class="alert alert-success">✅ Cuenta de empresa creada correctamente.</div>
+        <div th:if="${param.errorEmpresa != null}"   class="alert alert-error">⚠️ Ya existe un usuario con ese email.</div>
+        <div th:if="${param.deleted != null}"        class="alert alert-info">🗑️ Empresa eliminada.</div>
+        <div th:if="${param.rolChanged != null}"     class="alert alert-success">✅ Rol actualizado.</div>
+
+        <!-- Formulario crear empresa -->
+        <div class="admin-card">
+            <div class="admin-card__header">
+                <h2>➕ Crear nueva cuenta de empresa</h2>
+            </div>
+            <div class="admin-card__body">
+                <form th:action="@{/admin/empresas/crear}" method="post" class="admin-form-grid">
+                    <input type="text"     name="nombre"   required placeholder="Nombre de la empresa *">
+                    <input type="email"    name="email"    required placeholder="Email de acceso *">
+                    <input type="password" name="password" required minlength="8" placeholder="Contraseña (mín. 8 caracteres) *">
+                    <button type="submit" class="btn btn-primary" style="grid-column:span 1">Crear empresa →</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de empresas -->
+        <div class="admin-card">
+            <div class="admin-card__header">
+                <h2>Empresas registradas</h2>
+                <span style="font-size:.82rem;color:var(--c-muted)" th:text="${#lists.size(empresas)} + ' empresas'"></span>
+            </div>
+            <div class="admin-card__body">
+                <div th:if="${#lists.isEmpty(empresas)}" class="empty-state">
+                    <div class="empty-icon">🏢</div>
+                    <h3>No hay empresas registradas</h3>
+                    <p>Crea una nueva cuenta con el formulario de arriba.</p>
+                </div>
+                <div class="admin-empresas-grid" th:unless="${#lists.isEmpty(empresas)}">
+                    <div th:each="emp : ${empresas}" class="admin-empresa-card">
+                        <div class="admin-empresa-card__avatar"
+                             th:text="${#strings.substring(emp.nombre, 0, 2).toUpperCase()}">EM</div>
+                        <div class="admin-empresa-card__info">
+                            <strong th:text="${emp.nombre}">Empresa</strong>
+                            <small th:text="${emp.email}">email</small>
+                            <span class="admin-badge badge-local" th:text="${emp.proveedor != null ? emp.proveedor : 'LOCAL'}"></span>
+                        </div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <form th:action="@{/admin/usuarios/cambiar-rol}" method="post">
+                                <input type="hidden" name="id" th:value="${emp.id}">
+                                <input type="hidden" name="nuevoRol" value="ROLE_USER">
+                                <button type="submit" class="btn btn-outline btn-sm"
+                                        onclick="return confirm('¿Quitar acceso de empresa?')">Degradar</button>
+                            </form>
+                            <form th:action="@{/admin/usuarios/eliminar}" method="post">
+                                <input type="hidden" name="id" th:value="${emp.id}">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('¿Eliminar esta empresa?')">🗑️</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

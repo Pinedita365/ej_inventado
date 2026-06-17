@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Política de privacidad de TriPing. RGPD.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleLegal.css}">
+    <title>Política de privacidad — TriPing</title>
+</head>
+<body class="legal-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+<div class="legal-hero">
+    <span class="legal-hero__tag">Legal</span>
+    <h1>Política de privacidad</h1>
+    <p>Cómo recopilamos, usamos y protegemos tus datos personales en TriPing.</p>
+</div>
+
+<!-- ══ CONTENIDO ═════════════════════════════════════════════════════ -->
+<div class="legal-content">
+
+    <p class="legal-updated">Última actualización: 2 de junio de 2026</p>
+
+    <div class="legal-highlight">
+        En TriPing respetamos tu privacidad. Esta política explica qué datos recopilamos, por qué y cómo puedes
+        ejercer tus derechos. Cumplimos con el <strong>Reglamento General de Protección de Datos (RGPD)</strong>
+        y la normativa española de protección de datos.
+    </div>
+
+    <div class="legal-section">
+        <h2>1. Responsable del tratamiento</h2>
+        <p>
+            El responsable del tratamiento de tus datos personales es <strong>TriPing</strong>. Para cualquier
+            consulta relacionada con la privacidad, puedes contactarnos en
+            <a href="mailto:privacidad@triping.es">privacidad@triping.es</a>.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>2. Datos que recopilamos</h2>
+        <p>Recopilamos únicamente los datos necesarios para prestarte el servicio:</p>
+        <ul>
+            <li><strong>Nombre y email:</strong> para crear y gestionar tu cuenta de usuario.</li>
+            <li><strong>Contraseña (cifrada):</strong> solo si te registras con email. Nunca almacenamos contraseñas en texto plano.</li>
+            <li><strong>Proveedor de login:</strong> si usas Google o GitHub, registramos qué proveedor usaste.</li>
+            <li><strong>Datos de sesión:</strong> para mantenerte autenticado durante tu visita.</li>
+            <li><strong>Email de itinerario:</strong> cuando solicitas enviar tu plan, usamos tu email para enviarlo.</li>
+        </ul>
+        <p>
+            <strong>No recopilamos</strong> datos de pago, ubicación en tiempo real, ni datos sensibles de ningún tipo.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>3. Finalidad y base legal del tratamiento</h2>
+        <ul>
+            <li>
+                <strong>Prestación del servicio:</strong> gestionar tu cuenta, sesión e itinerarios.
+                Base legal: ejecución del contrato (Art. 6.1.b RGPD).
+            </li>
+            <li>
+                <strong>Comunicaciones transaccionales:</strong> envío del PDF de itinerario por email.
+                Base legal: ejecución del contrato (Art. 6.1.b RGPD).
+            </li>
+            <li>
+                <strong>Obligaciones legales:</strong> conservación de datos según la normativa vigente.
+                Base legal: cumplimiento de obligación legal (Art. 6.1.c RGPD).
+            </li>
+        </ul>
+    </div>
+
+    <div class="legal-section">
+        <h2>4. Conservación de datos</h2>
+        <p>
+            Conservamos tus datos mientras mantengas tu cuenta activa en TriPing. Si eliminas tu cuenta,
+            tus datos personales serán eliminados en un plazo máximo de 30 días, salvo que exista obligación
+            legal de conservarlos por un período mayor.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>5. Destinatarios de los datos</h2>
+        <p>
+            Tus datos son tratados por TriPing y los siguientes proveedores de servicios, que actúan como
+            encargados del tratamiento:
+        </p>
+        <ul>
+            <li><strong>Cloudinary:</strong> almacenamiento de imágenes de actividades.</li>
+            <li><strong>SendGrid (Twilio):</strong> envío de emails con el itinerario en PDF.</li>
+            <li><strong>Google / GitHub:</strong> autenticación OAuth2 (si usas este método de login).</li>
+        </ul>
+        <p>
+            No cedemos tus datos a terceros para fines publicitarios ni los vendemos bajo ningún concepto.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>6. Tus derechos</h2>
+        <p>Conforme al RGPD, tienes derecho a:</p>
+        <ul>
+            <li><strong>Acceso:</strong> conocer qué datos tenemos sobre ti.</li>
+            <li><strong>Rectificación:</strong> corregir datos inexactos o incompletos.</li>
+            <li><strong>Supresión:</strong> solicitar la eliminación de tus datos ("derecho al olvido").</li>
+            <li><strong>Limitación:</strong> solicitar que limitemos el tratamiento de tus datos.</li>
+            <li><strong>Portabilidad:</strong> recibir tus datos en formato estructurado y legible.</li>
+            <li><strong>Oposición:</strong> oponerte al tratamiento de tus datos en determinadas circunstancias.</li>
+        </ul>
+        <p>
+            Para ejercer cualquiera de estos derechos, escríbenos a
+            <a href="mailto:privacidad@triping.es">privacidad@triping.es</a>.
+            También puedes presentar una reclamación ante la
+            <a href="https://www.aepd.es" target="_blank" rel="noopener">Agencia Española de Protección de Datos (AEPD)</a>.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>7. Seguridad</h2>
+        <p>
+            Aplicamos medidas técnicas y organizativas adecuadas para proteger tus datos: cifrado BCrypt para
+            contraseñas, cookies con atributo HttpOnly y SameSite, protección CSRF, y Content Security Policy (CSP).
+        </p>
+        <p>
+            A pesar de nuestros esfuerzos, ningún sistema es 100% seguro. Si detectas alguna vulnerabilidad,
+            te rogamos que nos lo comuniques de forma responsable en <a href="mailto:seguridad@triping.es">seguridad@triping.es</a>.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>8. Cambios en esta política</h2>
+        <p>
+            Podemos actualizar esta política para reflejar cambios en el servicio o en la normativa. Te
+            notificaremos los cambios significativos mediante un aviso en la plataforma. La fecha de la última
+            actualización aparece al inicio de este documento.
+        </p>
+    </div>
+
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

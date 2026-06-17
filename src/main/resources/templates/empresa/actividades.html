@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleEmpresa.css}">
+    <title>TriPing | Mis actividades</title>
+</head>
+<body class="empresa-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="empresa-layout">
+
+    <!-- ── Sidebar ─────────────────────────────────────────────────── -->
+    <aside class="empresa-sidebar">
+        <div class="empresa-sidebar__brand">
+            <div class="empresa-sidebar__avatar"
+                 th:text="${#strings.substring(session.nombre != null ? session.nombre : 'E', 0, 2).toUpperCase()}">EM</div>
+            <div>
+                <strong th:text="${session.nombre}">Empresa</strong>
+                <small th:text="${email}">email</small>
+            </div>
+        </div>
+        <nav class="empresa-sidebar__nav">
+            <a th:href="@{/empresa/actividades}" class="empresa-nav-link empresa-nav-link--active">📋 Mis actividades</a>
+            <a th:href="@{/empresa/nueva}"       class="empresa-nav-link">➕ Nueva actividad</a>
+            <a th:href="@{/}"                 class="empresa-nav-link">🏠 Hub</a>
+            <a th:href="@{/explorar}"            class="empresa-nav-link">🔍 Explorar</a>
+        </nav>
+    </aside>
+
+    <!-- ── Contenido ───────────────────────────────────────────────── -->
+    <main class="empresa-main">
+
+        <!-- Alertas -->
+        <div th:if="${param.success}"     class="alert alert-success">✅ Actividad guardada correctamente.</div>
+        <div th:if="${param.editado}"     class="alert alert-success">✏️ Actividad actualizada correctamente.</div>
+        <div th:if="${param.deleted}"     class="alert alert-info">🗑️ Actividad eliminada.</div>
+        <div th:if="${param.errorEditar}" class="alert alert-error">⚠️ No tienes permiso para editar esa actividad.</div>
+
+        <section class="empresa-section">
+            <div class="empresa-section__header">
+                <h2>Mis actividades</h2>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span class="empresa-count" th:text="${#lists.size(misActividades)} + ' actividades'">0 actividades</span>
+                    <a th:href="@{/empresa/nueva}" class="btn btn-accent btn-sm">➕ Nueva actividad</a>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(misActividades)}" class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h3>Todavía no tienes actividades</h3>
+                <p>Crea tu primera actividad para aparecer en el catálogo.</p>
+                <a th:href="@{/empresa/nueva}" class="btn btn-accent">➕ Crear primera actividad</a>
+            </div>
+
+            <div class="empresa-acts-grid" th:unless="${#lists.isEmpty(misActividades)}">
+                <div th:each="act : ${misActividades}" class="empresa-act-card">
+                    <img th:src="@{${act.img}}" th:alt="${act.nombre}">
+                    <div class="empresa-act-card__body">
+                        <div>
+                            <span class="badge"
+                                  th:classappend="${act.tipo.name() == 'DEPORTIVA'} ? ' badge-deportiva' :
+                                                 (${act.tipo.name() == 'TURISTICA'} ? ' badge-turistica' : ' badge-gastronomica')"
+                                  th:text="${act.tipo.name()}"></span>
+                            <h4 th:text="${act.nombre}">Nombre</h4>
+                            <p>📍 <span th:text="${act.ciudad}"></span> · <span th:text="${act.precio} + ' €'"></span></p>
+                        </div>
+                        <div style="display:flex;gap:8px">
+                            <button type="button" class="btn btn-outline btn-sm"
+                                    th:onclick="'abrirEditar(' + ${act.id} + ',\'' + ${act.nombre} + '\',\'' + ${act.ciudad} + '\',' + ${act.precio} + ',' + ${act.duracion} + ',\'' + ${act.tipo.name()} + '\',\'' + ${act.descripcion} + '\',' + (${act.latitud} != null ? ${act.latitud} : 'null') + ',' + (${act.longitud} != null ? ${act.longitud} : 'null') + ')'">
+                                ✏️ Editar
+                            </button>
+                            <form th:action="@{/empresa/eliminar}" method="post">
+                                <input type="hidden" name="id" th:value="${act.id}">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('¿Eliminar esta actividad?')">🗑️</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<!-- ══ MODAL EDITAR ════════════════════════════════════════════════ -->
+<div id="modal-editar" class="modal-overlay" style="display:none" onclick="cerrarModalEditar(event)">
+    <div class="modal-box">
+        <div class="modal-box__header">
+            <h3>✏️ Editar actividad</h3>
+            <button type="button" class="modal-close" onclick="cerrarModal()">✕</button>
+        </div>
+        <form id="form-editar" th:action="@{/empresa/editar}" method="post" enctype="multipart/form-data" class="empresa-form">
+            <input type="hidden" name="id" id="edit-id">
+            <div class="empresa-form__row">
+                <div class="field"><label>Nombre *</label><input type="text" name="nombre" id="edit-nombre" required maxlength="120"></div>
+                <div class="field"><label>Ciudad *</label><input type="text" name="ciudad" id="edit-ciudad" required></div>
+            </div>
+            <div class="empresa-form__row empresa-form__row--3">
+                <div class="field"><label>Precio (€) *</label><input type="number" name="precio" id="edit-precio" required min="0" max="1000"></div>
+                <div class="field"><label>Duración (min) *</label><input type="number" name="duracion" id="edit-duracion" required min="15" max="1440"></div>
+                <div class="field"><label>Tipo</label><input type="text" id="edit-tipo-display" disabled style="background:var(--c-light);color:var(--c-muted)"><input type="hidden" name="tipo" id="edit-tipo"></div>
+            </div>
+            <div class="field"><label>Descripción *</label><textarea name="descripcion" id="edit-descripcion" required rows="3"></textarea></div>
+            <div id="edit-campoDeportiva"   style="display:none"><div class="field"><label>Nivel</label><select name="nivelStr" id="edit-nivel"><option value="Bajo">Bajo</option><option value="Medio">Medio</option><option value="Alto">Alto</option></select></div></div>
+            <div id="edit-campoGastronomica" style="display:none"><div class="field"><label>Vestimenta</label><input type="text" name="vestimenta" id="edit-vestimenta"></div></div>
+            <div id="edit-campoTuristica"   style="display:none"><div class="field"><label style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" name="vehiculo" id="edit-vehiculo" value="true" style="width:auto"> ¿Requiere vehículo propio?</label></div></div>
+            <div class="empresa-form__row">
+                <div class="field"><label>Nueva imagen (opcional)</label><input type="file" name="imagen" accept="image/*"></div>
+                <div class="field"><label>Latitud</label><input type="number" name="latitud" id="edit-latitud" step="0.0001"></div>
+                <div class="field"><label>Longitud</label><input type="number" name="longitud" id="edit-longitud" step="0.0001"></div>
+            </div>
+            <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+                <button type="button" class="btn btn-outline" onclick="cerrarModal()">Cancelar</button>
+                <button type="submit" class="btn btn-accent">Guardar cambios →</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function abrirEditar(id, nombre, ciudad, precio, duracion, tipo, descripcion, lat, lng) {
+    document.getElementById('edit-id').value       = id;
+    document.getElementById('edit-nombre').value   = nombre;
+    document.getElementById('edit-ciudad').value   = ciudad;
+    document.getElementById('edit-precio').value   = precio;
+    document.getElementById('edit-duracion').value = duracion;
+    document.getElementById('edit-tipo').value     = tipo;
+    document.getElementById('edit-tipo-display').value = tipo.charAt(0) + tipo.slice(1).toLowerCase();
+    document.getElementById('edit-descripcion').value  = descripcion;
+    document.getElementById('edit-latitud').value  = lat !== 'null' ? lat : '';
+    document.getElementById('edit-longitud').value = lng !== 'null' ? lng : '';
+    ['edit-campoDeportiva','edit-campoGastronomica','edit-campoTuristica'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+    });
+    if (tipo === 'DEPORTIVA')    document.getElementById('edit-campoDeportiva').style.display    = 'block';
+    if (tipo === 'GASTRONOMICA') document.getElementById('edit-campoGastronomica').style.display = 'block';
+    if (tipo === 'TURISTICA')    document.getElementById('edit-campoTuristica').style.display    = 'block';
+    document.getElementById('modal-editar').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+function cerrarModal() {
+    document.getElementById('modal-editar').style.display = 'none';
+    document.body.style.overflow = '';
+}
+function cerrarModalEditar(e) {
+    if (e.target === document.getElementById('modal-editar')) cerrarModal();
+}
+</script>
+</body>
+</html>

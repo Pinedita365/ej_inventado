@@ -1,0 +1,175 @@
+/* =====================================================================
+   TriPing — Footer principal + Navbar links
+   ===================================================================== */
+
+/* ── Navbar links (extensión de styleGlobal) ─────────────────────── */
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.navbar-link {
+    padding: 6px 12px;
+    color: rgba(255,255,255,.78);
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: var(--rad-s);
+    transition: background var(--t), color var(--t);
+}
+.navbar-link:hover                { background: rgba(255,255,255,.12); color: #fff; }
+.navbar-link--admin               { color: var(--c-mint); font-weight: 700; }
+.navbar-link--admin:hover         { background: rgba(120,255,214,.15); }
+
+/* ── Dropdown de Admin ───────────────────────────────────────────── */
+.nav-dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+.nav-dropdown__btn { cursor: default; user-select: none; }
+.nav-dropdown__panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: #023040;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: var(--rad-m);
+    padding: 6px;
+    min-width: 180px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity .18s ease, transform .18s ease;
+    z-index: 300;
+}
+.nav-dropdown:hover .nav-dropdown__panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+}
+.nav-dropdown__panel a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    color: rgba(255,255,255,.8);
+    font-size: .85rem;
+    font-weight: 500;
+    border-radius: var(--rad-s);
+    transition: background var(--t), color var(--t);
+    white-space: nowrap;
+}
+.nav-dropdown__panel a:hover {
+    background: rgba(255,255,255,.12);
+    color: #fff;
+}
+.nav-dropdown__panel a + a {
+    border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.navbar-auth-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-rol {
+    font-size: 0.68rem;
+    font-weight: 700;
+    background: rgba(120,255,214,.20);
+    color: var(--c-mint);
+    padding: 2px 7px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+/* ── Main footer ──────────────────────────────────────────────────── */
+.main-footer {
+    background: var(--c-dark);
+    color: rgba(255,255,255,.65);
+    font-size: 0.875rem;
+    padding: 48px 24px 0;
+    margin-top: auto;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+    max-width: 1100px;
+    margin: 0 auto 32px;
+}
+
+/* Columna de marca */
+.footer-col--brand .footer-brand {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--c-mint);
+    margin-bottom: 12px;
+}
+.footer-col--brand p {
+    line-height: 1.65;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+    max-width: 260px;
+}
+.footer-langs {
+    display: flex;
+    gap: 12px;
+}
+.footer-langs a {
+    color: rgba(255,255,255,.5);
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: color var(--t);
+}
+.footer-langs a:hover { color: var(--c-mint); }
+
+/* Columnas de links */
+.footer-col h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 14px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-col a {
+    color: rgba(255,255,255,.55);
+    font-size: 0.83rem;
+    transition: color var(--t);
+}
+.footer-col a:hover { color: var(--c-mint); }
+
+/* Barra inferior */
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,.1);
+    padding: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.78rem;
+}
+.footer-bottom strong { color: var(--c-mint); }
+.footer-bottom__links { display: flex; gap: 10px; align-items: center; }
+.footer-bottom__links a  { color: rgba(255,255,255,.45); transition: color var(--t); }
+.footer-bottom__links a:hover { color: var(--c-mint); }
+.footer-bottom__links span { color: rgba(255,255,255,.2); }
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-col--brand { grid-column: span 2; }
+}
+@media (max-width: 540px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-col--brand { grid-column: span 1; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+    Fragmento: footer completo con todas las páginas
+    Uso: <footer th:replace="~{fragments/footer :: footer}"></footer>
+-->
+<footer th:fragment="footer" class="main-footer">
+    <div class="footer-grid">
+
+        <!-- Marca -->
+        <div class="footer-col footer-col--brand">
+            <div class="footer-brand">🌍 <strong>TriPing</strong></div>
+            <p>Descubre y planifica actividades únicas en cualquier ciudad. Tu aventura empieza aquí.</p>
+            <div class="footer-langs">
+                <a href="?lang=es">🇪🇸 ES</a>
+                <a href="?lang=en">🇬🇧 EN</a>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="footer-col">
+            <h4>Plataforma</h4>
+            <ul>
+                <li><a th:href="@{/}">Inicio</a></li>
+                <li><a th:href="@{/explorar}">Explorar actividades</a></li>
+                <li><a th:href="@{/configurar-viaje}">Planificar viaje</a></li>
+                <li><a th:href="@{/}">Mi panel</a></li>
+                <li><a th:href="@{/invitado}">Modo invitado</a></li>
+            </ul>
+        </div>
+
+        <!-- Legal -->
+        <div class="footer-col">
+            <h4>Legal</h4>
+            <ul>
+                <li><a th:href="@{/sobre-nosotros}">Sobre nosotros</a></li>
+                <li><a th:href="@{/privacidad}">Política de privacidad</a></li>
+                <li><a th:href="@{/terminos}">Términos y condiciones</a></li>
+                <li><a th:href="@{/cookies}">Política de cookies</a></li>
+            </ul>
+        </div>
+
+        <!-- Empresa -->
+        <div class="footer-col">
+            <h4>Para empresas</h4>
+            <ul>
+                <li><a th:href="@{/clientes}">Nuestros clientes</a></li>
+                <li><a th:href="@{/empresa/panel}">Panel de empresa</a></li>
+                <li><a th:href="@{/sobre-nosotros}">Contacto</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <span>&copy; 2026 <strong>TriPing</strong> — Todos los derechos reservados</span>
+        <div class="footer-bottom__links">
+            <a th:href="@{/privacidad}">Privacidad</a>
+            <span>·</span>
+            <a th:href="@{/cookies}">Cookies</a>
+            <span>·</span>
+            <a th:href="@{/terminos}">Términos</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,157 +1,200 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TriPing - Actividades del viaje</title>
-    <link rel="stylesheet" href="css/styleActividades.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleActividades.css}">
+    <title>TriPing | Actividades en <span th:text="${session.ciudad}">tu ciudad</span></title>
 </head>
+<body class="inicio-body">
 
-<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
-    <!-- HEADER -->
-    <header class="header">
-        <div class="header-left">
-            <form th:action="@{/logout}" method="post" style="display: inline;">
-                <button type="submit" th:text="#{nav.logout}" class="btn-logout">
-                    Cerrar Sesión
+<!-- ══ BANNER DEL VIAJE ════════════════════════════════════════════════ -->
+<div class="trip-banner">
+    <div class="trip-banner__inner">
+        <div class="trip-banner__info">
+            <span class="trip-banner__city">📍 <strong th:text="${session.ciudad}">Ciudad</strong></span>
+            <span class="trip-banner__sep">·</span>
+            <span th:text="'Del ' + ${session.fEntrada} + ' al ' + ${session.fSalida}"></span>
+            <span class="trip-banner__sep">·</span>
+            <span th:text="${session.diasViaje} + ' días'"></span>
+        </div>
+        <div class="trip-banner__cart-summary">
+            🛒 <strong th:text="${session.cont}">0</strong>/<span th:text="${session.diasViaje}">0</span>
+            &nbsp;·&nbsp; <strong th:text="${session.precioCarro} + '€'">0€</strong>
+        </div>
+    </div>
+</div>
+
+<!-- ══ FILTROS ══════════════════════════════════════════════════════════ -->
+<div class="filter-strip">
+    <div class="filter-strip__inner">
+        <!-- Tipo -->
+        <div class="filter-strip__tipos">
+            <form action="" method="get" style="display:inline">
+                <input type="hidden" name="tipo" value="all">
+                <button type="submit" th:class="${session.tipo == null or session.tipo == 'all'} ? 'tipo-pill active' : 'tipo-pill'">Todas</button>
+            </form>
+            <form action="" method="get" style="display:inline">
+                <input type="hidden" name="tipo" value="DEPORTIVA">
+                <button type="submit" th:class="${session.tipo == 'DEPORTIVA'} ? 'tipo-pill tipo-dep active' : 'tipo-pill tipo-dep'">🏃 Deportiva</button>
+            </form>
+            <form action="" method="get" style="display:inline">
+                <input type="hidden" name="tipo" value="TURISTICA">
+                <button type="submit" th:class="${session.tipo == 'TURISTICA'} ? 'tipo-pill tipo-tur active' : 'tipo-pill tipo-tur'">🏛️ Turística</button>
+            </form>
+            <form action="" method="get" style="display:inline">
+                <input type="hidden" name="tipo" value="GASTRONOMICA">
+                <button type="submit" th:class="${session.tipo == 'GASTRONOMICA'} ? 'tipo-pill tipo-gas active' : 'tipo-pill tipo-gas'">🍽️ Gastronómica</button>
+            </form>
+        </div>
+        <!-- Orden -->
+        <form action="" method="get" class="filter-strip__orden">
+            <select name="orden" onchange="this.form.submit()">
+                <option value="defecto" th:selected="${session.orden == 'defecto'}">Por defecto</option>
+                <option value="precio"  th:selected="${session.orden == 'precio'}">Mayor precio</option>
+            </select>
+        </form>
+    </div>
+</div>
+
+<!-- ══ CONTENIDO PRINCIPAL ════════════════════════════════════════════ -->
+<div class="inicio-layout">
+
+    <!-- Grid de actividades -->
+    <main class="activities-grid-wrap">
+
+        <!-- Sin resultados -->
+        <div th:if="${mensajeVacio}" class="empty-state">
+            <div class="empty-icon">🔭</div>
+            <h3>Sin actividades en <span th:text="${session.ciudad}"></span></h3>
+            <p th:text="${mensajeVacio}"></p>
+            <a th:href="@{/configurar-viaje}" class="btn btn-primary">Cambiar ciudad</a>
+        </div>
+
+        <!-- Error de carrito lleno -->
+        <div th:if="${param.errorCarrito}" class="alert alert-warn" style="margin:16px">
+            ⚠️ Tu carrito ya está completo (un día = una actividad).
+        </div>
+
+        <!-- Cards -->
+        <div class="activities-grid" th:unless="${mensajeVacio}">
+            <div th:each="act : ${listaAct}"
+                 th:class="${(session.tipo == null or session.tipo == 'all' or act.tipo.name() == session.tipo)} ? 'act-card-flip' : 'act-card-flip hidden'"
+                 onclick="flipCard(this)">
+
+                <!-- Frente -->
+                <div class="act-card-flip__front">
+                    <div class="act-card-flip__img-wrap">
+                        <img th:src="@{${act.img}}" th:alt="${act.nombre}" loading="lazy">
+                        <span class="act-badge"
+                              th:classappend="${act.tipo.name() == 'DEPORTIVA'} ? ' badge-deportiva' :
+                                             (${act.tipo.name() == 'TURISTICA'} ? ' badge-turistica' : ' badge-gastronomica')"
+                              th:text="${act.tipo.name() == 'DEPORTIVA'} ? '🏃 Dep' :
+                                       (${act.tipo.name() == 'TURISTICA'} ? '🏛️ Tur' : '🍽️ Gas')">
+                        </span>
+                    </div>
+                    <div class="act-card-flip__info">
+                        <h3 th:text="${act.nombre}">Nombre</h3>
+                        <p class="act-city">📍 <span th:text="${act.ciudad}">Ciudad</span></p>
+                        <p class="act-price"
+                           th:text="${act.precio > 0} ? ${act.precio} + ' €' : 'Gratis'">0€</p>
+                    </div>
+                    <div class="act-card-flip__hint">Pulsa para ver descripción →</div>
+                </div>
+
+                <!-- Reverso (descripción + botones) -->
+                <div class="act-card-flip__back">
+                    <h3 th:text="${act.nombre}">Nombre</h3>
+                    <p class="act-desc" th:text="${act.getBreveDesc()}">Descripción</p>
+                    <div class="act-card-flip__actions">
+                        <!-- Ver más -->
+                        <form th:action="@{/verMas}" method="get" style="display:inline">
+                            <input type="hidden" name="id" th:value="${act.id}">
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                    onclick="event.stopPropagation()">Ver más →</button>
+                        </form>
+                        <!-- Añadir al carrito -->
+                        <form th:action="@{/inicio}" method="get" style="display:inline">
+                            <input type="hidden" name="añadirCarrito" th:value="${act.id}">
+                            <button type="submit" class="btn btn-accent btn-sm"
+                                    onclick="event.stopPropagation()">+ Carrito</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Sidebar del carrito -->
+    <aside class="cart-sidebar">
+        <div class="cart-sidebar__header">
+            <h2>🛒 CarriPing</h2>
+            <span class="cart-count" th:text="${session.cont} + '/' + ${session.diasViaje}">0/0</span>
+        </div>
+        <hr class="cart-divider">
+
+        <!-- Vacío -->
+        <div th:if="${session.carrito == null or session.carrito.isEmpty()}" class="cart-empty">
+            <p>Aún no has añadido actividades.</p>
+            <p class="cart-hint">Pulsa en una tarjeta y luego en <strong>"+ Carrito"</strong>.</p>
+        </div>
+
+        <!-- Items -->
+        <ul class="cart-items" th:unless="${session.carrito == null or session.carrito.isEmpty()}">
+            <li th:each="act : ${session.carrito}" class="cart-item">
+                <img th:src="@{${act.img}}" th:alt="${act.nombre}">
+                <div class="cart-item__text">
+                    <span th:text="${act.nombre}">Nombre</span>
+                    <small th:text="${act.precio} + '€'">0€</small>
+                </div>
+                <form th:action="@{/eliminarCarrito}" method="get">
+                    <input type="hidden" name="idEliminar" th:value="${act.id}">
+                    <button type="submit" class="cart-remove" title="Eliminar">✕</button>
+                </form>
+            </li>
+        </ul>
+
+        <div class="cart-total">
+            <span>Total</span>
+            <strong th:text="${session.precioCarro} + ' €'">0 €</strong>
+        </div>
+
+        <div th:unless="${session.carrito == null or session.carrito.isEmpty()}" class="cart-cta">
+            <form th:action="@{/confirmarCarrito}" method="get">
+                <button type="submit" class="btn btn-accent btn-full">
+                    Confirmar selección →
                 </button>
             </form>
         </div>
-        <div class="header-center">
-            <h1>TriPing</h1>
-        </div>
-        <div class="header-right">
-            <span class="usuario" th:text="${session.nombre}">Nombre</span>
-        </div>
-    </header>
 
-    <section class="imagen-entrada"></section>
-
-    <section class="info-viaje">
-        <div class="datos-viaje">
-            <div class="fechas">
-                <span
-                    th:text="#{generico.desde} + ' ' + ${session.fEntrada} + ' ' + #{generico.al} + ' ' + ${session.fSalida}"></span>
-            </div>
-            <div class="localidad">
-                <span th:text="#{generico.ciudad} + ': ' + ${session.ciudad}"></span>
-            </div>
+        <!-- Admin link -->
+        <div sec:authorize="hasRole('ADMIN')" class="cart-admin">
+            <a th:href="@{/admin/panel}" class="btn btn-outline btn-sm btn-full">⚙️ Panel Admin</a>
         </div>
 
-        <div class="controles">
-            <form action="" method="get">
-                <label for="ordenar" th:text="#{Ordenar.txt}"></label>
-                <select id="ordenar" name="orden">
-                    <option value="defecto" th:selected="${session.orden == 'defecto'}">Por defecto</option>
-                    <option value="precio" th:selected="${session.orden == 'precio'}">Precio</option>
-                </select>
-                <input type="submit" th:value="#{Ordenar.btn}">
-            </form>
-
-            <div class="contador">
-                <span th:text="#{Act.ana}"></span> <span th:text="${session.cont}">0</span>
-            </div>
+        <!-- Mi Ruta -->
+        <div class="cart-ruta">
+            <button class="btn btn-outline btn-sm btn-full btn-disabled" disabled>
+                🗺️ Mi Ruta <span class="soon-badge">Pronto</span>
+            </button>
         </div>
-    </section>
+    </aside>
+</div>
 
-    <section class="tipo-actividad">
-        <h2 th:text="#{inicio.titulo_seccion(${session.ciudad})}"></h2>
-        <div class="opciones-actividad">
-            <form action="" method="get">
-                <input type="hidden" name="tipo" value="DEPORTIVA">
-                <input class="button" type="submit" value="Deportiva">
-            </form>
-            <form action="" method="get">
-                <input type="hidden" name="tipo" value="GASTRONOMICA">
-                <input class="button" type="submit" value="Gastronómica">
-            </form>
-            <form action="" method="get">
-                <input type="hidden" name="tipo" value="TURISTICA">
-                <input class="button" type="submit" value="Turística">
-            </form>
-            <form action="" method="get">
-                <input type="hidden" name="tipo" value="all">
-                <input class="button" type="submit" value="Todas las actividades">
-            </form>
-        </div>
-    </section>
-    <div th:if="${mensajeVacio}" class="alert-warning" style="text-align: center; padding: 20px;">
-        <p th:text="${mensajeVacio}"></p>
-        <form th:action="@{/configurar-viaje}">
-            <input type="submit" th:value="#{Nohay}" class="btn-detalles">
-        </form>
-    </div>
-    <div class="contenedor-principal">
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 
-        <section class="contenedor-actividades">
-            <div th:each="act : ${listaAct}"
-                th:class="${session.tipo == null or session.tipo == 'all' or act.tipo.name() == session.tipo} ? 'card-actividad' : 'oculto'">
-
-                <img th:src="@{${act.img}}" alt="Imagen de la actividad">
-                <h3 th:text="${act.nombre}">Nombre Actividad</h3>
-                <p th:text="${act.getBreveDesc()}">Descripción breve</p>
-                <p><strong>Ciudad:</strong> <span th:text="${act.ciudad}">Ciudad</span></p>
-
-                <div class="botones-card">
-                    <form th:action="@{/verMas}" method="get">
-                        <input type="hidden" name="id" th:value="${act.id}">
-                        <input class="btn-detalles" type="submit" th:value="#{inicio.btn_ver}">
-                    </form>
-                    <form th:action="@{/inicio}" method="get">
-                        <input type="hidden" name="añadirCarrito" th:value="${act.id}">
-                        <input class="btn-anadir" type="submit" th:value="#{inicio.btn_añadir}">
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <aside class="carrito">
-            <h2>🛒 CarriPing 🗺️</h2>
-            <hr>
-
-            <div th:if="${session.carrito == null or session.carrito.isEmpty()}">
-                <p th:text="#{inicio.carrito_vacio}"></p>
-            </div>
-
-            <ul th:if="${session.carrito != null and !session.carrito.isEmpty()}">
-                <li th:each="act : ${session.carrito}">
-                    <span th:text="${act.nombre}">Actividad</span>
-                    <form th:action="@{/eliminarCarrito}" method="get" style="display:inline;">
-                        <input type="hidden" name="idEliminar" th:value="${act.id}">
-                        <input type="submit" class="btn-quitar" value="❌">
-                    </form>
-                </li>
-            </ul>
-
-            <div class="precio-carrito">
-                <strong th:text="#{inicio.carrito_total} + ': ' + ${session.precioCarro} + '€'"></strong>
-            </div>
-
-            <div class="carrito-acciones" th:if="${session.carrito != null and !session.carrito.isEmpty()}">
-                <form th:action="@{/confirmarCarrito}" method="get">
-                    <button type="submit" class="btn-confirmar" th:text="#{inicio.btn_confirmar}"></button>
-                </form>
-            </div>
-        </aside>
-
-    </div>
-    <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-        <a th:href="@{/admin/panel}" class="btn-admin">⚙️ Ir al Panel de Control</a>
-    </div>
-
-    <footer class="footer">
-        <p>
-            &copy; 2026 <span th:text="#{app.name}">TriPing</span> — <span th:text="#{index.eslogan}">Tu planificador de
-                viajes</span>
-        </p>
-        <div class="language-picker">
-            <a href="?lang=es">ES 🇪🇸</a> |
-            <a href="?lang=en">EN 🇬🇧</a>
-        </div>
-    </footer>
-
+<script>
+function flipCard(card) {
+    card.classList.toggle('flipped');
+}
+</script>
 </body>
-
 </html>

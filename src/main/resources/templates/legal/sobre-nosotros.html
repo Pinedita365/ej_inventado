@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Conoce el equipo y la misión de TriPing.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleLegal.css}">
+    <title>Sobre nosotros — TriPing</title>
+</head>
+<body class="legal-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+<div class="legal-hero">
+    <span class="legal-hero__tag">Quiénes somos</span>
+    <h1>Sobre TriPing</h1>
+    <p>Nacimos con una misión clara: hacer que planificar viajes sea fácil, divertido y memorable para todos.</p>
+</div>
+
+<!-- ══ CONTENIDO ═════════════════════════════════════════════════════ -->
+<div class="legal-content">
+
+    <div class="legal-section">
+        <h2>Nuestra misión</h2>
+        <p>
+            TriPing es una plataforma de planificación de actividades de viaje que conecta a los viajeros con las mejores experiencias
+            locales. Creemos que cada destino tiene algo único que ofrecer y queremos ayudarte a descubrirlo.
+        </p>
+        <p>
+            Desde actividades deportivas de alto nivel hasta rutas gastronómicas exclusivas y visitas culturales, en TriPing
+            encontrarás todo lo que necesitas para organizar tu viaje perfecto en pocos minutos.
+        </p>
+        <div class="legal-highlight">
+            Más de <strong>100 actividades</strong> en <strong>15 ciudades</strong> de España te esperan. Planifica tu itinerario
+            día a día y recibe tu plan por email en PDF, completamente gratis.
+        </div>
+    </div>
+
+    <div class="legal-section">
+        <h2>Nuestros valores</h2>
+        <div class="valores-grid">
+            <div class="valor-card">
+                <div class="valor-card__icon">🌍</div>
+                <h4>Accesibilidad</h4>
+                <p>Creemos que planificar un viaje debe estar al alcance de todos, sin importar el presupuesto ni la experiencia.</p>
+            </div>
+            <div class="valor-card">
+                <div class="valor-card__icon">⚡</div>
+                <h4>Rapidez</h4>
+                <p>Nadie quiere pasarse horas buscando. Con TriPing tienes tu itinerario listo en minutos.</p>
+            </div>
+            <div class="valor-card">
+                <div class="valor-card__icon">🤝</div>
+                <h4>Confianza</h4>
+                <p>Todas nuestras actividades son revisadas y verificadas antes de publicarse en la plataforma.</p>
+            </div>
+            <div class="valor-card">
+                <div class="valor-card__icon">🚀</div>
+                <h4>Innovación</h4>
+                <p>Mejoramos constantemente para ofrecerte la mejor experiencia de planificación del mercado.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="legal-section">
+        <h2>¿Cómo empezó todo?</h2>
+        <p>
+            TriPing nació de la frustración de planificar un viaje a última hora y no saber qué hacer, dónde ir ni cómo
+            organizarlo todo. Queríamos una herramienta que te dijese "esto puedes hacer en Sevilla en 3 días" sin tener
+            que abrir 10 pestañas distintas.
+        </p>
+        <p>
+            Lo que empezó como un proyecto estudiantil se convirtió en una plataforma real que ayuda a miles de viajeros
+            a descubrir actividades únicas en sus destinos. Hoy trabajamos para seguir creciendo y añadiendo más ciudades,
+            más actividades y más empresas locales al ecosistema.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>Para empresas</h2>
+        <p>
+            Si tienes una empresa de actividades turísticas, deportivas o gastronómicas, TriPing es tu escaparate. Llega a
+            miles de viajeros que buscan activamente experiencias como la tuya. Gestiona tus actividades, sube fotos y
+            establece tus propios precios desde nuestro panel de empresa.
+        </p>
+        <ul>
+            <li>Panel de gestión propio e intuitivo</li>
+            <li>Publicación inmediata de actividades</li>
+            <li>Visibilidad ante miles de usuarios activos</li>
+            <li>Soporte prioritario por email</li>
+        </ul>
+        <div style="margin-top: 16px;">
+            <a th:href="@{/clientes}" class="btn btn-primary">Ver nuestros clientes →</a>
+        </div>
+    </div>
+
+    <!-- Contacto -->
+    <div class="contacto-box">
+        <h3>¿Tienes alguna pregunta?</h3>
+        <p>Estamos aquí para ayudarte. Escríbenos y te responderemos lo antes posible.</p>
+        <a href="mailto:hola@triping.es" class="btn btn-accent">Escribirnos →</a>
+    </div>
+
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

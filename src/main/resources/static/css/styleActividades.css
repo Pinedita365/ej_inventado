@@ -1,329 +1,300 @@
-/* IMAGEN DECORATIVA */
-.imagen-entrada {
-    width: 100%;
-    height: 500px;
-    background: url('/img/inicio.jpg') no-repeat center center/cover;
-    background-attachment: fixed;
-}
-/* 🎨 Paleta TriPing */
-:root {
-    --color-bg: #E1FAF9;
-    --color-accent1: #78FFD6;
-    --color-accent2: #0AD3FF;
-    --color-accent3: #C3979F;
-    --color-dark: #023C40;
-}
+/* =====================================================================
+   TriPing — Inicio: actividades del viaje
+   ===================================================================== */
 
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
+.inicio-body { min-height: 100vh; display: flex; flex-direction: column; }
 
-/* Estructura general */
-body {
-    background-color: var(--color-bg);
+/* ── Banner del viaje ─────────────────────────────────────────────── */
+.trip-banner {
+    background: var(--c-dark);
+    color: rgba(255,255,255,.9);
+    padding: 10px 24px;
+    font-size: 0.85rem;
+}
+.trip-banner__inner {
+    max-width: 1300px;
+    margin: 0 auto;
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-/* HEADER */
-header.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;   
-    display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
-    background-color: var(--color-accent1);
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-}
-
-.header-center h1 {
-    color: var(--color-dark);
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-}
-
-.header-right .usuario {
-    color: var(--color-dark);
-    font-weight: 600;
-}
-
-/* INFORMACIÓN DEL VIAJE */
-.info-viaje {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: rgba(120, 255, 214, 0.85);
-    position: relative;
-    z-index: 1;
-}
-
-.datos-viaje {
-    color: var(--color-dark);
-    font-size: 1rem;
-}
-
-.controles {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-/* Estilo del selector y botón de ordenar */
-#ordenar {
-    padding: 0.4rem 0.6rem;
-    border: 2px solid var(--color-accent2);
-    border-radius: 8px;
-    background-color: var(--color-bg);
-    color: var(--color-dark);
-    cursor: pointer;
-}
-
-input[type="submit"][value="Ordenar"] {
-    background-color: var(--color-accent2);
-    color: var(--color-dark);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    font-weight: 500;
-}
-
-input[type="submit"][value="Ordenar"]:hover {
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-}
-
-.contador {
-    background-color: var(--color-accent3);
-    color: var(--color-bg);
-    padding: 0.4rem 0.8rem;
-    border-radius: 10px;
-    font-weight: 600;
-}
-
-/* TIPO DE ACTIVIDAD */
-.tipo-actividad {
-    text-align: center;
-    margin: 2rem 0;
-    position: relative;
-    z-index: 1;
-}
-
-.tipo-actividad h2 {
-    color: var(--color-dark);
-    margin-bottom: 1rem;
-    font-size: 1.4rem;
-}
-
-/* 🔹 Botones de tipo de actividad en fila */
-.opciones-actividad {
-    display: flex;
-    justify-content: center;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 8px;
 }
+.trip-banner__city strong { color: var(--c-mint); }
+.trip-banner__sep         { opacity: .4; margin: 0 6px; }
+.trip-banner__cart-summary{ font-weight: 600; color: var(--c-mint); }
 
-.opciones-actividad .button {
-    background-color: var(--color-accent1);
-    border: 2px solid var(--color-accent2);
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    color: var(--color-dark);
-    font-weight: 500;
-    transition: 0.3s ease;
+/* ── Filtros ──────────────────────────────────────────────────────── */
+.filter-strip {
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    padding: 10px 24px;
+    position: sticky;
+    top: 60px;
+    z-index: 90;
+    box-shadow: var(--shadow-xs);
 }
-
-.opciones-actividad .button:hover {
-    background-color: var(--color-accent2);
-    color: var(--color-bg);
-}
-
-.contenedor-actividades {
-    display: flex;          /* Usamos flexbox para la disposición */
-    flex-wrap: wrap;        /* Que las cards bajen a la siguiente fila si no caben */
-    gap: 1.5rem;            /* Separación entre cards */
-    justify-content: space-around; /* Centrar las cards horizontalmente */
-    
-}
-
-/* CARD DE ACTIVIDAD */
-.card-actividad {
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 280px;           /* Ancho uniforme */
-    flex-direction: column;
-}
-
-.oculto {
-    width: 0px;
-    display: none;
-}
-
-.card-actividad:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-}
-
-.card-actividad img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
-
-.card-actividad h3 {
-    color: var(--color-dark);
-    margin: 1rem 0 0.5rem 0;
-}
-
-.card-actividad p {
-    padding: 0 1rem;
-    color: #333;
-    font-size: 0.95rem;
-}
-
-.botones-card {
+.filter-strip__inner {
+    max-width: 1300px;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-around;
-    padding: 1rem;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
 }
+.filter-strip__tipos { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
 
-.btn-detalles,
-.btn-anadir {
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
+.tipo-pill {
+    padding: 5px 14px;
+    border: 2px solid var(--c-border);
+    border-radius: 99px;
+    background: #fff;
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--c-muted);
     cursor: pointer;
-    transition: 0.3s ease;
-    font-weight: 500;
+    transition: all var(--t);
 }
+.tipo-pill:hover          { border-color: var(--c-dark); color: var(--c-dark); }
+.tipo-pill.active         { background: var(--c-dark); border-color: var(--c-dark); color: #fff; }
+.tipo-pill.tipo-dep.active{ background: #1d4ed8; border-color: #1d4ed8; }
+.tipo-pill.tipo-tur.active{ background: #065f46; border-color: #065f46; }
+.tipo-pill.tipo-gas.active{ background: #92400e; border-color: #92400e; }
 
-.btn-detalles {
-    background-color: var(--color-accent2);
-    color: var(--color-dark);
+.filter-strip__orden select {
+    padding: 7px 12px;
+    border: 2px solid var(--c-border);
+    border-radius: var(--rad-m);
+    font-family: var(--font);
+    font-size: 0.82rem;
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: border-color var(--t);
 }
+.filter-strip__orden select:focus { border-color: var(--c-cyan); }
 
-.btn-anadir {
-    background-color: var(--color-accent3);
-    color: var(--color-bg);
-}
-
-.btn-detalles:hover,
-.btn-anadir:hover {
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-}
-
-/* CONTENEDOR PRINCIPAL ACTIVIDADES + CARRITO */
-.contenedor-principal {
-    display: flex;
-    gap: 20px;
-    margin: 2rem;
-    margin-top: 1rem;
-    flex: 1; /* permite que footer se mantenga abajo */
-}
-
-/* Sección de actividades ocupa todo el espacio disponible */
-.contenedor-actividades {
+/* ── Layout principal ─────────────────────────────────────────────── */
+.inicio-layout {
     flex: 1;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: space-around;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 24px;
+    gap: 24px;
+    align-items: flex-start;
 }
 
-/* Carrito lateral más grande, respetando header y info-viaje */
-.carrito {
-    width: 360px; /* ancho aumentado */
-    max-height: calc(100vh - 150px); /* altura disponible sin cubrir header ni info-viaje */
-    position: sticky; /* se mantiene visible al hacer scroll */
-    top: 130px; /* justo debajo del header + info-viaje */
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.25);
-    overflow-y: auto; /* scroll interno si hay muchas actividades */
+/* ── Grid de actividades ──────────────────────────────────────────── */
+.activities-grid-wrap { flex: 1; min-width: 0; }
+
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 20px;
 }
 
-/* Lista de actividades dentro del carrito */
-.carrito ul {
-    list-style: none;
-    padding: 0;
+/* ── Tarjeta con flip ─────────────────────────────────────────────── */
+.act-card-flip {
+    perspective: 1000px;
+    height: 360px;
+    cursor: pointer;
 }
 
-.carrito li {
+.act-card-flip__front,
+.act-card-flip__back {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--rad-l);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: transform 0.55s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+}
+
+.act-card-flip { position: relative; }
+
+.act-card-flip__front {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    box-shadow: var(--shadow-sm);
     display: flex;
+    flex-direction: column;
+    transform: rotateY(0deg);
+}
+
+.act-card-flip__back {
+    background: var(--c-dark);
+    color: #fff;
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
     justify-content: space-between;
+}
+
+.act-card-flip.flipped .act-card-flip__front { transform: rotateY(-180deg); }
+.act-card-flip.flipped .act-card-flip__back  { transform: rotateY(0deg); }
+
+/* Hover sin flip (solo levanta) cuando no está flipada */
+.act-card-flip:not(.flipped):hover .act-card-flip__front {
+    box-shadow: var(--shadow-lg);
+    transform: rotateY(0deg) translateY(-4px);
+}
+
+/* Frente */
+.act-card-flip__img-wrap {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: var(--c-light);
+    flex-shrink: 0;
+}
+.act-card-flip__img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.act-card-flip:not(.flipped):hover .act-card-flip__img-wrap img { transform: scale(1.05); }
+
+.act-badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    backdrop-filter: blur(6px);
+}
+
+.act-card-flip__info {
+    padding: 14px 16px 0;
+    flex: 1;
+}
+.act-card-flip__info h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+.act-city  { font-size: 0.8rem; color: var(--c-muted); margin-bottom: 4px; }
+.act-price { font-size: 1rem; font-weight: 700; color: var(--c-dark); }
+
+.act-card-flip__hint {
+    padding: 8px 16px 12px;
+    font-size: 0.73rem;
+    color: var(--c-muted);
+    font-style: italic;
+    text-align: right;
+    animation: pulse 2.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+/* Reverso */
+.act-card-flip__back h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--c-mint);
+    margin-bottom: 10px;
+}
+.act-desc {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,.8);
+    line-height: 1.6;
+    flex: 1;
+}
+.act-card-flip__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+/* ── Sidebar del carrito ──────────────────────────────────────────── */
+.cart-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--c-surface);
+    border-radius: var(--rad-l);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--c-border);
+    padding: 20px;
+    position: sticky;
+    top: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+}
+.cart-sidebar__header {
+    display: flex;
     align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #ddd;
+    justify-content: space-between;
+}
+.cart-sidebar__header h2 { font-size: 1rem; font-weight: 700; color: var(--c-dark); }
+.cart-count {
+    background: var(--c-dark);
+    color: var(--c-mint);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+}
+.cart-divider { border: none; border-top: 1px solid var(--c-border); }
+
+.cart-empty { text-align: center; color: var(--c-muted); font-size: 0.82rem; }
+.cart-hint  { margin-top: 6px; font-size: 0.75rem; }
+
+.cart-items { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: var(--c-light);
+    border-radius: var(--rad-s);
+    animation: slideIn .25s ease;
+}
+@keyframes slideIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:none} }
+
+.cart-item img { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+.cart-item__text { flex: 1; min-width: 0; }
+.cart-item__text span { font-size: 0.8rem; font-weight: 600; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cart-item__text small { font-size: 0.72rem; color: var(--c-muted); }
+
+.cart-remove {
+    background: none; border: none;
+    color: var(--c-muted); cursor: pointer;
+    font-size: 0.75rem; padding: 2px 4px;
+    border-radius: 4px; transition: all var(--t);
+    flex-shrink: 0;
+}
+.cart-remove:hover { background: #fee2e2; color: var(--c-error); }
+
+.cart-total {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-top: 1px solid var(--c-border);
+    font-size: 0.9rem; font-weight: 600;
+}
+.cart-total strong { font-size: 1.1rem; color: var(--c-dark); }
+
+.cart-admin, .cart-ruta { margin-top: 4px; }
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .inicio-layout { flex-direction: column; padding: 16px; }
+    .cart-sidebar { width: 100%; position: static; max-height: none; }
+    .activities-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 }
 
-.carrito-acciones {
-    margin-top: 1rem;
-    text-align: center;
-}
-
-.carrito-acciones .btn-confirmar {
-    background-color: var(--color-accent2);
-    color: var(--color-dark);
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: 0.3s ease;
-}
-
-.carrito-acciones .btn-confirmar:hover {
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-}
-
-/* Mensajes de error del carrito */
-.error-carrito {
-    margin-top: 1rem;
-    color: red;
-    font-weight: 600;
-}
-
-/* Footer normal */
-footer.footer {
-    text-align: center;
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-    padding: 1rem 0;
-    font-size: 0.9rem;
-    margin-top: auto; /* mantiene el footer abajo */
-    z-index: 2;
-}
-.btn-logout {
-    background-color: transparent;
-    border: 1px solid #d9534f;
-    color: #d9534f;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-    transition: all 0.3s ease;
-}
-
-.btn-logout:hover {
-    background-color: #d9534f;
-    color: white;
+@media (max-width: 500px) {
+    .activities-grid { grid-template-columns: 1fr 1fr; }
+    .act-card-flip  { height: 300px; }
+    .act-card-flip__img-wrap { height: 150px; }
 }

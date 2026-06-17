@@ -1,0 +1,155 @@
+/* =====================================================================
+   TriPing — Página de perfil de usuario
+   ===================================================================== */
+
+.perfil-body { min-height: 100vh; display: flex; flex-direction: column; background: var(--c-bg); }
+
+.perfil-main {
+    flex: 1;
+    max-width: 760px;
+    margin: 40px auto;
+    padding: 0 24px;
+    width: 100%;
+}
+
+/* ── Cabecera ─────────────────────────────────────────────────────── */
+.perfil-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: linear-gradient(135deg, var(--c-dark) 0%, #035358 100%);
+    border-radius: var(--rad-xl);
+    padding: 32px;
+    margin-bottom: 24px;
+    color: #fff;
+}
+
+.perfil-avatar-wrap { position: relative; flex-shrink: 0; }
+.perfil-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 3px solid var(--c-mint);
+    overflow: hidden;
+    background: var(--c-dark-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.perfil-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.perfil-avatar-initials {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--c-mint);
+}
+.perfil-avatar-edit {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 28px; height: 28px;
+    background: var(--c-cyan);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem;
+    cursor: pointer;
+    border: 2px solid var(--c-dark);
+    transition: transform var(--t);
+}
+.perfil-avatar-edit:hover { transform: scale(1.15); }
+
+.perfil-header__info h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+.perfil-header__info p {
+    color: rgba(255,255,255,.65);
+    font-size: .875rem;
+}
+.perfil-rol-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    margin-top: 8px;
+}
+.perfil-rol-badge--user    { background: rgba(255,255,255,.15); color: rgba(255,255,255,.85); }
+.perfil-rol-badge--empresa { background: rgba(167,139,250,.25); color: #c4b5fd; }
+.perfil-rol-badge--admin   { background: rgba(120,255,214,.2);  color: var(--c-mint); }
+
+/* ── Tarjeta formulario ───────────────────────────────────────────── */
+.perfil-card {
+    background: var(--c-surface);
+    border-radius: var(--rad-xl);
+    border: 1px solid var(--c-border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.perfil-card__header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--c-border);
+}
+.perfil-card__header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--c-dark);
+}
+.perfil-card__body { padding: 24px; }
+
+/* Upload zona ───────────────────────────────────────────────────────── */
+.perfil-upload-zone {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 2px dashed var(--c-border);
+    border-radius: var(--rad-l);
+    background: var(--c-bg);
+    cursor: pointer;
+    transition: border-color var(--t), background var(--t);
+    margin-bottom: 8px;
+}
+.perfil-upload-zone:hover { border-color: var(--c-cyan); background: rgba(10,211,255,.04); }
+
+.perfil-upload-preview {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--c-border);
+    flex-shrink: 0;
+    background: var(--c-dark);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--c-mint); font-weight: 800;
+}
+.perfil-upload-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.perfil-upload-text strong { display: block; font-size: .875rem; font-weight: 600; color: var(--c-text); }
+.perfil-upload-text small  { font-size: .78rem; color: var(--c-muted); }
+
+input[type="file"]#foto-input { display: none; }
+
+/* ── Info de cuenta ───────────────────────────────────────────────── */
+.perfil-info-rows { display: flex; flex-direction: column; }
+.perfil-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--c-border);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.perfil-info-row:last-child { border-bottom: none; }
+.perfil-info-row__label { font-size: .82rem; color: var(--c-muted); font-weight: 600; min-width: 120px; }
+.perfil-info-row__value { font-size: .9rem; color: var(--c-text); font-weight: 500; }
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 540px) {
+    .perfil-header { flex-direction: column; text-align: center; padding: 24px; }
+    .perfil-main { margin: 24px auto; }
+}

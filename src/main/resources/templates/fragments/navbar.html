@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<!--
+    Navbar unificado — igual para todos; las secciones de empresa/admin
+    se muestran condicionalmente con sec:authorize.
+    Uso: <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+-->
+<nav th:fragment="navbar" class="navbar">
+
+    <!-- Brand -->
+    <a th:href="@{/}" class="navbar-brand"><span>🌍</span> TriPing</a>
+
+    <div class="navbar-spacer"></div>
+
+    <!-- Links comunes para todos los usuarios -->
+    <div class="navbar-links hide-mobile">
+        <a th:href="@{/}"               class="navbar-link">Inicio</a>
+        <a th:href="@{/explorar}"       class="navbar-link">Explorar</a>
+        <a th:href="@{/configurar-viaje}" class="navbar-link">Planificar</a>
+        <a th:href="@{/sobre-nosotros}" class="navbar-link">Sobre nosotros</a>
+        <a th:href="@{/clientes}"       class="navbar-link">Clientes</a>
+
+        <!-- Gestión de empresa (solo ROLE_EMPRESA o ROLE_ADMIN) -->
+        <a th:href="@{/empresa/actividades}" class="navbar-link"
+           sec:authorize="hasAnyRole('EMPRESA','ADMIN')">Mi panel</a>
+
+        <!-- Dropdown Admin (solo ROLE_ADMIN) -->
+        <div class="nav-dropdown" sec:authorize="hasRole('ADMIN')">
+            <span class="navbar-link navbar-link--admin nav-dropdown__btn">⚙️ Admin ▾</span>
+            <div class="nav-dropdown__panel">
+                <a th:href="@{/admin/usuarios}">👥 Usuarios</a>
+                <a th:href="@{/admin/empresas}">🏢 Empresas</a>
+                <a th:href="@{/admin/actividades}">🎯 Actividades</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área derecha: avatar si autenticado, botón si no -->
+    <div class="navbar-auth-area" sec:authorize="isAuthenticated()">
+        <a th:href="@{/perfil}" class="navbar-user" style="text-decoration:none">
+            <div class="avatar">
+                <img th:if="${session.fotoPerfil != null and !#strings.isEmpty(session.fotoPerfil)}"
+                     th:src="${session.fotoPerfil}" alt="foto"
+                     style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                <span th:unless="${session.fotoPerfil != null and !#strings.isEmpty(session.fotoPerfil)}"
+                      th:text="${#strings.substring(session.nombre != null ? session.nombre : 'U', 0, 1).toUpperCase()}">U</span>
+            </div>
+            <span class="hide-mobile" th:text="${session.nombre}">Usuario</span>
+            <span class="navbar-rol hide-mobile"
+                  th:text="${session.rolUsuario == 'ROLE_ADMIN'} ? 'Admin' :
+                           (${session.rolUsuario == 'ROLE_EMPRESA'} ? 'Empresa' : '')"></span>
+        </a>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="btn-logout">Salir</button>
+        </form>
+    </div>
+
+    <div sec:authorize="!isAuthenticated()">
+        <a th:href="@{/login}" class="btn btn-accent btn-sm">Acceder</a>
+    </div>
+
+</nav>
+
+</body>
+</html>

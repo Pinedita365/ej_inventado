@@ -24,7 +24,8 @@ public class Gastronomica extends Actividad {
     }
 
     @Override
-    public String getCategoria() {
-        return "Actividad gastronomica";
-    }
+    public String getCategoria() { return "Actividad gastronómica"; }
+
+    @Override
+    public String getInfoExtra() { return "Vestimenta: " + (vestimenta != null ? vestimenta : "—"); }
 }

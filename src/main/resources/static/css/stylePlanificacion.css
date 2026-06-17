@@ -1,239 +1,116 @@
-/* Paleta de TriPing */
-:root {
-    --color-bg: #E1FAF9;
-    --color-accent1: #78FFD6;
-    --color-accent2: #0AD3FF;
-    --color-accent3: #C3979F;
-    --color-dark: #023C40;
+/* =====================================================================
+   TriPing — Planificación día a día
+   ===================================================================== */
+.plan-body { min-height: 100vh; display: flex; flex-direction: column; background: var(--c-bg); }
+
+/* Reutiliza .cc-progress de styleConfirmarCarrito */
+.cc-progress {
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    padding: 10px 24px;
+}
+.cc-progress__inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cc-step { font-size: 0.8rem; font-weight: 600; color: var(--c-muted); padding: 4px 12px; border-radius: 99px; border: 1.5px solid var(--c-border); }
+.cc-step--active { background: var(--c-dark); color: var(--c-mint); border-color: var(--c-dark); }
+.cc-step--done   { background: var(--c-light); color: var(--c-dark); }
+.cc-step__arrow  { color: var(--c-muted); font-size: 0.9rem; }
+
+/* ── Main ─────────────────────────────────────────────────────────── */
+.plan-main { flex: 1; max-width: 1200px; margin: 0 auto; padding: 28px 24px 40px; width: 100%; display: flex; flex-direction: column; gap: 24px; }
+
+/* ── Cabecera ─────────────────────────────────────────────────────── */
+.plan-header { text-align: center; }
+.plan-header h1 { font-size: 1.75rem; font-weight: 800; color: var(--c-dark); margin-bottom: 6px; }
+.plan-header p  { font-size: 0.875rem; color: var(--c-muted); }
+.plan-hint      { margin-top: 6px; font-size: 0.82rem; color: var(--c-info); font-weight: 500; }
+
+/* ── Layout ───────────────────────────────────────────────────────── */
+.plan-layout { display: flex; gap: 24px; align-items: flex-start; }
+
+.plan-section-title { font-size: 1rem; font-weight: 700; color: var(--c-dark); margin-bottom: 12px; }
+
+/* ── Carrito lateral ──────────────────────────────────────────────── */
+.plan-carrito {
+    width: 260px; flex-shrink: 0;
+    background: var(--c-surface);
+    border-radius: var(--rad-l);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--c-border);
+    padding: 20px;
+    position: sticky; top: 130px;
+}
+.plan-carrito__hint { font-size: 0.75rem; color: var(--c-muted); margin-bottom: 14px; }
+.plan-carrito__list { display: flex; flex-direction: column; gap: 10px; }
+
+.plan-carrito-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px; background: var(--c-light); border-radius: var(--rad-m);
+    border: 2px solid transparent; transition: border-color var(--t), background var(--t);
+}
+.plan-carrito-item--selected { border-color: var(--c-cyan); background: #e0fdf4; }
+.plan-carrito-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.plan-carrito-item__info { flex: 1; min-width: 0; }
+.plan-carrito-item__info span { font-size: 0.8rem; font-weight: 600; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.plan-carrito-item__info small { font-size: 0.72rem; color: var(--c-muted); }
+
+/* ── Días ─────────────────────────────────────────────────────────── */
+.plan-days { flex: 1; }
+.plan-days__hint { font-size: 0.82rem; color: var(--c-info); font-weight: 600; margin-bottom: 14px; padding: 8px 12px; background: #eff6ff; border-radius: var(--rad-s); border-left: 3px solid var(--c-info); }
+
+.plan-days__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
 }
 
-/* RESET BÁSICO */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+.plan-day {
+    border-radius: var(--rad-m);
+    border: 2px solid var(--c-border);
+    overflow: hidden;
+    transition: border-color var(--t), box-shadow var(--t);
+    background: var(--c-surface);
+    min-height: 130px;
+    display: flex; flex-direction: column;
 }
+.plan-day--filled { border-color: var(--c-mint); }
+.plan-day--filled:hover { box-shadow: var(--shadow-md); }
 
-body {
-    background-color: var(--color-bg);
-    color: var(--color-dark);
-    min-height: 100vh;
+.plan-day__header {
+    background: var(--c-dark); padding: 6px 10px;
 }
+.plan-day__num { font-size: 0.75rem; font-weight: 700; color: var(--c-mint); }
 
-/* HEADER */
-header.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--color-accent1);
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+.plan-day__content {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 6px; padding: 10px; text-align: center;
 }
+.plan-day__content img { width: 60px; height: 44px; object-fit: cover; border-radius: 6px; }
+.plan-day__content span { font-size: 0.75rem; font-weight: 600; color: var(--c-dark); line-height: 1.3; }
 
-.header-left button {
-    background-color: var(--color-accent2);
-    color: var(--color-dark);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: 0.3s ease;
+.plan-day__empty-content { flex: 1; display: flex; align-items: center; justify-content: center; }
+.plan-day__assign-btn {
+    width: 100%; height: 100%; min-height: 80px;
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font); font-size: 0.78rem; font-weight: 600;
+    color: var(--c-muted); transition: all var(--t);
+    border-radius: 0 0 var(--rad-m) var(--rad-m);
 }
+.plan-day__assign-btn:not(:disabled):hover { background: var(--c-light); color: var(--c-dark); }
+.plan-day__assign-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-.header-left button:hover {
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-}
-
-.header-center h1 {
-    color: var(--color-dark);
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-}
-
-.header-right .usuario {
-    color: var(--color-dark);
-    font-weight: 600;
-}
-
-/* BARRA DE INFORMACIÓN DEL VIAJE */
-.barra-viaje {
-    margin-top: 90px; /* espacio por header fijo */
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-    padding: 1rem 2rem;
+/* ── Finalizar ────────────────────────────────────────────────────── */
+.plan-finish {
     text-align: center;
-    border-radius: 8px;
-    font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 24px;
+    background: var(--c-surface);
+    border-radius: var(--rad-l);
+    border: 1px solid var(--c-border);
 }
+.plan-finish__info { font-size: 0.82rem; color: var(--c-muted); margin-bottom: 16px; font-style: italic; }
 
-/* MAIN PLANIFICACION */
-.planificacion-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* TABLA DE DÍAS */
-.dias-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    margin-bottom: 2rem;
-}
-
-.dias-container .card-actividad {
-    width: 120px;
-    min-height: 80px;
-    background-color: var(--color-accent3);
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    transition: transform 0.2s;
-}
-
-.dias-container .card-actividad:hover {
-    transform: translateY(-5px);
-}
-
-/* Días libres */
-.dias-container .card-actividad .btn-detalles {
-    background-color: #b7f1c1; /* verde claro */
-    color: var(--color-dark);
-    border: none;
-    padding: 0.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.dias-container .card-actividad .btn-detalles:hover {
-    background-color: #91e49f;
-}
-
-/* CARDS DEL CARRITO */
-.carrito-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.carrito-container .card-actividad {
-    width: 250px;
-    background-color: var(--color-accent1);
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.carrito-container .card-actividad:hover {
-    transform: translateY(-5px);
-}
-
-.carrito-container .card-actividad img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.carrito-container .card-actividad button {
-    background-color: var(--color-accent2);
-    color: var(--color-dark);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 10px;
-    font-weight: 500;
-}
-
-.carrito-container .card-actividad button:hover {
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-}
-
-.carrito-container .card-actividad select {
-    margin-left: 5px;
-    padding: 4px 6px;
-    border-radius: 6px;
-    border: 1px solid var(--color-dark);
-}
-/* CONTENEDOR DEL BOTÓN FINALIZAR */
-.finalizar-container {
-    text-align: center;
-    margin-top: 30px;
-}
-
-/* HR acotado */
-.finalizar-container hr {
-    width: 60%; /* ajusta al 60% del contenedor */
-    margin: 30px auto; /* centrado horizontal */
-    border: 1px solid var(--color-accent3);
-}
-
-/* BOTÓN FINALIZAR PLANIFICACIÓN */
-.btn-boton {
-    display: inline-block;
-    background-color: var(--color-accent2);
-    color: var(--color-dark);
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 20px;
-}
-
-.btn-boton:hover {
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-    transform: translateY(-3px);
-}
-
-
-
-/* Footer normal */
-footer.footer {
-    text-align: center;
-    background-color: var(--color-dark);
-    color: var(--color-bg);
-    padding: 1rem 0;
-    font-size: 0.9rem;
-    margin-top: auto; /* mantiene el footer abajo */
-    z-index: 2;
-}
-.btn-logout {
-    background-color: transparent;
-    border: 1px solid #d9534f;
-    color: #d9534f;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-    transition: all 0.3s ease;
-}
-
-.btn-logout:hover {
-    background-color: #d9534f;
-    color: white;
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 800px) {
+    .plan-layout { flex-direction: column; }
+    .plan-carrito { width: 100%; position: static; }
+    .plan-days__grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
 }

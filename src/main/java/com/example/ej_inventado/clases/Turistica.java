@@ -24,7 +24,8 @@ public class Turistica extends Actividad {
     }
 
     @Override
-    public String getCategoria() {
-        return "Actividad turistica";
-    }
+    public String getCategoria() { return "Actividad turística"; }
+
+    @Override
+    public String getInfoExtra() { return vehiculo ? "Requiere vehículo propio" : "Sin vehículo necesario"; }
 }

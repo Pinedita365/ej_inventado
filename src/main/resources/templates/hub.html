@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleHub.css}">
+    <title>TriPing | ¿Qué hacemos hoy?</title>
+</head>
+<body class="hub-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ══ HERO ════════════════════════════════════════════════════════════ -->
+<main class="hub-main">
+    <div class="hub-hero">
+        <p class="hub-saludo">
+            Hola, <strong th:text="${nombre}">Usuario</strong> 👋
+        </p>
+        <h1 class="hub-titulo">¿Qué quieres hacer hoy?</h1>
+        <p class="hub-subtitulo">Descubre actividades únicas o planifica tu próxima escapada</p>
+    </div>
+
+    <!-- ══ TARJETAS DE ACCIÓN ═══════════════════════════════════════════ -->
+    <div class="hub-grid">
+
+        <!-- Explorar actividades -->
+        <a th:href="@{/explorar}" class="hub-card hub-card--explore">
+            <div class="hub-card__icon">🔍</div>
+            <div class="hub-card__body">
+                <h2>Investigar actividades</h2>
+                <p>Busca entre todas nuestras actividades por ciudad, nombre o tipo. Filtra por precio y encuentra lo que más te gusta.</p>
+                <ul class="hub-card__features">
+                    <li>🗺️ Busca por ciudad</li>
+                    <li>🏷️ Filtra por precio y tipo</li>
+                    <li>📋 Consulta todos los detalles</li>
+                </ul>
+            </div>
+            <div class="hub-card__cta">
+                Explorar actividades <span>→</span>
+            </div>
+        </a>
+
+        <!-- Planificar viaje -->
+        <a th:href="@{/configurar-viaje}" class="hub-card hub-card--plan">
+            <div class="hub-card__icon">✈️</div>
+            <div class="hub-card__body">
+                <h2>Planificar un viaje</h2>
+                <p>Elige tu destino y las fechas de tu viaje. Te mostraremos las actividades disponibles para que construyas tu itinerario día a día.</p>
+                <ul class="hub-card__features">
+                    <li>📍 Elige tu ciudad destino</li>
+                    <li>📅 Selecciona tus fechas</li>
+                    <li>📄 Genera y recibe tu itinerario</li>
+                </ul>
+            </div>
+            <div class="hub-card__cta">
+                Empezar a planificar <span>→</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- ══ BOTÓN MI RUTA (PRÓXIMAMENTE) ════════════════════════════════ -->
+    <div class="hub-ruta">
+        <button class="btn btn-outline btn-lg btn-disabled" disabled>
+            🗺️ Ver actividades en mi ruta
+            <span class="soon-badge">Próximamente</span>
+        </button>
+        <p class="hub-ruta__desc">
+            Pronto podrás ver todas las actividades cercanas a tu ruta en un mapa interactivo.
+        </p>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

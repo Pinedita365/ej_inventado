@@ -1,59 +1,172 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TriPing | Detalle Actividad</title>
-    <link rel="stylesheet" href="css/styleDetalleActividad.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleDetalleActividad.css}">
+    <title th:text="'TriPing | ' + ${session.act.nombre}">TriPing | Detalle</title>
 </head>
+<body class="det-body">
 
-<body>
-    <!-- HEADER -->
-    <header class="header">
-        <div class="header-left">
-            <button onclick="window.location.href='inicio'">← Volver al inicio</button>
-        </div>
-        <div class="header-center">
-            <h1>TriPing</h1>
-        </div>
-        <div class="header-right">
-            <span class="usuario" th:text="${session.nombre}">Usuario</span>
-        </div>
-    </header>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
-    <!-- BARRA DE INFORMACIÓN DEL VIAJE -->
-    <div class="barra-viaje"><p> 
-        <strong th:text="${session.ciudad}"></strong> — 
-        <span th:text="'Del ' + ${session.fEntrada} + ' al ' + ${session.fSalida}"></span> </p>
+<!-- ══ GALERÍA DE IMÁGENES ════════════════════════════════════════════ -->
+<section class="det-gallery">
+    <!-- Imagen principal -->
+    <div class="det-gallery__main" onclick="openLightbox(this.querySelector('img').src)">
+        <img th:src="@{${session.act.img}}" th:alt="${session.act.nombre}">
+        <div class="det-gallery__overlay">
+            <span>🔍 Ver en grande</span>
+        </div>
     </div>
 
-    <!-- CONTENEDOR PRINCIPAL -->
-    <main class="detalle-container">
-        <div class="detalle-card">
-            <img th:src="${session.act.img}" alt="Imagen de la actividad" class="detalle-img">
-            <div class="detalle-info">
-                <h2 th:text="${session.act.nombre}" class="detalle-nombre"></h2>
-                <h4 th:text="${session.act.tipo}" class="detalle-tipo"></h4>
-                <p th:text="${session.act.descripcion}" class="detalle-descripcion"></p>
-                <p><strong>Duración:</strong> <span th:text="${session.act.getTiempo()} + ' horas'"></span></p>
-                <p><strong>Precio:</strong> <span th:text="${session.act.precio} + ' €'"></span></p>
-                <p><strong>Ciudad:</strong> <span th:text="${session.act.ciudad}"></span></p>
+    <!-- Strip de thumbnails (solo la imagen actual; preparado para múltiples) -->
+    <div class="det-gallery__strip">
+        <div class="det-gallery__thumb det-gallery__thumb--active"
+             onclick="openLightbox(this.querySelector('img').src)">
+            <img th:src="@{${session.act.img}}" th:alt="${session.act.nombre}">
+        </div>
+        <!-- Placeholder para futuras imágenes adicionales -->
+        <div class="det-gallery__thumb det-gallery__thumb--placeholder">
+            <span>+</span>
+        </div>
+    </div>
+</section>
+
+<!-- ══ LIGHTBOX ════════════════════════════════════════════════════════ -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()" aria-label="Cerrar imagen">
+    <button class="lightbox__close" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="Vista ampliada">
+</div>
+
+<!-- ══ CONTENIDO PRINCIPAL ════════════════════════════════════════════ -->
+<main class="det-main">
+
+    <!-- Columna izquierda: info -->
+    <div class="det-info">
+
+        <!-- Badge de tipo -->
+        <span class="det-tipo-badge"
+              th:classappend="${session.act.tipo.name() == 'DEPORTIVA'} ? ' badge-deportiva' :
+                             (${session.act.tipo.name() == 'TURISTICA'} ? ' badge-turistica' : ' badge-gastronomica')"
+              th:text="${session.act.tipo.name() == 'DEPORTIVA'} ? '🏃 Deportiva' :
+                       (${session.act.tipo.name() == 'TURISTICA'} ? '🏛️ Turística' : '🍽️ Gastronómica')">
+        </span>
+
+        <!-- Título -->
+        <h1 class="det-titulo" th:text="${session.act.nombre}">Nombre de la actividad</h1>
+
+        <!-- Ciudad y duración -->
+        <div class="det-meta">
+            <span>📍 <strong th:text="${session.act.ciudad}">Ciudad</strong></span>
+            <span>⏱️ <span th:text="${session.act.duracion}">0</span> min</span>
+            <span>⭐ <span th:text="${session.act.getCategoria()}">Tipo</span></span>
+        </div>
+
+        <!-- Descripción completa -->
+        <div class="det-descripcion">
+            <h3>Sobre esta actividad</h3>
+            <p th:text="${session.act.descripcion}">Descripción completa de la actividad.</p>
+        </div>
+
+        <!-- Detalle específico del tipo -->
+        <div th:if="${!#strings.isEmpty(session.act.getInfoExtra())}" class="det-extra">
+            <span class="det-extra__icon">ℹ️</span>
+            <span th:text="${session.act.getInfoExtra()}">Info extra</span>
+        </div>
+
+        <!-- Mapa placeholder -->
+        <div class="det-mapa-placeholder" th:if="${session.act.latitud != null}">
+            <div class="det-mapa-placeholder__inner">
+                🗺️ Mapa interactivo — próximamente
+                <small th:text="${session.act.latitud} + ', ' + ${session.act.longitud}"></small>
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        <p>
-            &copy; 2026 <span th:text="#{app.name}">TriPing</span> — <span th:text="#{index.eslogan}">Tu planificador de
-                viajes</span>
-        </p>
-        <div class="language-picker">
-            <a href="?lang=es">ES 🇪🇸</a> |
-            <a href="?lang=en">EN 🇬🇧</a>
+    <!-- Columna derecha: datos clave + CTA -->
+    <div class="det-sidebar">
+        <div class="det-facts-card">
+            <h3>Información clave</h3>
+
+            <div class="det-fact">
+                <span class="det-fact__icon">💶</span>
+                <div>
+                    <span class="det-fact__label">Precio</span>
+                    <span class="det-fact__val"
+                          th:text="${session.act.precio > 0} ? ${session.act.precio} + ' €' : 'Gratis'">0 €</span>
+                </div>
+            </div>
+
+            <div class="det-fact">
+                <span class="det-fact__icon">⏱️</span>
+                <div>
+                    <span class="det-fact__label">Duración</span>
+                    <span class="det-fact__val" th:text="${session.act.duracion} + ' minutos'">0 min</span>
+                </div>
+            </div>
+
+            <div class="det-fact">
+                <span class="det-fact__icon">📍</span>
+                <div>
+                    <span class="det-fact__label">Ciudad</span>
+                    <span class="det-fact__val" th:text="${session.act.ciudad}">Ciudad</span>
+                </div>
+            </div>
+
+            <div class="det-fact" th:if="${!#strings.isEmpty(session.act.getInfoExtra())}">
+                <span class="det-fact__icon">✅</span>
+                <div>
+                    <span class="det-fact__label">Detalle</span>
+                    <span class="det-fact__val" th:text="${session.act.getInfoExtra()}">Info</span>
+                </div>
+            </div>
+
+            <!-- CTA: Añadir al carrito (si viene del flujo de planificación) -->
+            <div class="det-cta" th:if="${session.ciudad != null}">
+                <form th:action="@{/inicio}" method="get">
+                    <input type="hidden" name="añadirCarrito" th:value="${session.act.id}">
+                    <button type="submit" class="btn btn-accent btn-full btn-lg">
+                        + Añadir a mi viaje
+                    </button>
+                </form>
+                <a th:href="@{/inicio}" class="btn btn-outline btn-full" style="margin-top:8px">
+                    ← Ver todas las actividades
+                </a>
+            </div>
+
+            <!-- Si viene desde explorar (sin ciudad en sesión) -->
+            <div class="det-cta" th:unless="${session.ciudad != null}">
+                <a th:href="@{/explorar}" class="btn btn-outline btn-full">
+                    ← Volver a explorar
+                </a>
+                <a th:href="@{/configurar-viaje}" class="btn btn-primary btn-full" style="margin-top:8px">
+                    ✈️ Planificar un viaje
+                </a>
+            </div>
         </div>
-    </footer>
-</body>
+    </div>
+</main>
 
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+
+</body>
 </html>

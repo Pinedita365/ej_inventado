@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleExplorar.css}">
+    <title>TriPing | Explorar actividades</title>
+</head>
+<body>
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ══ BARRA DE BÚSQUEDA + FILTROS ════════════════════════════════════ -->
+<div class="search-bar-wrap">
+    <form th:action="@{/explorar}" method="get" class="search-form">
+        <!-- Búsqueda principal -->
+        <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" name="q" id="q"
+                   th:value="${q}"
+                   placeholder="Busca por ciudad, nombre o descripción..."
+                   autocomplete="off">
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-row">
+            <!-- Tipo de actividad -->
+            <div class="filter-group">
+                <label>Tipo</label>
+                <div class="tipo-btns">
+                    <button type="submit" name="tipo" value="TODAS"
+                            th:class="${tipo == 'TODAS' or tipo == null} ? 'tipo-btn active' : 'tipo-btn'">
+                        Todas
+                    </button>
+                    <button type="submit" name="tipo" value="DEPORTIVA"
+                            th:class="${tipo == 'DEPORTIVA'} ? 'tipo-btn tipo-dep active' : 'tipo-btn tipo-dep'">
+                        🏃 Deportiva
+                    </button>
+                    <button type="submit" name="tipo" value="TURISTICA"
+                            th:class="${tipo == 'TURISTICA'} ? 'tipo-btn tipo-tur active' : 'tipo-btn tipo-tur'">
+                        🏛️ Turística
+                    </button>
+                    <button type="submit" name="tipo" value="GASTRONOMICA"
+                            th:class="${tipo == 'GASTRONOMICA'} ? 'tipo-btn tipo-gas active' : 'tipo-btn tipo-gas'">
+                        🍽️ Gastronómica
+                    </button>
+                </div>
+            </div>
+
+            <!-- Precio -->
+            <div class="filter-group filter-precio">
+                <label>Precio máx.: <strong id="precio-val" th:text="${precioMax == 9999 ? '∞' : precioMax + '€'}">∞</strong></label>
+                <input type="range" name="precioMax" id="precioMax"
+                       min="0" max="200" step="5"
+                       th:value="${precioMax == 9999 ? 200 : precioMax}"
+                       oninput="actualizarPrecio(this.value)">
+                <input type="hidden" name="precioMin" th:value="${precioMin}">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm">Aplicar</button>
+        </div>
+    </form>
+</div>
+
+<!-- ══ CONTENIDO PRINCIPAL ════════════════════════════════════════════ -->
+<main class="explorar-main">
+
+    <!-- Resumen de resultados -->
+    <div class="results-header">
+        <p class="results-count">
+            <span th:text="${#lists.size(listaAct)}">0</span> actividades encontradas
+            <span th:if="${q != null and !q.isEmpty()}" class="results-query">
+                para "<strong th:text="${q}"></strong>"
+            </span>
+        </p>
+        <a th:href="@{/explorar}" th:if="${q != null and !q.isEmpty() or tipo != 'TODAS'}"
+           class="btn btn-outline btn-sm">✕ Limpiar filtros</a>
+    </div>
+
+    <!-- Sin resultados -->
+    <div th:if="${#lists.isEmpty(listaAct)}" class="empty-state">
+        <div class="empty-icon">🔭</div>
+        <h3>No encontramos actividades</h3>
+        <p>Prueba con otro término de búsqueda o elimina los filtros activos.</p>
+        <a th:href="@{/explorar}" class="btn btn-primary">Ver todas las actividades</a>
+    </div>
+
+    <!-- Grid de tarjetas -->
+    <div class="cards-grid" th:unless="${#lists.isEmpty(listaAct)}">
+        <article class="act-card" th:each="act : ${listaAct}">
+            <div class="act-card__img-wrap">
+                <img th:src="@{${act.img}}" th:alt="${act.nombre}" loading="lazy">
+                <span class="act-card__badge"
+                      th:classappend="${act.tipo.name() == 'DEPORTIVA'} ? 'badge-deportiva' :
+                                      (${act.tipo.name() == 'TURISTICA'} ? 'badge-turistica' : 'badge-gastronomica')"
+                      th:text="${act.tipo.name() == 'DEPORTIVA'} ? '🏃 Deportiva' :
+                               (${act.tipo.name() == 'TURISTICA'} ? '🏛️ Turística' : '🍽️ Gastronómica')">
+                </span>
+            </div>
+            <div class="act-card__body">
+                <h3 class="act-card__title" th:text="${act.nombre}">Nombre</h3>
+                <p class="act-card__meta">
+                    <span>📍 <span th:text="${act.ciudad}">Ciudad</span></span>
+                    <span>⏱️ <span th:text="${act.duracion}">0</span> min</span>
+                </p>
+                <p class="act-card__desc" th:text="${act.getBreveDesc()}">Descripción</p>
+            </div>
+            <div class="act-card__footer">
+                <span class="act-card__precio">
+                    <span th:if="${act.precio > 0}" th:text="${act.precio} + '€'">0€</span>
+                    <span th:if="${act.precio == 0}" class="act-card__gratis">Gratis</span>
+                </span>
+                <a th:href="@{/verMas(id=${act.id})}" class="btn btn-primary btn-sm">Ver más →</a>
+            </div>
+        </article>
+    </div>
+</main>
+
+<!-- ══ BOTÓN FLOTANTE "MI RUTA" ════════════════════════════════════════ -->
+<div class="fab-ruta">
+    <button class="fab-btn" disabled title="Próximamente">
+        🗺️ Mi Ruta
+        <span class="soon-badge">Pronto</span>
+    </button>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+function actualizarPrecio(val) {
+    const lbl = document.getElementById('precio-val');
+    lbl.textContent = val >= 200 ? '∞' : val + '€';
+    // Si es 200 (máximo del slider) enviamos 9999 para "sin límite"
+    document.querySelector('input[name="precioMax"]').value = val >= 200 ? 9999 : val;
+}
+// Sincronizar al cargar si venía un valor concreto
+document.addEventListener('DOMContentLoaded', () => {
+    const slider = document.getElementById('precioMax');
+    if (slider) actualizarPrecio(slider.value);
+});
+</script>
+
+</body>
+</html>

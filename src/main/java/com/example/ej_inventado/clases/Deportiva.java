@@ -27,7 +27,8 @@ public class Deportiva extends Actividad {
     }
 
     @Override
-    public String getCategoria() {
-        return "Actividad deportiva";
-    }
+    public String getCategoria() { return "Actividad deportiva"; }
+
+    @Override
+    public String getInfoExtra() { return "Nivel: " + (nivel != null ? nivel.name() : "—"); }
 }

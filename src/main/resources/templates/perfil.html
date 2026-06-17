@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/stylePerfil.css}">
+    <title>TriPing | Mi perfil</title>
+</head>
+<body class="perfil-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<main class="perfil-main">
+
+    <!-- Alerta de éxito -->
+    <div th:if="${param.success}" class="alert alert-success" style="margin-bottom:20px">
+        ✅ Perfil actualizado correctamente.
+    </div>
+
+    <!-- ── Cabecera con avatar ─────────────────────────────────── -->
+    <div class="perfil-header">
+        <div class="perfil-avatar-wrap">
+            <div class="perfil-avatar">
+                <img th:if="${usuario != null and usuario.fotoPerfil != null and !#strings.isEmpty(usuario.fotoPerfil)}"
+                     th:src="${usuario.fotoPerfil}" alt="foto de perfil">
+                <span class="perfil-avatar-initials"
+                      th:unless="${usuario != null and usuario.fotoPerfil != null and !#strings.isEmpty(usuario.fotoPerfil)}"
+                      th:text="${#strings.substring(usuario != null ? usuario.nombre : 'U', 0, 1).toUpperCase()}">U</span>
+            </div>
+            <label for="foto-input" class="perfil-avatar-edit" title="Cambiar foto">✏️</label>
+        </div>
+        <div class="perfil-header__info">
+            <h1 th:text="${usuario != null ? usuario.nombre : 'Mi perfil'}">Mi perfil</h1>
+            <p th:text="${usuario != null ? usuario.email : ''}">email</p>
+            <span class="perfil-rol-badge"
+                  th:classappend="${usuario != null and usuario.rol == 'ROLE_ADMIN'} ? ' perfil-rol-badge--admin' :
+                                 (${usuario != null and usuario.rol == 'ROLE_EMPRESA'} ? ' perfil-rol-badge--empresa' : ' perfil-rol-badge--user')"
+                  th:text="${usuario != null and usuario.rol == 'ROLE_ADMIN'} ? '⚙️ Administrador' :
+                           (${usuario != null and usuario.rol == 'ROLE_EMPRESA'} ? '🏢 Empresa' : '👤 Usuario')">
+                Usuario
+            </span>
+        </div>
+    </div>
+
+    <!-- ── Formulario de edición ───────────────────────────────── -->
+    <div class="perfil-card">
+        <div class="perfil-card__header">
+            <h2>✏️ Editar información</h2>
+        </div>
+        <div class="perfil-card__body">
+            <form th:action="@{/perfil/guardar}" method="post" enctype="multipart/form-data"
+                  id="form-perfil">
+
+                <!-- Foto de perfil -->
+                <div class="field" style="margin-bottom:20px">
+                    <label>Foto de perfil</label>
+                    <div class="perfil-upload-zone" onclick="document.getElementById('foto-input').click()">
+                        <div class="perfil-upload-preview" id="preview-wrap">
+                            <img id="foto-preview"
+                                 th:if="${usuario != null and usuario.fotoPerfil != null and !#strings.isEmpty(usuario.fotoPerfil)}"
+                                 th:src="${usuario.fotoPerfil}" alt="preview">
+                            <span th:unless="${usuario != null and usuario.fotoPerfil != null and !#strings.isEmpty(usuario.fotoPerfil)}"
+                                  th:text="${#strings.substring(usuario != null ? usuario.nombre : 'U', 0, 1).toUpperCase()}">U</span>
+                        </div>
+                        <div class="perfil-upload-text">
+                            <strong>Haz clic para cambiar la foto</strong>
+                            <small>PNG, JPG o WEBP · Máx. 5 MB</small>
+                        </div>
+                    </div>
+                    <input type="file" name="fotoPerfil" id="foto-input" accept="image/*"
+                           onchange="previewFoto(this)">
+                </div>
+
+                <!-- Nombre -->
+                <div class="field">
+                    <label for="nombre">Nombre visible</label>
+                    <input id="nombre" type="text" name="nombre" required maxlength="100"
+                           th:value="${usuario != null ? usuario.nombre : ''}"
+                           placeholder="Tu nombre">
+                </div>
+
+                <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+                    <a th:href="@{/}" class="btn btn-outline">Cancelar</a>
+                    <button type="submit" class="btn btn-accent btn-lg">Guardar cambios →</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── Información de cuenta (solo lectura) ────────────────── -->
+    <div class="perfil-card">
+        <div class="perfil-card__header">
+            <h2>ℹ️ Información de la cuenta</h2>
+        </div>
+        <div class="perfil-card__body" style="padding:0 24px">
+            <div class="perfil-info-rows">
+                <div class="perfil-info-row">
+                    <span class="perfil-info-row__label">Email</span>
+                    <span class="perfil-info-row__value" th:text="${usuario != null ? usuario.email : '—'}">—</span>
+                </div>
+                <div class="perfil-info-row">
+                    <span class="perfil-info-row__label">Método de acceso</span>
+                    <span class="perfil-info-row__value"
+                          th:text="${usuario != null and usuario.proveedor != null} ? ${usuario.proveedor} : 'LOCAL'">LOCAL</span>
+                </div>
+                <div class="perfil-info-row">
+                    <span class="perfil-info-row__label">Rol</span>
+                    <span class="perfil-info-row__value"
+                          th:text="${usuario != null and usuario.rol == 'ROLE_ADMIN'} ? 'Administrador' :
+                                   (${usuario != null and usuario.rol == 'ROLE_EMPRESA'} ? 'Empresa' : 'Usuario')">Usuario</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Cambiar contraseña (solo usuarios locales) ─────────── -->
+    <div class="perfil-card"
+         th:if="${usuario != null and (usuario.proveedor == null or usuario.proveedor == 'LOCAL')}">
+        <div class="perfil-card__header">
+            <h2>🔐 Cambiar contraseña</h2>
+        </div>
+        <div class="perfil-card__body">
+            <p style="color:var(--c-muted);font-size:.875rem;margin-bottom:16px">
+                ¿Olvidaste tu contraseña o quieres actualizarla?
+            </p>
+            <a th:href="@{/recuperar-password}" class="btn btn-outline">Ir a recuperación de contraseña →</a>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+function previewFoto(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const wrap = document.getElementById('preview-wrap');
+        wrap.innerHTML = '<img src="' + e.target.result + '" alt="preview" style="width:100%;height:100%;object-fit:cover">';
+    };
+    reader.readAsDataURL(input.files[0]);
+}
+// Activar input file al clicar el botón de editar del avatar principal
+document.querySelector('.perfil-avatar-edit').addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById('foto-input').click();
+});
+</script>
+
+</body>
+</html>

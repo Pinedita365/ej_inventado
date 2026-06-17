@@ -1,133 +1,328 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Administrador</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
     <link rel="stylesheet" th:href="@{/css/styleAdmin.css}">
+    <title>TriPing | Panel de administración</title>
 </head>
+<body class="admin-body">
 
-<body>
-    <div class="admin-container">
-        <div class="header-acciones"
-            style="width: 100%; display: flex; justify-content: flex-start; margin-bottom: 20px;">
-            <a th:href="@{/inicio}" class="btn-volver">
-                 <span th:text="#{nav.volver}">Volver al inicio</span>
-            </a>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ══ CABECERA ADMIN ═════════════════════════════════════════════════ -->
+<div class="admin-header">
+    <div class="admin-header__inner">
+        <div>
+            <h1>Panel de Administración</h1>
+            <p>Gestiona usuarios, empresas y actividades de la plataforma.</p>
         </div>
-        <h1 th:text="#{admin.panel_titulo}"></h1>
-        <div class="admin-card">
-            <h2 th:text="#{admin.nueva}">Añadir Nueva Actividad</h2>
-            <h4>Todos los valores obligatorios <span style="color: red;">*</span></h4>
+        <div class="admin-header__stats">
+            <div class="admin-stat">
+                <strong th:text="${totalUsuarios}">0</strong>
+                <span>Usuarios</span>
+            </div>
+            <div class="admin-stat">
+                <strong th:text="${totalEmpresas}">0</strong>
+                <span>Empresas</span>
+            </div>
+            <div class="admin-stat">
+                <strong th:text="${totalActividades}">0</strong>
+                <span>Actividades</span>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <form th:action="@{/admin/guardar}" method="post" enctype="multipart/form-data" class="admin-form">
-                
-                <input type="text" name="nombre" th:placeholder="#{admin.nombre_placeholder}" required>
+<!-- ══ TABS ═══════════════════════════════════════════════════════════ -->
+<div class="admin-tabs-wrap">
+    <div class="admin-tabs">
+        <button class="admin-tab" id="tab-usuarios"    onclick="showTab('usuarios')">👥 Usuarios</button>
+        <button class="admin-tab" id="tab-empresas"    onclick="showTab('empresas')">🏢 Empresas</button>
+        <button class="admin-tab" id="tab-actividades" onclick="showTab('actividades')">🎯 Actividades</button>
+    </div>
+</div>
 
-                <input type="text" name="ciudad" th:placeholder="#{admin.ciudad}" required>
+<main class="admin-main">
 
-                <input type="number" name="precio" th:placeholder="#{admin.precio_placeholder}" min=5 max=500 step=1 required>
+    <!-- ═══════════════════════════════════════════════════════════════
+         TAB: USUARIOS
+    ══════════════════════════════════════════════════════════════════ -->
+    <section id="panel-usuarios" class="admin-panel">
 
-                <input type="number" name="duracion" placeholder="Duración (minutos) *" min=15 max=480 required>
+        <!-- Alertas -->
+        <div th:if="${param.deleted  != null and param.tab[0] == 'usuarios'}" class="alert alert-info">🗑️ Usuario eliminado.</div>
+        <div th:if="${param.rolChanged != null}"                               class="alert alert-success">✅ Rol actualizado.</div>
 
-                <textarea name="descripcion" th:placeholder="#{admin.desc_placeholder}" required></textarea>
-
-                <div class="form-group" style="grid-column: span 1;">
-                    <label style="font-size: 12px; color: #666;" th:text="#{admin.img_label}"></label>
-                    <input type="file" name="imagen" accept="image/*" required>
+        <!-- Filtros -->
+        <div class="admin-filters">
+            <form th:action="@{/admin/panel}" method="get" class="admin-search-form">
+                <input type="hidden" name="tab" value="usuarios">
+                <div class="admin-search-wrap">
+                    <span class="admin-search-icon">🔍</span>
+                    <input type="text" name="q" id="searchQ" th:value="${q}" placeholder="Buscar por nombre o email...">
                 </div>
-
-                <div class="form-group" style="grid-column: span 1;">
-                    <label style="font-size: 12px; color: #666;" th:text="#{admin.tipo_label}"></label>
-                    <select name="tipo" id="tipoActividad" onchange="mostrarCampos()" required>
-                        <option value="">-- Selecciona un tipo --</option>
-                        <option value="DEPORTIVA">Deportiva</option>
-                        <option value="GASTRONOMICA">Gastronómica</option>
-                        <option value="TURISTICA">Turística</option>
-                    </select>
+                <div class="admin-rol-btns">
+                    <button type="submit" name="rolFiltro" value="TODOS"
+                            th:class="${rolFiltro == 'TODOS'} ? 'admin-rol-btn active' : 'admin-rol-btn'">Todos</button>
+                    <button type="submit" name="rolFiltro" value="ROLE_USER"
+                            th:class="${rolFiltro == 'ROLE_USER'} ? 'admin-rol-btn active' : 'admin-rol-btn'">Usuarios</button>
+                    <button type="submit" name="rolFiltro" value="ROLE_EMPRESA"
+                            th:class="${rolFiltro == 'ROLE_EMPRESA'} ? 'admin-rol-btn active' : 'admin-rol-btn'">Empresas</button>
+                    <button type="submit" name="rolFiltro" value="ROLE_ADMIN"
+                            th:class="${rolFiltro == 'ROLE_ADMIN'} ? 'admin-rol-btn active' : 'admin-rol-btn'">Admins</button>
                 </div>
-
-                <div id="seccionDeportiva" class="campo-especifico">
-                    <label>Nivel de dificultad:</label>
-                    <select name="nivel" style="width: 100%;">
-                        <option value="Bajo">Bajo</option>
-                        <option value="Medio">Medio</option>
-                        <option value="Alto">Alto</option>
-                    </select>
-                </div>
-
-                <div id="seccionGastronomica" class="campo-especifico">
-                    <label>Tipo de vestimenta:</label>
-                    <input type="text" name="vestimenta" placeholder="Ej: Formal, Informal..." style="width: 95%;">
-                </div>
-
-                <div id="seccionTuristica" class="campo-especifico">
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" name="vehiculo" value="true" style="width: auto;"> ¿Requiere vehículo
-                        propio?
-                    </label>
-                </div>
-
-                <button type="submit" class="btn-save">Guardar Actividad</button>
             </form>
         </div>
 
-        <div class="admin-card">
-            <h2>Listado de Actividades Actuales</h2>
-
-            <table>
+        <!-- Tabla -->
+        <div class="admin-table-wrap">
+            <table class="admin-table">
                 <thead>
                     <tr>
-                        <th th:text="#{admin.img_label}"></th>
-                        <th th:text="#{admin.nombre_placeholder}"></th>
-                        <th th:text="#{admin.ciudad}"></th>
-                        <th th:text="#{admin.tipo_label}"></th>
-                        <th th:text="#{admin.precio_placeholder}"></th>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Proveedor</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="u : ${usuarios}" th:class="${u.rol == 'ROLE_ADMIN'} ? 'row-admin' : ''">
+                        <td th:text="${u.id}">1</td>
+                        <td th:text="${u.nombre}">Nombre</td>
+                        <td><small th:text="${u.email}">email</small></td>
+                        <td>
+                            <span class="admin-badge"
+                                  th:classappend="${u.proveedor == 'GOOGLE'} ? ' badge-google' :
+                                                 (${u.proveedor == 'GITHUB'} ? ' badge-github' : ' badge-local')"
+                                  th:text="${u.proveedor != null ? u.proveedor : 'LOCAL'}"></span>
+                        </td>
+                        <td>
+                            <span class="admin-rol-badge"
+                                  th:classappend="${u.rol == 'ROLE_ADMIN'} ? ' rol-admin' :
+                                                 (${u.rol == 'ROLE_EMPRESA'} ? ' rol-empresa' : ' rol-user')"
+                                  th:text="${u.rol == 'ROLE_ADMIN'} ? 'Admin' :
+                                           (${u.rol == 'ROLE_EMPRESA'} ? 'Empresa' : 'Usuario')"></span>
+                        </td>
+                        <td class="admin-table__actions">
+                            <!-- Cambiar rol -->
+                            <form th:action="@{/admin/usuarios/cambiar-rol}" method="post" style="display:inline">
+                                <input type="hidden" name="id" th:value="${u.id}">
+                                <select name="nuevoRol" class="admin-rol-select" onchange="this.form.submit()">
+                                    <option value="" disabled selected>Rol...</option>
+                                    <option value="ROLE_USER"    th:selected="${u.rol == 'ROLE_USER'}">Usuario</option>
+                                    <option value="ROLE_EMPRESA" th:selected="${u.rol == 'ROLE_EMPRESA'}">Empresa</option>
+                                    <option value="ROLE_ADMIN"   th:selected="${u.rol == 'ROLE_ADMIN'}">Admin</option>
+                                </select>
+                            </form>
+                            <!-- Eliminar -->
+                            <form th:action="@{/admin/usuarios/eliminar}" method="post" style="display:inline">
+                                <input type="hidden" name="id" th:value="${u.id}">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                        th:disabled="${u.rol == 'ROLE_ADMIN'}"
+                                        onclick="return confirm('¿Eliminar este usuario?')">🗑️</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(usuarios)}">
+                        <td colspan="6" style="text-align:center;color:var(--c-muted);padding:32px">
+                            No se encontraron usuarios con los filtros actuales.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         TAB: EMPRESAS
+    ══════════════════════════════════════════════════════════════════ -->
+    <section id="panel-empresas" class="admin-panel" style="display:none">
+
+        <!-- Alertas -->
+        <div th:if="${param.createdEmpresa != null}" class="alert alert-success">✅ Cuenta de empresa creada correctamente.</div>
+        <div th:if="${param.errorEmpresa != null and param.errorEmpresa[0] == 'email_en_uso'}" class="alert alert-error">⚠️ Ya existe un usuario con ese email.</div>
+
+        <!-- Formulario crear empresa -->
+        <div class="admin-create-form-header">
+            <h3>➕ Crear nueva cuenta de empresa</h3>
+            <p style="font-size:.85rem;color:var(--c-muted);margin-top:4px">
+                Crea directamente una cuenta con acceso al panel de empresa (ROLE_EMPRESA).
+            </p>
+        </div>
+        <div class="admin-form-card" style="margin-bottom:36px">
+            <form th:action="@{/admin/empresas/crear}" method="post" class="admin-form-grid">
+                <input type="text"     name="nombre"   required placeholder="Nombre de la empresa *" style="grid-column:span 2">
+                <input type="email"    name="email"    required placeholder="Email de acceso *">
+                <input type="password" name="password" required minlength="8" placeholder="Contraseña (mín. 8 caracteres) *">
+                <button type="submit" class="btn btn-primary" style="grid-column:span 2">Crear cuenta empresa</button>
+            </form>
+        </div>
+
+        <p class="admin-panel__desc">
+            Lista de usuarios con rol <strong>ROLE_EMPRESA</strong>. También puedes asignar este rol desde la pestaña Usuarios.
+        </p>
+
+        <div th:if="${#lists.isEmpty(empresas)}" class="empty-state">
+            <div class="empty-icon">🏢</div>
+            <h3>No hay empresas registradas</h3>
+            <p>Crea una cuenta de empresa con el formulario de arriba.</p>
+        </div>
+
+        <div class="admin-empresas-grid" th:unless="${#lists.isEmpty(empresas)}">
+            <div th:each="emp : ${empresas}" class="admin-empresa-card">
+                <div class="admin-empresa-card__avatar"
+                     th:text="${#strings.substring(emp.nombre, 0, 2).toUpperCase()}">EM</div>
+                <div class="admin-empresa-card__info">
+                    <strong th:text="${emp.nombre}">Empresa</strong>
+                    <small th:text="${emp.email}">email</small>
+                    <span class="admin-badge badge-local" th:text="${emp.proveedor != null ? emp.proveedor : 'LOCAL'}"></span>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <form th:action="@{/admin/usuarios/cambiar-rol}" method="post" style="display:inline">
+                        <input type="hidden" name="id" th:value="${emp.id}">
+                        <input type="hidden" name="nuevoRol" value="ROLE_USER">
+                        <button type="submit" class="btn btn-outline btn-sm"
+                                onclick="return confirm('¿Quitar acceso de empresa a este usuario?')">
+                            Quitar empresa
+                        </button>
+                    </form>
+                    <form th:action="@{/admin/usuarios/eliminar}" method="post" style="display:inline">
+                        <input type="hidden" name="id" th:value="${emp.id}">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Eliminar esta cuenta de empresa?')">🗑️</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         TAB: ACTIVIDADES
+    ══════════════════════════════════════════════════════════════════ -->
+    <section id="panel-actividades" class="admin-panel" style="display:none">
+
+        <div th:if="${param.success != null and param.tab[0] == 'actividades'}" class="alert alert-success">✅ Actividad guardada.</div>
+        <div th:if="${param.deleted != null and param.tab[0] == 'actividades'}" class="alert alert-info">🗑️ Actividad eliminada.</div>
+
+        <!-- Tabla de actividades -->
+        <div class="admin-table-wrap" style="margin-bottom:32px">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Img</th>
+                        <th>Nombre</th>
+                        <th>Ciudad</th>
+                        <th>Tipo</th>
+                        <th>Precio</th>
+                        <th>Propietario</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="act : ${actividades}">
+                        <td><img th:src="${act.img}" alt="" style="width:54px;height:36px;object-fit:cover;border-radius:6px"></td>
+                        <td th:text="${act.nombre}">Nombre</td>
+                        <td th:text="${act.ciudad}">Ciudad</td>
                         <td>
-                            <img th:src="${act.img}" alt="Actividad"
-                                style="width: 80px; height: 50px; object-fit: cover; border-radius: 5px;">
+                            <span class="badge"
+                                  th:classappend="${act.tipo.name() == 'DEPORTIVA'} ? ' badge-deportiva' :
+                                                 (${act.tipo.name() == 'TURISTICA'} ? ' badge-turistica' : ' badge-gastronomica')"
+                                  th:text="${act.tipo.name()}"></span>
                         </td>
-                        <td th:text="${act.nombre}"></td>
-                        <td th:text="${act.ciudad}"></td>
-                        <td th:text="${act.tipo}"></td>
-                        <td th:text="${act.precio} + '€'"></td>
+                        <td th:text="${act.precio > 0} ? ${act.precio} + '€' : 'Gratis'">0€</td>
+                        <td><small th:text="${act.creadorEmail != null ? act.creadorEmail : 'Admin'}">—</small></td>
                         <td>
-                            <form th:action="@{/admin/eliminar}" method="post" style="display:inline;">
+                            <form th:action="@{/admin/eliminar-actividad}" method="post" style="display:inline">
                                 <input type="hidden" name="id" th:value="${act.id}">
-                                <button type="submit" class="btn-delete"
-                                    onclick="return confirm('¿Estás seguro de que quieres borrar esta actividad?')"
-                                    th:text="#{admin.btn_eliminar}">
-                                </button>
+                                <input type="hidden" name="tab" value="actividades">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('¿Eliminar esta actividad?')">🗑️</button>
                             </form>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <script>
-        function mostrarCampos() {
-            document.getElementById('seccionDeportiva').style.display = 'none';
-            document.getElementById('seccionGastronomica').style.display = 'none';
-            document.getElementById('seccionTuristica').style.display = 'none';
+        <!-- Formulario crear actividad -->
+        <div class="admin-create-form-header">
+            <h3>➕ Crear nueva actividad</h3>
+        </div>
+        <div class="admin-form-card">
+            <form th:action="@{/admin/guardar}" method="post" enctype="multipart/form-data" class="admin-form-grid">
+                <input type="hidden" name="tab" value="actividades">
+                <input type="text"   name="nombre"      required placeholder="Nombre *">
+                <input type="text"   name="ciudad"      required placeholder="Ciudad *">
+                <input type="number" name="precio"      required min="0" max="1000" placeholder="Precio (€) *">
+                <input type="number" name="duracion"    required min="15" max="1440" placeholder="Duración (min) *">
+                <textarea name="descripcion" required placeholder="Descripción *" style="grid-column:span 2"></textarea>
+                <div>
+                    <label style="font-size:.78rem;color:var(--c-muted);margin-bottom:4px;display:block">Imagen *</label>
+                    <input type="file" name="imagen" accept="image/*" required>
+                </div>
+                <select name="tipo" id="adminTipo" onchange="adminMostrarCampos()" required>
+                    <option value="">-- Tipo --</option>
+                    <option value="DEPORTIVA">Deportiva</option>
+                    <option value="GASTRONOMICA">Gastronómica</option>
+                    <option value="TURISTICA">Turística</option>
+                </select>
+                <div id="aCampoDeportiva" style="display:none">
+                    <label style="font-size:.78rem;color:var(--c-muted);margin-bottom:4px;display:block">Nivel</label>
+                    <select name="nivelStr" style="width:100%">
+                        <option value="Bajo">Bajo</option><option value="Medio">Medio</option><option value="Alto">Alto</option>
+                    </select>
+                </div>
+                <div id="aCampoGastronomica" style="display:none">
+                    <input type="text" name="vestimenta" placeholder="Vestimenta">
+                </div>
+                <div id="aCampoTuristica" style="display:none">
+                    <label style="display:flex;align-items:center;gap:8px;font-size:.85rem">
+                        <input type="checkbox" name="vehiculo" value="true" style="width:auto"> Requiere vehículo
+                    </label>
+                </div>
+                <input type="number" name="latitud"  step="0.0001" placeholder="Latitud (opt)">
+                <input type="number" name="longitud" step="0.0001" placeholder="Longitud (opt)">
+                <button type="submit" class="btn btn-primary" style="grid-column:span 2">Guardar actividad</button>
+            </form>
+        </div>
+    </section>
+</main>
 
-            var tipo = document.getElementById('tipoActividad').value;
+<footer th:replace="~{fragments/footer :: footer}"></footer>
 
-            if (tipo === 'DEPORTIVA') {
-                document.getElementById('seccionDeportiva').style.display = 'block';
-            } else if (tipo === 'GASTRONOMICA') {
-                document.getElementById('seccionGastronomica').style.display = 'block';
-            } else if (tipo === 'TURISTICA') {
-                document.getElementById('seccionTuristica').style.display = 'block';
-            }
-        }
-    </script>
+<script>
+// ── Tabs ─────────────────────────────────────────────────────────────
+function showTab(name) {
+    ['usuarios','empresas','actividades'].forEach(t => {
+        document.getElementById('panel-' + t).style.display = t === name ? 'block' : 'none';
+        document.getElementById('tab-' + t).classList.toggle('active', t === name);
+    });
+    history.replaceState(null,'', window.location.pathname + '?tab=' + name);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tab = new URLSearchParams(location.search).get('tab') || 'usuarios';
+    showTab(tab);
+});
+
+// ── Campos por tipo (empresa form) ───────────────────────────────────
+function adminMostrarCampos() {
+    ['aCampoDeportiva','aCampoGastronomica','aCampoTuristica'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+    });
+    const t = document.getElementById('adminTipo').value;
+    if (t === 'DEPORTIVA')    document.getElementById('aCampoDeportiva').style.display    = 'block';
+    if (t === 'GASTRONOMICA') document.getElementById('aCampoGastronomica').style.display = 'block';
+    if (t === 'TURISTICA')    document.getElementById('aCampoTuristica').style.display    = 'block';
+}
+</script>
 </body>
-
 </html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleIndex.css}">
+    <title>TriPing | Verificación en dos pasos</title>
+    <style>
+        .tfa-card {
+            background: var(--c-surface);
+            border-radius: var(--rad-xl);
+            padding: 40px 36px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+        }
+        .tfa-icon { font-size: 3rem; margin-bottom: 12px; }
+        .tfa-card h1 { font-size: 1.5rem; font-weight: 800; color: var(--c-dark); margin-bottom: 8px; }
+        .tfa-card .tfa-sub { color: var(--c-muted); font-size: .875rem; margin-bottom: 28px; line-height: 1.6; }
+        .tfa-card .tfa-sub strong { color: var(--c-text); }
+
+        .code-input-wrap { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+        .code-digit {
+            width: 48px; height: 56px;
+            border: 2px solid var(--c-border);
+            border-radius: var(--rad-m);
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            font-family: var(--font);
+            color: var(--c-dark);
+            background: #fafbfc;
+            transition: border-color var(--t), box-shadow var(--t);
+            outline: none;
+        }
+        .code-digit:focus { border-color: var(--c-cyan); box-shadow: 0 0 0 3px rgba(10,211,255,.16); }
+
+        .tfa-timer { font-size: .8rem; color: var(--c-muted); margin-bottom: 20px; }
+        .tfa-timer strong { color: var(--c-dark); }
+        .tfa-timer.expired { color: var(--c-error); }
+
+        .tfa-actions { display: flex; flex-direction: column; gap: 10px; }
+        .tfa-resend { background: none; border: none; color: var(--c-muted); font-family: var(--font); font-size: .85rem; cursor: pointer; text-decoration: underline; padding: 4px; }
+        .tfa-resend:hover { color: var(--c-dark); }
+    </style>
+</head>
+<body>
+<div class="overlay" style="background:linear-gradient(135deg,#012d30 0%,var(--c-dark) 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px">
+
+    <a th:href="@{/}" style="text-decoration:none;margin-bottom:32px">
+        <div style="color:var(--c-mint);font-size:1.5rem;font-weight:800">🌍 TriPing</div>
+    </a>
+
+    <div class="tfa-card">
+        <div class="tfa-icon">🔐</div>
+        <h1>Verificación en dos pasos</h1>
+        <p class="tfa-sub">
+            Hemos enviado un código de 6 dígitos a
+            <strong th:text="${emailMasked != null ? emailMasked : 'tu email'}">****@gmail.com</strong>.
+            Introdúcelo a continuación.
+        </p>
+
+        <!-- Alertas -->
+        <div th:if="${param.error}"    class="alert alert-error"   style="margin-bottom:16px;text-align:left">⚠️ Código incorrecto. Inténtalo de nuevo.</div>
+        <div th:if="${param.expired}"  class="alert alert-warn"    style="margin-bottom:16px;text-align:left">⏱️ El código ha caducado. Solicita uno nuevo.</div>
+        <div th:if="${param.reenviado}"class="alert alert-success" style="margin-bottom:16px;text-align:left">✅ Código reenviado a tu email.</div>
+
+        <!-- Formulario con 6 dígitos individuales -->
+        <form th:action="@{/verificar-2fa}" method="post" id="form-2fa">
+            <div class="code-input-wrap">
+                <input class="code-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="d0" autocomplete="one-time-code" autofocus>
+                <input class="code-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="d1">
+                <input class="code-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="d2">
+                <input class="code-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="d3">
+                <input class="code-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="d4">
+                <input class="code-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="d5">
+            </div>
+            <input type="hidden" name="codigo" id="codigo-hidden">
+
+            <!-- Temporizador -->
+            <div class="tfa-timer" id="timer-wrap" th:if="${segundosRestantes != null}">
+                Expira en <strong id="timer-val">--:--</strong>
+            </div>
+
+            <div class="tfa-actions">
+                <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-verificar">
+                    Verificar código →
+                </button>
+            </div>
+        </form>
+
+        <!-- Reenviar código -->
+        <form th:action="@{/reenviar-2fa}" method="post" style="margin-top:16px">
+            <button type="submit" class="tfa-resend">¿No has recibido el código? Reenviar →</button>
+        </form>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--c-border)">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="tfa-resend" style="color:var(--c-error)">Cancelar y volver al inicio</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+const totalSeg = /*[[${segundosRestantes != null ? segundosRestantes : 600}]]*/ 600;
+
+// ── Temporizador ──────────────────────────────────────────────────
+let restante = totalSeg;
+function formatear(s) {
+    const m = Math.floor(s / 60);
+    const ss = s % 60;
+    return String(m).padStart(2,'0') + ':' + String(ss).padStart(2,'0');
+}
+const timerEl  = document.getElementById('timer-val');
+const timerWrap = document.getElementById('timer-wrap');
+if (timerEl) {
+    timerEl.textContent = formatear(restante);
+    const iv = setInterval(() => {
+        restante--;
+        if (restante <= 0) {
+            clearInterval(iv);
+            timerEl.textContent = '00:00';
+            timerWrap.classList.add('expired');
+            document.getElementById('btn-verificar').disabled = true;
+        } else {
+            timerEl.textContent = formatear(restante);
+        }
+    }, 1000);
+}
+
+// ── Inputs individuales: navegar automáticamente ──────────────────
+const digits = Array.from(document.querySelectorAll('.code-digit'));
+digits.forEach((el, i) => {
+    el.addEventListener('input', e => {
+        const v = e.target.value.replace(/\D/g, '');
+        e.target.value = v;
+        if (v && i < 5) digits[i + 1].focus();
+        updateHidden();
+    });
+    el.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !e.target.value && i > 0) digits[i - 1].focus();
+    });
+    el.addEventListener('paste', e => {
+        e.preventDefault();
+        const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+        paste.split('').forEach((c, j) => { if (digits[j]) digits[j].value = c; });
+        if (digits[paste.length - 1]) digits[paste.length - 1].focus();
+        updateHidden();
+    });
+});
+
+function updateHidden() {
+    document.getElementById('codigo-hidden').value = digits.map(d => d.value).join('');
+}
+
+document.getElementById('form-2fa').addEventListener('submit', e => {
+    updateHidden();
+    const c = document.getElementById('codigo-hidden').value;
+    if (c.length < 6) { e.preventDefault(); digits[0].focus(); }
+});
+</script>
+</body>
+</html>

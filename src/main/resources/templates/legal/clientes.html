@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Empresas que confían en TriPing para publicar sus actividades.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleLegal.css}">
+    <title>Nuestros clientes — TriPing</title>
+</head>
+<body class="legal-body">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+<div class="legal-hero">
+    <span class="legal-hero__tag">Empresas asociadas</span>
+    <h1>Nuestros clientes</h1>
+    <p>Empresas que confían en TriPing para llegar a miles de viajeros y crecer su negocio.</p>
+    <div class="clientes-hero-extra">
+        <div class="clientes-stat"><strong>20+</strong><span>Empresas activas</span></div>
+        <div class="clientes-stat"><strong>100+</strong><span>Actividades publicadas</span></div>
+        <div class="clientes-stat"><strong>15+</strong><span>Ciudades</span></div>
+    </div>
+</div>
+
+<!-- ══ CONTENIDO ═════════════════════════════════════════════════════ -->
+<div class="legal-content">
+
+    <div class="legal-section">
+        <h2>Empresas que publican en TriPing</h2>
+        <p>
+            Estas son algunas de las empresas que ya forman parte de nuestra red de proveedores de actividades.
+            Cada una ha sido verificada y aprobada por nuestro equipo.
+        </p>
+
+        <div class="clientes-grid">
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#dbeafe;">🏄</div>
+                <h3>AquaAdventures</h3>
+                <p>Actividades acuáticas en la Costa de Almería. Snórquel, kayak y paddle surf para todos los niveles.</p>
+                <span class="cliente-card__tag tag-dep">Deportiva</span>
+            </div>
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#d1fae5;">🏛️</div>
+                <h3>Sevilla Heritage Tours</h3>
+                <p>Visitas guiadas al patrimonio histórico de Sevilla. Expertos locales con más de 10 años de experiencia.</p>
+                <span class="cliente-card__tag tag-tur">Turística</span>
+            </div>
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#fef3c7;">🍷</div>
+                <h3>Rutas del Sabor</h3>
+                <p>Rutas gastronómicas por los mejores bares y restaurantes de Sevilla. Tapas, vinos y cultura local.</p>
+                <span class="cliente-card__tag tag-gas">Gastronómica</span>
+            </div>
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#fce7f3;">🏕️</div>
+                <h3>Cantabria Outdoor</h3>
+                <p>Aventuras al aire libre en Cantabria: descenso del Sella, rutas de senderismo y escalada en roca.</p>
+                <span class="cliente-card__tag tag-dep">Deportiva</span>
+            </div>
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#ede9fe;">🌿</div>
+                <h3>Cabo de Gata Natura</h3>
+                <p>Rutas de senderismo y observación de naturaleza en el Parque Natural Cabo de Gata-Níjar.</p>
+                <span class="cliente-card__tag tag-mix">Mixta</span>
+            </div>
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#d1fae5;">🍽️</div>
+                <h3>Mar y Mesa</h3>
+                <p>Experiencias gastronómicas exclusivas en Cantabria. Menús de degustación y catas de productos del mar.</p>
+                <span class="cliente-card__tag tag-gas">Gastronómica</span>
+            </div>
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#dbeafe;">🚴</div>
+                <h3>BiciSevilla</h3>
+                <p>Rutas en bicicleta por la ciudad de Sevilla y su entorno natural. Guías bilingüe disponibles.</p>
+                <span class="cliente-card__tag tag-dep">Deportiva</span>
+            </div>
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#fef3c7;">🎭</div>
+                <h3>Flamenco Vivo</h3>
+                <p>Shows de flamenco auténtico y clases para turistas en el corazón del barrio de Triana, Sevilla.</p>
+                <span class="cliente-card__tag tag-tur">Turística</span>
+            </div>
+
+            <div class="cliente-card">
+                <div class="cliente-card__logo" style="background:#f3e8ff;">⛵</div>
+                <h3>Almería Sailing</h3>
+                <p>Excursiones en velero y catamarán por la costa almeriense. Ideal para grupos y familias.</p>
+                <span class="cliente-card__tag tag-dep">Deportiva</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CTA para empresas -->
+    <div class="clientes-cta">
+        <h2>¿Quieres unirte?</h2>
+        <p>
+            Si tienes una empresa de actividades, únete a TriPing y empieza a llegar a miles de viajeros.
+            Gestiona tus actividades, sube fotos y establece tus propios precios.
+        </p>
+        <div class="clientes-cta__actions">
+            <a th:href="@{/sobre-nosotros}" class="btn btn-accent btn-lg">Saber más →</a>
+            <a th:href="@{/login}" class="btn btn-ghost btn-lg">Acceder a mi panel</a>
+        </div>
+    </div>
+
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

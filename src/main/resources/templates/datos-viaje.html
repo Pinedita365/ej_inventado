@@ -1,59 +1,215 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styleDatosViaje.css">
-    <title>TriPing | Configura tu viaje</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styleGlobal.css}">
+    <link rel="stylesheet" th:href="@{/css/styleFooter.css}">
+    <link rel="stylesheet" th:href="@{/css/styleDatosViaje.css}">
+    <title>TriPing | Planifica tu viaje</title>
 </head>
+<body class="dv-body">
 
-<body>
-    <div class="video-background">
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ══ CONTENIDO ═══════════════════════════════════════════════════════ -->
+<main class="dv-main">
+
+    <!-- Cabecera -->
+    <div class="dv-header">
+        <div class="dv-header__icon">✈️</div>
+        <h1>Planifica tu viaje</h1>
+        <p>Dinos a dónde quieres ir y cuándo, y te mostraremos las mejores actividades disponibles.</p>
     </div>
 
-    <div class="card-configuracion">
-        <header class="card-header">
-            <span class="emoji-viaje">✈️</span>
-            <h2 th:text="#{viaje.prepara}">Prepara tu aventura</h2>
-            <p>
-                <span
-                    th:text="#{viaje.hola(${session.nombre != null ? session.nombre : #messages.msg('generico.invitado')})}"></span>
-            </p>
-        </header>
+    <!-- Mensaje de error -->
+    <div th:if="${session.errorMensaje}" class="alert alert-error dv-alert"
+         role="alert" aria-live="polite">
+        <span>⚠️</span>
+        <span th:text="${session.errorMensaje}"></span>
+    </div>
 
-        <form th:action="@{/comprobar}" method="get" class="form-viaje">
-            <div class="input-group">
-                <label for="ciudad" th:text="#{viaje.pregunta_ciudad}" class="ast">📍 ¿A dónde quieres ir? <span
-                        style="color: red;">*</span></label>
-                <input type="text" id="ciudad" name="ciudad" th:placeholder="#{viaje.placeholder_ciudad}" required>
+    <!-- Formulario -->
+    <div class="dv-card">
+        <form th:action="@{/comprobar}" method="get" class="dv-form" novalidate>
+            <input type="hidden" name="nombre"
+                   th:value="${session.nombre != null ? session.nombre : 'Viajero'}">
+
+            <!-- Ciudad con autocompletado -->
+            <div class="field">
+                <label for="ciudad">
+                    📍 Ciudad destino <span class="required">*</span>
+                </label>
+                <div class="autocomplete-wrap">
+                    <input type="text" id="ciudad" name="ciudad"
+                           th:value="${session.ciudad}"
+                           placeholder="Escribe una ciudad real..."
+                           autocomplete="off"
+                           required
+                           oninput="buscarCiudad(this)"
+                           onblur="ocultarDropdown()">
+                    <div id="ciudad-dropdown" class="autocomplete-dropdown" hidden></div>
+                </div>
+                <p class="field-hint">Selecciona una ciudad del desplegable para asegurarte de que existe.</p>
             </div>
 
-            <div class="fechas-container">
-                <div class="input-group">
-                    <label for="fEntrada" th:text="#{viaje.fecha_inicio}" class="ast">📅 Fecha de inicio</label>
-                    <input th:if="${session.fEntrada!=null}" type="date" id="fEntrada" name="fEntrada" th:value="${session.fEntrada}" required>
-                    <input th:if="${session.ciudad==null}" type="date" id="fEntrada" name="fEntrada" required>
+            <!-- Fechas -->
+            <div class="dv-fechas">
+                <div class="field">
+                    <label for="fEntrada">📅 Fecha de inicio <span class="required">*</span></label>
+                    <input type="date" id="fEntrada" name="fEntrada"
+                           th:value="${session.fEntrada}"
+                           required
+                           oninput="actualizarFechaMinSalida()">
                 </div>
-                <div class="input-group">
-                    <label for="fSalida" th:text="#{viaje.fecha_fin}" class="ast">📅 Fecha de fin</label>
-                    <input th:if="${session.fSalida!=null}" type="date" id="fSalida" name="fSalida" th:value="${session.fSalida}" required>
-                    <input th:if="${session.fSalida==null}" type="date" id="fSalida" name="fSalida" required>
+                <div class="field">
+                    <label for="fSalida">📅 Fecha de fin <span class="required">*</span></label>
+                    <input type="date" id="fSalida" name="fSalida"
+                           th:value="${session.fSalida}"
+                           required>
                 </div>
             </div>
 
-            <input type="hidden" name="nombre" th:value="${session.nombre != null ? session.nombre : 'Invitado'}">
+            <!-- Info de días -->
+            <div class="dv-dias-info" id="dias-info" hidden>
+                <span id="dias-texto"></span>
+            </div>
 
-            <button type="submit" class="btn-comenzar" th:text="#{viaje.btn}">
-                <span>Explorar Actividades</span>
-                <i class="icon-arrow">→</i>
+            <button type="submit" class="btn btn-primary btn-full btn-lg dv-submit"
+                    onclick="return validarFormulario()">
+                Buscar actividades →
             </button>
         </form>
-
-        <div class="card-footer">
-            <a href="/" class="btn-volver">← Cambiar usuario</a>
-        </div>
     </div>
-</body>
 
+    <!-- Enlace a explorar -->
+    <div class="dv-alt">
+        <p>¿Solo quieres explorar sin planificar?</p>
+        <a th:href="@{/explorar}" class="btn btn-outline">🔍 Ver todas las actividades</a>
+    </div>
+
+    <!-- Botón mi ruta -->
+    <div style="text-align:center;margin-top:12px">
+        <button class="btn btn-disabled" disabled>
+            🗺️ Ver actividades en mi ruta
+            <span class="soon-badge">Próximamente</span>
+        </button>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+/* ── Autocompletado de ciudad con Nominatim ─────────────────────── */
+let debounceTimer;
+let ciudadSeleccionada = false;
+
+function buscarCiudad(input) {
+    ciudadSeleccionada = false;
+    clearTimeout(debounceTimer);
+    const q = input.value.trim();
+    if (q.length < 2) { ocultarDropdown(); return; }
+
+    debounceTimer = setTimeout(async () => {
+        try {
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=6&addressdetails=1&accept-language=es`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            mostrarSugerencias(data, input);
+        } catch (e) { ocultarDropdown(); }
+    }, 350);
+}
+
+function mostrarSugerencias(resultados, input) {
+    const dropdown = document.getElementById('ciudad-dropdown');
+    dropdown.innerHTML = '';
+
+    // Filtrar y formatear: solo poblaciones
+    const tipos = ['city','town','village','municipality','hamlet','suburb'];
+    const filtradas = resultados
+        .filter(r => tipos.includes(r.type) || tipos.includes(r.addresstype) || tipos.includes(r.class))
+        .slice(0, 5);
+
+    if (filtradas.length === 0) { ocultarDropdown(); return; }
+
+    filtradas.forEach(lugar => {
+        const partes = lugar.display_name.split(',');
+        const nombre = partes[0].trim();
+        const pais   = partes[partes.length - 1].trim();
+        const region = partes.length > 2 ? partes[1].trim() : '';
+
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        item.innerHTML = `<strong>${nombre}</strong><span class="autocomplete-sub">${region}${region ? ', ' : ''}${pais}</span>`;
+        item.addEventListener('mousedown', () => {
+            input.value = nombre;
+            ciudadSeleccionada = true;
+            ocultarDropdown();
+        });
+        dropdown.appendChild(item);
+    });
+
+    dropdown.hidden = false;
+}
+
+function ocultarDropdown() {
+    setTimeout(() => {
+        const d = document.getElementById('ciudad-dropdown');
+        if (d) d.hidden = true;
+    }, 200);
+}
+
+/* ── Cálculo de días ────────────────────────────────────────────── */
+function actualizarFechaMinSalida() {
+    const fE = document.getElementById('fEntrada').value;
+    const fS = document.getElementById('fSalida');
+    if (fE) fS.min = fE;
+    calcularDias();
+}
+
+function calcularDias() {
+    const fE = document.getElementById('fEntrada').value;
+    const fS = document.getElementById('fSalida').value;
+    const info = document.getElementById('dias-info');
+    const txt  = document.getElementById('dias-texto');
+    if (!fE || !fS) { info.hidden = true; return; }
+    const dias = Math.round((new Date(fS) - new Date(fE)) / 86400000) + 1;
+    if (dias > 0 && dias <= 30) {
+        txt.textContent = `📅 ${dias} día${dias > 1 ? 's' : ''} de viaje`;
+        info.hidden = false;
+    } else {
+        info.hidden = true;
+    }
+}
+
+document.getElementById('fSalida').addEventListener('input', calcularDias);
+
+/* ── Validación antes de enviar ────────────────────────────────── */
+function validarFormulario() {
+    const ciudad = document.getElementById('ciudad').value.trim();
+    const fE = document.getElementById('fEntrada').value;
+    const fS = document.getElementById('fSalida').value;
+
+    if (!ciudad) { alert('Por favor, escribe una ciudad destino.'); return false; }
+    if (!fE || !fS) { alert('Por favor, selecciona las fechas del viaje.'); return false; }
+
+    const dias = Math.round((new Date(fS) - new Date(fE)) / 86400000) + 1;
+    if (dias <= 0) { alert('La fecha de fin debe ser posterior a la de inicio.'); return false; }
+    if (dias > 30)  { alert('El viaje no puede superar los 30 días.'); return false; }
+    return true;
+}
+
+/* ── Inicialización ─────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('fEntrada').min = today;
+    const ciudad = document.getElementById('ciudad').value;
+    if (ciudad) ciudadSeleccionada = true;
+    calcularDias();
+});
+</script>
+</body>
 </html>

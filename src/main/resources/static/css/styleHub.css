@@ -1,0 +1,197 @@
+/* =====================================================================
+   TriPing — Hub page
+   ===================================================================== */
+
+.hub-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(160deg, #f0fffe 0%, #e6f7ff 50%, #f4f7f9 100%);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.hub-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.hub-hero {
+    text-align: center;
+    margin-bottom: 44px;
+}
+
+.hub-saludo {
+    font-size: 1rem;
+    color: var(--c-muted);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.hub-titulo {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: var(--c-dark);
+    line-height: 1.2;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+}
+
+.hub-subtitulo {
+    font-size: 1.05rem;
+    color: var(--c-muted);
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+/* ── Grid de tarjetas ─────────────────────────────────────────────── */
+.hub-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+/* ── Tarjeta de acción ────────────────────────────────────────────── */
+.hub-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--c-surface);
+    border-radius: var(--rad-xl);
+    padding: 36px 32px 28px;
+    box-shadow: var(--shadow-md);
+    border: 2px solid transparent;
+    transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--c-text);
+    position: relative;
+    overflow: hidden;
+}
+
+.hub-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: var(--rad-xl) var(--rad-xl) 0 0;
+}
+
+.hub-card--explore::before { background: linear-gradient(90deg, var(--c-cyan), var(--c-mint)); }
+.hub-card--plan::before    { background: linear-gradient(90deg, var(--c-dark), var(--c-dark-h)); }
+
+.hub-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-xl);
+}
+
+.hub-card--explore:hover { border-color: var(--c-cyan); }
+.hub-card--plan:hover    { border-color: var(--c-dark); }
+
+.hub-card__icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    line-height: 1;
+}
+
+.hub-card__body {
+    flex: 1;
+}
+
+.hub-card__body h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin-bottom: 10px;
+    line-height: 1.25;
+}
+
+.hub-card__body p {
+    font-size: 0.9rem;
+    color: var(--c-muted);
+    line-height: 1.65;
+    margin-bottom: 20px;
+}
+
+.hub-card__features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 28px;
+}
+
+.hub-card__features li {
+    font-size: 0.85rem;
+    color: var(--c-text);
+    font-weight: 500;
+    padding: 5px 10px;
+    background: var(--c-light);
+    border-radius: var(--rad-s);
+}
+
+.hub-card__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 12px 16px;
+    border-radius: var(--rad-m);
+    transition: background var(--t), color var(--t);
+}
+
+.hub-card--explore .hub-card__cta {
+    background: linear-gradient(135deg, var(--c-cyan), #06b6d4);
+    color: #fff;
+}
+
+.hub-card--plan .hub-card__cta {
+    background: var(--c-dark);
+    color: #fff;
+}
+
+.hub-card--explore:hover .hub-card__cta { filter: brightness(1.08); }
+.hub-card--plan:hover    .hub-card__cta { background: var(--c-dark-h); }
+
+.hub-card__cta span {
+    font-size: 1.1rem;
+    transition: transform var(--t);
+}
+
+.hub-card:hover .hub-card__cta span { transform: translateX(4px); }
+
+/* ── Sección "Mi Ruta" ────────────────────────────────────────────── */
+.hub-ruta {
+    text-align: center;
+    padding: 28px 20px;
+    border-radius: var(--rad-l);
+    border: 2px dashed var(--c-border);
+    width: 100%;
+    max-width: 500px;
+    background: rgba(255,255,255,.6);
+}
+
+.hub-ruta__desc {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    color: var(--c-muted);
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+    .hub-titulo     { font-size: 1.9rem; }
+    .hub-grid       { grid-template-columns: 1fr; }
+    .hub-card       { padding: 28px 24px 22px; }
+    .hub-card__icon { font-size: 2.2rem; }
+    .hub-main       { padding: 32px 16px 28px; }
+}
